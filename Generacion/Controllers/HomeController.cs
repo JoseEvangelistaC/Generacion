@@ -1,5 +1,7 @@
-﻿using Generacion.Application.Usuario;
+﻿using Generacion.Application.DatosConsola.Query;
+using Generacion.Application.Usuario;
 using Generacion.Models;
+using Generacion.Models.DatosConsola;
 using Generacion.Models.Usuario;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +15,19 @@ namespace Generacion.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUsuario _usuario;
-
-        public HomeController(ILogger<HomeController> logger, IUsuario usuario)
+        private readonly DatosConsola _datosConsola;
+        public HomeController(ILogger<HomeController> logger, IUsuario usuario, DatosConsola datosConsola)
         {
             _logger = logger;
             _usuario = usuario;
+            _datosConsola = datosConsola;
         }
 
         public async Task<IActionResult> Index()
         {
+            Respuesta<Dictionary<string, CabecerasTabla>> datoscabecera = await _datosConsola.ObtenerCabecerasDeTabla();
+            HttpContext.Session.SetString("datoscabecera", JsonConvert.SerializeObject(datoscabecera.Detalle));
+
             Respuesta<DetalleOperario> datos = await _usuario.ObtenerDatosOperario("jevangelista");
 
             if (datos.IdRespuesta ==0)

@@ -2,7 +2,7 @@
 @using Newtonsoft.Json;
 @{
     DetalleOperario datosOperario = ViewData["DetalleOperario"] as DetalleOperario;
-    
+
 }
 
 
@@ -42,9 +42,10 @@
     <script src="../js/PDF/jspdf.min.js"></script>
 </head>
 <style>
-    .body table{
-        color : black;
+    .body table {
+        color: black;
     }
+
     .modal-loader {
         position: fixed;
         top: 0;
@@ -175,10 +176,10 @@
 
     .boton-eliminar {
         /*border: groove;
-                    color: black;
-                    font-weight: bold;
-                    border-radius: 5px;
-                    background: red;*/
+                        color: black;
+                        font-weight: bold;
+                        border-radius: 5px;
+                        background: red;*/
         position: absolute;
     }
 
@@ -274,6 +275,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Reportes:</h6>
                         <a class="collapse-item" href="@Url.Action("Index", "RegMantenimiento")">Mantenimiento</a>
+                        <a class="collapse-item" href="@Url.Action("Index", "ReporteGAS")">Reporte Diario de Gas</a>
                     </div>
                 </div>
             </li>
@@ -296,13 +298,13 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOpex"
                    aria-expanded="true" aria-controls="collapseOpex">
                     <i class="fas fa-fw fa-wrench"></i>
-                    <span>Opex</span>
+                    <span>Reportes</span>
                 </a>
                 <div id="collapseOpex" class="collapse" aria-labelledby="headingUtilities"
                      data-parent="#collapseOpex">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Cuentas Contables</h6>
-                        <a class="collapse-item" href="" value='68'>68 HT</a>
+                        <a class="collapse-item" href="" value='68'></a>
                     </div>
                 </div>
             </li>
@@ -310,7 +312,7 @@
             <hr class="sidebar-divider">
 
             <div class="sidebar-heading">
-                Maestros
+                Otros
             </div>
 
             <li class="nav-item">
@@ -322,8 +324,7 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Tablas Maestas</h6>
-                        <a class="collapse-item" href="@Url.Action("Index", "CentroCostos")">Centro de Costo</a>
-                        <a class="collapse-item" href="@Url.Action("Index", "Homologacion")">Homologacion</a>
+                        <a class="collapse-item" href="@Url.Action("", "")">Centro de Costo</a>
                         <a class="collapse-item" href="">Forgot Password</a>
                         <div class="collapse-divider"></div>
                     </div>
@@ -335,7 +336,7 @@
 
             <div id="content">
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                    <button type="button" class="btn btn-outline-secondary">Secondary</button>
+                    <button type="button" class="btn btn-outline-secondary" id="ocultarNav">Ocultar Nav</button>
                     <ul class="navbar-nav ml-auto">
 
                         <div class="topbar-divider d-none d-sm-block"></div>
@@ -444,10 +445,17 @@
 
 </html>
 
+<script>
+    var fecha = new Date();
+    var horaActual = fecha.getHours();
 
+
+
+
+</script>
 <script>
     var objetoJson = localStorage.getItem("DetalleUsuario");
-    var datosOperario ;
+    var datosOperario;
     if (objetoJson) {
         datosOperario = obtenerDetalleOperario();
 
@@ -457,7 +465,7 @@
 
         divNombre.textContent = valor;
 
-    }else{
+    } else {
         var objetoJson = JSON.stringify(@Html.Raw(JsonConvert.SerializeObject(datosOperario)));
         localStorage.setItem("DetalleUsuario", objetoJson);
 
@@ -475,6 +483,27 @@
     }
 
 
+</script>
+<script>
+
+    var botonOcultarNav = document.getElementById('ocultarNav');
+    var ocultarNavegador = false;
+
+    botonOcultarNav.addEventListener('click', function () {
+        var botonOcultarNav = document.getElementById('ocultarNav');
+        var nav = document.getElementById('accordionSidebar');
+
+        if (!ocultarNavegador) {
+            nav.style.display="none";
+            ocultarNavegador = true;
+            botonOcultarNav.innerText ="Mostrar Nav"
+        }else{
+            nav.style.display ="initial";
+            ocultarNavegador = false;
+            botonOcultarNav.innerText = "Ocultar Nav"
+        } 
+
+    });
 </script>
 <script>
     var loader = document.getElementById('loader');
@@ -502,12 +531,13 @@
 
         var fechaFormateada = "";
         if (value == "format") {
-
             fechaFormateada = dia + "_" + mes + "_" + año;
         }
         if (value == "fecha") {
             fechaFormateada = `${año}-${mes}-${dia}`;
-
+        }
+        if (value == "fechaVista") {
+            fechaFormateada = `${dia}/${mes}/${año}`;
         }
         return fechaFormateada;
     }

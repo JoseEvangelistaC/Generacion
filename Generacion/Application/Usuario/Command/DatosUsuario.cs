@@ -100,7 +100,7 @@ namespace Generacion.Application.Usuario.Command
                     using (OracleCommand command = new OracleCommand(sqlQuery, connection))
                     {
                         command.Parameters.Add(new OracleParameter("p_usuarioRed", usuarioRed));
-
+                        
                         using (OracleDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())

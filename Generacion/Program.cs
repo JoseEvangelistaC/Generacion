@@ -3,8 +3,12 @@ using Generacion.Application.DatosConsola;
 using Generacion.Application.DatosConsola.Command;
 using Generacion.Application.DatosConsola.Query;
 using Generacion.Application.Funciones;
+using Generacion.Application.ION.Query;
 using Generacion.Application.Mantenimiento;
 using Generacion.Application.Mantenimiento.Command;
+using Generacion.Application.MGD;
+using Generacion.Application.MGD.Command;
+using Generacion.Application.MGD.Query;
 using Generacion.Application.ReporteDiarioGAS;
 using Generacion.Application.ReporteDiarioGAS.Query;
 using Generacion.Application.ReporteGAS.Command;
@@ -43,11 +47,14 @@ namespace Generacion
                    services.AddScoped<IUsuario, DatosUsuario>();
                    services.AddScoped<IDatosRegistroConsola, DatosRegistroConsola>();
                    services.AddScoped<IRegistroDatosGAS, RegistroDatosGAS>();
+                   services.AddScoped<IDatosMGD, RegistroDatosMGD>();
                    
                    services.AddScoped(typeof(FotoServidor));
                    services.AddScoped(typeof(ConsultarUsuario));
                    services.AddScoped(typeof(DatosConsola));
                    services.AddScoped(typeof(ObtenerDatosReporteGAS));
+                   services.AddScoped(typeof(ConsultarION));
+                   services.AddScoped(typeof(ConsultarDatosMGD));
                    
                    // services.AddScoped(typeof(CacheDatos));
                });

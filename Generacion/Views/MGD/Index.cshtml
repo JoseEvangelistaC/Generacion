@@ -1,0 +1,33 @@
+﻿@using Generacion.Models.ION;
+@{
+    @model List<DatosION>
+
+}
+
+<div style="display: flex;">
+    <table class="table table-bordered EG">
+        <thead>
+            <tr>
+                <th>HORA</th>
+                <th>Potencia Activa (MW)</th>
+                <th>Potencia Reactiva (MVAR)</th>
+                <th>Tensión (kV)</th>
+                <th>Frecuencia (Hz)</th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in @Model)
+            {
+                <tr>
+                    <td>00</td>
+                    <td>@item.KWDelInt</td>
+                    <td>@item.KVARDelInt</td>
+                    <td>@item.KWRecInt</td>
+                    <td>@item.KVARRecInt</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

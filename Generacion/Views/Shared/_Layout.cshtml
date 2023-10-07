@@ -276,6 +276,8 @@
                         <h6 class="collapse-header">Reportes:</h6>
                         <a class="collapse-item" href="@Url.Action("Index", "RegMantenimiento")">Mantenimiento</a>
                         <a class="collapse-item" href="@Url.Action("Index", "ReporteGAS")">Reporte Diario de Gas</a>
+                        <a class="collapse-item" href="@Url.Action("Index", "ION")">Reporte ION</a>
+                        <a class="collapse-item" href="@Url.Action("Index", "MGD")">Reporte MGD</a>
                     </div>
                 </div>
             </li>
@@ -303,8 +305,8 @@
                 <div id="collapseOpex" class="collapse" aria-labelledby="headingUtilities"
                      data-parent="#collapseOpex">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Cuentas Contables</h6>
-                        <a class="collapse-item" href="" value='68'></a>
+                        <h6 class="collapse-header">Otros</h6>
+                        <a class="collapse-item" href="" value='Reporte Produccion'></a>
                     </div>
                 </div>
             </li>
@@ -324,7 +326,7 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Tablas Maestas</h6>
-                        <a class="collapse-item" href="@Url.Action("", "")">Centro de Costo</a>
+                  
                         <a class="collapse-item" href="">Forgot Password</a>
                         <div class="collapse-divider"></div>
                     </div>
@@ -456,14 +458,31 @@
 <script>
     var objetoJson = localStorage.getItem("DetalleUsuario");
     var datosOperario;
+
     if (objetoJson) {
+
+        var datosOperarioNuevo = @Html.Raw(JsonConvert.SerializeObject(datosOperario));
         datosOperario = obtenerDetalleOperario();
 
-        var valor = datosOperario.Nombre + ' ' + datosOperario.Apellidos;
+        if (datosOperarioNuevo != null && (datosOperarioNuevo.IdOperario != datosOperario.IdOperario)) {
+
+            var objetoJson = JSON.stringify(@Html.Raw(JsonConvert.SerializeObject(datosOperario)));
+            localStorage.setItem("DetalleUsuario", objetoJson);
+
+
+            datosOperario = @Html.Raw(JsonConvert.SerializeObject(datosOperario));
+
+            var valor = datosOperario.Nombre + ' ' + datosOperario.Apellidos;
+            var divNombre = document.getElementById("nombreCompleto");
+            divNombre.textContent = valor;
+        }else{
+            var valor = datosOperario.Nombre + ' ' + datosOperario.Apellidos;
 
         var divNombre = document.getElementById("nombreCompleto");
 
         divNombre.textContent = valor;
+        }
+
 
     } else {
         var objetoJson = JSON.stringify(@Html.Raw(JsonConvert.SerializeObject(datosOperario)));
@@ -492,18 +511,36 @@
     botonOcultarNav.addEventListener('click', function () {
         var botonOcultarNav = document.getElementById('ocultarNav');
         var nav = document.getElementById('accordionSidebar');
+        var botones = document.querySelectorAll('body button'); // Seleccionar todos los botones dentro del body
 
         if (!ocultarNavegador) {
-            nav.style.display="none";
+            nav.style.display = "none";
+
+            // Ocultar todos los botones excepto el botónOcultarNav
+            botones.forEach(function (boton) {
+                if (boton !== botonOcultarNav) {
+                    boton.style.display = "none";
+                }
+            });
+
             ocultarNavegador = true;
-            botonOcultarNav.innerText ="Mostrar Nav"
-        }else{
-            nav.style.display ="initial";
+            botonOcultarNav.innerText = "Mostrar Nav"
+        } else {
+            nav.style.display = "initial";
+
+            // Mostrar todos los botones excepto el botónOcultarNav
+            botones.forEach(function (boton) {
+                if (boton !== botonOcultarNav) {
+                    boton.style.display = "initial";
+                }
+            });
+
             ocultarNavegador = false;
             botonOcultarNav.innerText = "Ocultar Nav"
-        } 
-
+        }
     });
+
+
 </script>
 <script>
     var loader = document.getElementById('loader');

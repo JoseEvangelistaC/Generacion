@@ -28,7 +28,7 @@ namespace Generacion.Controllers
             Respuesta<Dictionary<string, CabecerasTabla>> datoscabecera = await _datosConsola.ObtenerCabecerasDeTabla();
             HttpContext.Session.SetString("datoscabecera", JsonConvert.SerializeObject(datoscabecera.Detalle));
 
-            Respuesta<DetalleOperario> datos = await _usuario.ObtenerDatosOperario("jevangelista");
+            Respuesta<DetalleOperario> datos = await _usuario.ObtenerDatosOperario("externo");
 
             if (datos.IdRespuesta ==0)
             {

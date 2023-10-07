@@ -18,6 +18,7 @@
 
 }
 <style>
+
     .Head-table-consola td, th {
         width: 130px !important;
         text-align: center;
@@ -43,609 +44,730 @@
 
     .datos-anteriores input {
         border: none;
+        width: 100%;
     }
 
     .titulo-tabla-horas {
         border: none;
-       /*position: absolute;*/
+        /*position: absolute;*/
         padding: 0 0 0 50px;
     }
+
+    .subtitulo-reporte-gas {
+        float: right;
+        border: none;
+    }
+
+    .titulo-reporte-gas {
+        border: none;
+        text-align-last: center;
+    }
+
+    .cabecera-fecha-tabla {
+        place-content: center;
+        width: 100% !important;
+        display: flex;
+        height: 50px;
+    }
+
+    .savePDF th {
+        /*height: 35px;*/
+        height: 49px;
+        border: none;
+    }
+
+    .savePDF td {
+        height: 35px;
+    }
+
+    .savePDF tr {
+        height: 35px;
+        font-size: 10px;
+    }
+
+    .savePDF p {
+        position: inherit;
+        padding: 0;
+    }
+
+    .savePDF th input {
+        display: none;
+        height: 10px !important;
+    }
+    .delimitador-tablas{
+        padding: 10px;
+        background: #666EFA;
+        width:92%;
+        
+    }
+
 </style>
-<div style="text-align: right;">
-    <button class="btn btn-primary " id="GuardarDatos">Guardar Datos</button>
-</div>
 <div>
-    <button style="display:@displayBtnIniciar;" id="iniciar">INICIAR</button>
-
-
-    <button class="btn btn-outline-secondary" style="display:@(display18Count);" id="mostrar-linea">Ver Linea2</button>
-</div>
-<div class="row">
-    <div class="col-md-3" style="display: flow;">
-        <img class="image-logo" src="./img/logo_elec.png" />
+    <div style="text-align: right;">
+        <button class="btn btn-primary " id="GuardarDatos">Guardar Datos</button>
     </div>
-    <div class="col-md-9" style="display: flow;">
-        <p>
-            CENTRAL TERMICA LUREN - ELECTRODUNAS S.A. <br />
-            ESTACIÓN DE REGULACIÓN Y MEDICIÓN DE GAS - ERM <br />
-            REPORTE DIARIO DE GAS <br />
-        </p>
-        <p>ELD.CTL-OM-003 Versión:00</p>
-    </div>
-</div>
-<div>
-    <div style="display: flex;" id="linea18">
-        <div style="width: 260px;">
-            <table class="table table-bordered Head-table-consola">
-                <tbody>
-                    <tr>
-                        <th colspan="2">FECHA</th>
-                    </tr>
-                    <tr>
-                        <td colspan="2">HORA</td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["VC"].Detalle </td>
-                        <td>@detalleCabeceras["SM3"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["VN"].Detalle </td>
-                        <td>@detalleCabeceras["M3"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["PL"].Detalle </td>
-                        <td>@detalleCabeceras["BAR"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["FL"].Detalle </td>
-                        <td>@detalleCabeceras["M3H"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["SV"].Detalle </td>
-                        <td>@detalleCabeceras["DC"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["TL"].Detalle </td>
-                        <td>@detalleCabeceras["C"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["FC"].Detalle </td>
-                        <td>@detalleCabeceras["E"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["FS"].Detalle </td>
-                        <td>@detalleCabeceras["CM3"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["DA"].Detalle </td>
-                        <td>@detalleCabeceras["M3"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["DP"].Detalle </td>
-                        <td>@detalleCabeceras["M3"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["PR"].Detalle </td>
-                        <td>@detalleCabeceras["BAR"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["D1"].Detalle </td>
-                        <td>@detalleCabeceras["MBAR"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["D2"].Detalle </td>
-                        <td>@detalleCabeceras["MBAR"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["L"].Detalle </td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["Caudalimetro"].Detalle </td>
-                        <td>@detalleCabeceras["M3"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <th colspan="2">Presión de ingreso (bar)</th>
-                    </tr>
-                </tbody>
-            </table>
 
+    <div>
+        <button style="display:@displayBtnIniciar;" id="iniciar">INICIAR</button>
+
+        <button class="btn btn-outline-secondary" style="display:@(display18Count);" id="mostrar-linea">Ver Linea2</button>
+        <button class="btn btn-outline-secondary" id="mostrar-todo">Mostrar Ambos</button>
+    </div>
+    <div id="contenido-reporte-gas">
+        <div class="row">
+            <div class="col-md-3" style="display: flow;">
+                <img class="image-logo" src="./img/logo_elec.png" />
+            </div>
+            <div class="col-md-9" style="display: flow;">
+                <p class="titulo-reporte-gas">
+                    CENTRAL TERMICA LUREN - ELECTRODUNAS S.A. <br />
+                    ESTACIÓN DE REGULACIÓN Y MEDICIÓN DE GAS - ERM <br />
+                    REPORTE DIARIO DE GAS <br />
+                </p>
+                <p class="subtitulo-reporte-gas">ELD.CTL-OM-003 Versión:00</p>
+            </div>
         </div>
-        <div id="contendor-datos-gas" style="display:flex; overflow-x: auto; ">
-            @{
-                int cantidadTablas = 1;
-                DateTime fechaObjeto = DateTime.Now;
-                switch (displayNuevaTabla18)
-                {
-                    case true:
+        <div style="display: flex;" id="linea18">
+            <div style="width: 260px;">
+                <table class="table table-bordered Head-table-consola">
+                    <tbody>
+                        <tr>
+                            <th colspan="2">FECHA</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">HORA</td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["VC"].Detalle </td>
+                            <td>@detalleCabeceras["SM3"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["VN"].Detalle </td>
+                            <td>@detalleCabeceras["M3"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["PL"].Detalle </td>
+                            <td>@detalleCabeceras["BAR"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["FL"].Detalle </td>
+                            <td>@detalleCabeceras["M3H"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["SV"].Detalle </td>
+                            <td>@detalleCabeceras["DC"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["TL"].Detalle </td>
+                            <td>@detalleCabeceras["C"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["FC"].Detalle </td>
+                            <td>@detalleCabeceras["E"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["FS"].Detalle </td>
+                            <td>@detalleCabeceras["CM3"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["DA"].Detalle </td>
+                            <td>@detalleCabeceras["M3"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["DP"].Detalle </td>
+                            <td>@detalleCabeceras["M3"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["PR"].Detalle </td>
+                            <td>@detalleCabeceras["BAR"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["D1"].Detalle </td>
+                            <td>@detalleCabeceras["MBAR"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["D2"].Detalle </td>
+                            <td>@detalleCabeceras["MBAR"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["L"].Detalle </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["Caudalimetro"].Detalle </td>
+                            <td>@detalleCabeceras["M3"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">Presión de ingreso (bar)</th>
+                        </tr>
+                    </tbody>
+                </table>
 
-                        foreach (var item in detalleReporte["18"])
-                        {
-                            fechaObjeto = DateTime.ParseExact(item.Fecha, "d/M/yyyy HH:mm:ss", null);
+            </div>
+            <div id="contendor-datos-gas" style="display:flex;  ">
+                @{
+                    int cantidadTablas = 1;
+                    DateTime fechaObjeto = DateTime.Now;
+                    switch (displayNuevaTabla18)
+                    {
+                        case true:
 
-                            <table id='tabla-contenedor@(cantidadTablas)' class="table table-bordered datos-table-consola datos-anteriores">
+                            foreach (var item in detalleReporte["18"])
+                            {
+                                fechaObjeto = DateTime.ParseExact(item.Fecha, "d/M/yyyy HH:mm:ss", null);
+
+                                <table id='tabla-contenedor@(cantidadTablas)' class="table table-bordered datos-table-consola datos-anteriores">
+                                    <tr>
+                                        <th class="cabecera-fecha-tabla">
+                                            <p class="titulo-tabla-horas" @*style="border: none; position: absolute;" *@ id="fechaRegistroGas@(cantidadTablas)" fechaDato="@item.Fecha" versionReporte='@idReportegas.IdReporteGas'>@fechaObjeto.ToString("dd/MM/yyyy")</p>
+                                            @if (date.ToString("dd/MM/yyyy") == fechaObjeto.ToString("dd/MM/yyyy"))
+                                            {
+                                             <input @*style="margin-left: 80%; display: flex; padding: 0 0 0 0;" *@ type="checkbox" valueId='@item.IdDetalleReporte' id='checkEdt@(cantidadTablas)' />
+                                            }
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th id="horaReporte@(cantidadTablas)">18:00</th>
+                                    </tr>
+                                    <tr>
+                                        <td id="vc">
+                                            <input disabled value=@item.VC />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="vn">
+                                            <input disabled value=@item.VN />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="pl">
+                                            <input disabled value=@item.PL />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fl" class="dato-visible-sobreado">
+                                            <input disabled value=@item.FL />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="sv">
+                                            <input disabled value=@item.SV />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="tl">
+                                            <input disabled value=@item.TL />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fc">
+                                            <input disabled value=@item.FC />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fs">
+                                            <input disabled value=@item.FS />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="da">
+                                            <input disabled value=@item.DA />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="dp" class="dato-visible-sobreado">
+                                            <input disabled value=@item.DP />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="pr">
+                                            <input disabled value=@item.PR />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="d1">
+                                            <input disabled value=@item.D1 />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="d2">
+                                            <input disabled value=@item.D2 />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="l">
+                                            <input disabled value=@item.L />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="caudalimetro" class="dato-visible-sobreado">
+                                            <input disabled value=@item.Caudalimetro />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="presionIngreso">
+                                            <input disabled value=@item.PresionIngreso />
+                                        </td>
+                                    </tr>
+                                </table>
+                                cantidadTablas++;
+                            }
+                            if (date.ToString("dd/MM/yyyy") != fechaObjeto.ToString("dd/MM/yyyy"))
+                            {
+                                fechaObjeto = fechaObjeto.AddDays(1);
+                                goto case false;
+                            }
+                            break;
+                        case false:
+                            <table  style="display:@(display18Count);" id="tabla-contenedor@(cantidadTablas)" class="table table-bordered datos-table-consola">
                                 <tr>
-                                    <th style="place-content:center; width: 100% !important; display: flex;">
-                                        <p class="titulo-tabla-horas" @*style="border: none; position: absolute;" *@ id="fechaRegistroGas@(cantidadTablas)" fechaDato="@item.Fecha" versionReporte='@idReportegas.IdReporteGas'>@fechaObjeto.ToString("dd/MM/yyyy")</p>
-                                        <input @*style="margin-left: 80%; display: flex; padding: 0 0 0 0;" *@  type="checkbox" valueId='@item.IdDetalleReporte' id='checkEdt@(cantidadTablas)' />
+                                    <th style="height: 50px;">
+                                        <p class="titulo-tabla-horas" id="fechaRegistroGas@(cantidadTablas)" fechaDato='@fechaObjeto.ToString("dd/MM/yyyy")' versionReporte='@idReportegas.IdReporteGas'> @fechaObjeto.ToString("dd/MM/yyyy")</p>
                                     </th>
                                 </tr>
                                 <tr>
-                                    <td id="horaReporte@(cantidadTablas)">18:00</td>
+                                    <th id="horaReporte@(cantidadTablas)">18:00</th>
                                 </tr>
                                 <tr>
                                     <td id="vc">
-                                        <input disabled value=@item.VC />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="vn">
-                                        <input disabled value=@item.VN />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="pl">
-                                        <input disabled value=@item.PL />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="fl" class="dato-visible-sobreado">
-                                        <input disabled value=@item.FL />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="sv">
-                                        <input disabled value=@item.SV />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="tl">
-                                        <input disabled value=@item.TL />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="fc">
-                                        <input disabled value=@item.FC />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="fs">
-                                        <input disabled value=@item.FS />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="da">
-                                        <input disabled value=@item.DA />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="dp" class="dato-visible-sobreado">
-                                        <input disabled value=@item.DP />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="pr">
-                                        <input disabled value=@item.PR />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="d1">
-                                        <input disabled value=@item.D1 />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="d2">
-                                        <input disabled value=@item.D2 />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="l">
-                                        <input disabled value=@item.L />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="caudalimetro" class="dato-visible-sobreado">
-                                        <input disabled value=@item.Caudalimetro />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="presionIngreso">
-                                        <input disabled value=@item.PresionIngreso />
+                                        <input />
                                     </td>
                                 </tr>
                             </table>
-                            cantidadTablas++;
-                        }
-                        if (date.ToString("dd/MM/yyyy") != fechaObjeto.ToString("dd/MM/yyyy"))
-                        {
-                            fechaObjeto = fechaObjeto.AddDays(1);
-                            goto case false;
-                        }
-                        break;
-                    case false:
-                        <table style="display:@(display18Count);" id="tabla-contenedor@(cantidadTablas)" class="table table-bordered datos-table-consola">
-                            <tr>
-                                <th style="height: 50px;">
-                                    <p class="titulo-tabla-horas" id="fechaRegistroGas@(cantidadTablas)" fechaDato='@fechaObjeto.ToString("dd/MM/yyyy")' versionReporte='@idReportegas.IdReporteGas'> @fechaObjeto.ToString("dd/MM/yyyy")</p>
-                                </th>
-                            </tr>
-                            <tr>
-                                <td id="horaReporte@(cantidadTablas)">18:00</td>
-                            </tr>
-                            <tr>
-                                <td id="vc">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="vn">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="pl">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="fl" class="dato-visible-sobreado">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="sv">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="tl">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="fc">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="fs">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="da">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="dp" class="dato-visible-sobreado">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="pr">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="d1">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="d2">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="l">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="caudalimetro" class="dato-visible-sobreado">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="presionIngreso">
-                                    <input />
-                                </td>
-                            </tr>
-                        </table>
-                        break;
+                            break;
+                    }
                 }
-            }
+            </div>
         </div>
-    </div>
 
-    <div style="display: none;" id="linea6">
-        <div style="width: 260px;">
-            <table class="table table-bordered Head-table-consola">
-                <tbody>
-                    <tr>
-                        <th colspan="2">FECHA2</th>
-                    </tr>
-                    <tr>
-                        <td colspan="2">HORA</td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["VC"].Detalle </td>
-                        <td>@detalleCabeceras["SM3"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["VN"].Detalle </td>
-                        <td>@detalleCabeceras["M3"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["PL"].Detalle </td>
-                        <td>@detalleCabeceras["BAR"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["FL"].Detalle </td>
-                        <td>@detalleCabeceras["M3H"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["SV"].Detalle </td>
-                        <td>@detalleCabeceras["DC"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["TL"].Detalle </td>
-                        <td>@detalleCabeceras["C"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["FC"].Detalle </td>
-                        <td>@detalleCabeceras["E"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["FS"].Detalle </td>
-                        <td>@detalleCabeceras["CM3"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["DA"].Detalle </td>
-                        <td>@detalleCabeceras["M3"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["DP"].Detalle </td>
-                        <td>@detalleCabeceras["M3"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["PR"].Detalle </td>
-                        <td>@detalleCabeceras["BAR"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["D1"].Detalle </td>
-                        <td>@detalleCabeceras["MBAR"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["D2"].Detalle </td>
-                        <td>@detalleCabeceras["MBAR"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["L"].Detalle </td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>@detalleCabeceras["Caudalimetro"].Detalle </td>
-                        <td>@detalleCabeceras["M3"].Detalle </td>
-                    </tr>
-                    <tr>
-                        <th colspan="2">Presión de ingreso (bar)</th>
-                    </tr>
-                </tbody>
-            </table>
+        <div id="delimitador">
 
         </div>
-        <div id="contendor-datos-gas" style="display:flex;overflow-x: auto; ">
-            @{
-                fechaObjeto = DateTime.Now;
-                cantidadTablas = 1;
-                switch (displayNuevaTabla6)
-                {
-                    case true:
 
-                        foreach (var item in detalleReporte["6"])
-                        {
-                            fechaObjeto = DateTime.ParseExact(item.Fecha, "d/M/yyyy HH:mm:ss", null);
+        <div style="display: none;" id="linea6">
+            <div style="width: 260px;">
+                <table class="table table-bordered Head-table-consola">
+                    <tbody>
+                        <tr>
+                            <th colspan="2">FECHA2</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">HORA</th>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["VC"].Detalle </td>
+                            <td>@detalleCabeceras["SM3"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["VN"].Detalle </td>
+                            <td>@detalleCabeceras["M3"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["PL"].Detalle </td>
+                            <td>@detalleCabeceras["BAR"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["FL"].Detalle </td>
+                            <td>@detalleCabeceras["M3H"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["SV"].Detalle </td>
+                            <td>@detalleCabeceras["DC"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["TL"].Detalle </td>
+                            <td>@detalleCabeceras["C"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["FC"].Detalle </td>
+                            <td>@detalleCabeceras["E"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["FS"].Detalle </td>
+                            <td>@detalleCabeceras["CM3"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["DA"].Detalle </td>
+                            <td>@detalleCabeceras["M3"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["DP"].Detalle </td>
+                            <td>@detalleCabeceras["M3"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["PR"].Detalle </td>
+                            <td>@detalleCabeceras["BAR"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["D1"].Detalle </td>
+                            <td>@detalleCabeceras["MBAR"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["D2"].Detalle </td>
+                            <td>@detalleCabeceras["MBAR"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["L"].Detalle </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>@detalleCabeceras["Caudalimetro"].Detalle </td>
+                            <td>@detalleCabeceras["M3"].Detalle </td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">Presión de ingreso (bar)</th>
+                        </tr>
+                    </tbody>
+                </table>
 
-                            <table id='tabla-contenedor2@(cantidadTablas)' class="table table-bordered datos-table-consola datos-anteriores">
+            </div>
+            <div id="contendor-datos-gas" style="display:flex; ">
+                @{
+                    fechaObjeto = DateTime.Now;
+                    cantidadTablas = 1;
+                    switch (displayNuevaTabla6)
+                    {
+                        case true:
+
+                            foreach (var item in detalleReporte["6"])
+                            {
+                                fechaObjeto = DateTime.ParseExact(item.Fecha, "d/M/yyyy HH:mm:ss", null);
+
+                                <table id='tabla-contenedor2@(cantidadTablas)' class="table table-bordered datos-table-consola datos-anteriores">
+                                    <tr>
+                                        <th class="cabecera-fecha-tabla">
+                                            <p class="titulo-tabla-horas" @*style="border: none; position: absolute;"*@ id="fechaRegistroGas2@(cantidadTablas)" fechaDato="@item.Fecha" versionReporte='@(idReportegas.IdReporteGas)'>@fechaObjeto.ToString("dd/MM/yyyy")</p>
+                                            @if (date.ToString("dd/MM/yyyy") == fechaObjeto.ToString("dd/MM/yyyy"))
+                                            {
+                                              <input @*style="margin-left: 80%; display: flex; padding: 0 0 0 0;"*@ type="checkbox" valueId='@item.IdDetalleReporte' id='checkEdt2@(cantidadTablas)' />
+
+                                            }
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th id="horaReporte2@(cantidadTablas)">6:00</th>
+                                    </tr>
+                                    <tr>
+                                        <td id="vc">
+                                            <input disabled value=@item.VC />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="vn">
+                                            <input disabled value=@item.VN />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="pl">
+                                            <input disabled value=@item.PL />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fl" class="dato-visible-sobreado">
+                                            <input disabled value=@item.FL />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="sv">
+                                            <input disabled value=@item.SV />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="tl">
+                                            <input disabled value=@item.TL />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fc">
+                                            <input disabled value=@item.FC />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="fs">
+                                            <input disabled value=@item.FS />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="da">
+                                            <input disabled value=@item.DA />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="dp" class="dato-visible-sobreado">
+                                            <input disabled value=@item.DP />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="pr">
+                                            <input disabled value=@item.PR />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="d1">
+                                            <input disabled value=@item.D1 />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="d2">
+                                            <input disabled value=@item.D2 />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="l">
+                                            <input disabled value=@item.L />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="caudalimetro" class="dato-visible-sobreado">
+                                            <input disabled value=@item.Caudalimetro />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td id="presionIngreso">
+                                            <input disabled value=@item.PresionIngreso />
+                                        </td>
+                                    </tr>
+                                </table>
+                                cantidadTablas++;
+                            }
+                            if (date.ToString("dd/MM/yyyy") != fechaObjeto.ToString("dd/MM/yyyy"))
+                            {
+                                fechaObjeto = fechaObjeto.AddDays(1);
+                                goto case false;
+                            }
+                            break;
+
+                        case false:
+                            <table style="display:@(display6Count);" id="tabla-contenedor2@(cantidadTablas)" class="table table-bordered datos-table-consola">
                                 <tr>
-                                    <th style="place-content:center; width: 100% !important; display: flex;">
-                                        <p class="titulo-tabla-horas" @*style="border: none; position: absolute;"*@ id="fechaRegistroGas2@(cantidadTablas)" fechaDato="@item.Fecha" versionReporte='@(idReportegas.IdReporteGas)'>@fechaObjeto.ToString("dd/MM/yyyy")</p>
-                                        <input @*style="margin-left: 80%; display: flex; padding: 0 0 0 0;"*@ type="checkbox" valueId='@item.IdDetalleReporte' id='checkEdt2@(cantidadTablas)' />
+                                    <th style="height: 50px;">
+                                        <p class="titulo-tabla-horas" id="fechaRegistroGas2@(cantidadTablas)" fechaDato='@fechaObjeto.ToString("dd/MM/yyyy")' versionReporte='@idReportegas.IdReporteGas'> @fechaObjeto.ToString("dd/MM/yyyy")</p>
                                     </th>
                                 </tr>
                                 <tr>
-                                    <td id="horaReporte2@(cantidadTablas)">6:00</td>
+                                    <th id="horaReporte2@(cantidadTablas)">6:00</th>
                                 </tr>
                                 <tr>
                                     <td id="vc">
-                                        <input disabled value=@item.VC />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="vn">
-                                        <input disabled value=@item.VN />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="pl">
-                                        <input disabled value=@item.PL />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="fl" class="dato-visible-sobreado">
-                                        <input disabled value=@item.FL />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="sv">
-                                        <input disabled value=@item.SV />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="tl">
-                                        <input disabled value=@item.TL />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="fc">
-                                        <input disabled value=@item.FC />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="fs">
-                                        <input disabled value=@item.FS />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="da">
-                                        <input disabled value=@item.DA />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="dp" class="dato-visible-sobreado">
-                                        <input disabled value=@item.DP />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="pr">
-                                        <input disabled value=@item.PR />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="d1">
-                                        <input disabled value=@item.D1 />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="d2">
-                                        <input disabled value=@item.D2 />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="l">
-                                        <input disabled value=@item.L />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="caudalimetro" class="dato-visible-sobreado">
-                                        <input disabled value=@item.Caudalimetro />
+                                        <input />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="presionIngreso">
-                                        <input disabled value=@item.PresionIngreso />
+                                        <input />
                                     </td>
                                 </tr>
                             </table>
-                            cantidadTablas++;
-                        }
-                        if (date.ToString("dd/MM/yyyy") != fechaObjeto.ToString("dd/MM/yyyy"))
-                        {
-                            fechaObjeto = fechaObjeto.AddDays(1);
-                            goto case false;
-                        }
-                        break;
-
-                    case false:
-                        <table style="display:@(display6Count);" id="tabla-contenedor2@(cantidadTablas)" class="table table-bordered datos-table-consola">
-                            <tr>
-                                <th style="height: 50px;">
-                                    <p class="titulo-tabla-horas" id="fechaRegistroGas2@(cantidadTablas)" fechaDato='@fechaObjeto.ToString("dd/MM/yyyy")' versionReporte='@idReportegas.IdReporteGas'> @fechaObjeto.ToString("dd/MM/yyyy")</p>
-                                </th>
-                            </tr>
-                            <tr>
-                                <td id="horaReporte2@(cantidadTablas)">6:00</td>
-                            </tr>
-                            <tr>
-                                <td id="vc">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="vn">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="pl">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="fl" class="dato-visible-sobreado">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="sv">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="tl">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="fc">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="fs">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="da">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="dp" class="dato-visible-sobreado">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="pr">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="d1">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="d2">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="l">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="caudalimetro" class="dato-visible-sobreado">
-                                    <input />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td id="presionIngreso">
-                                    <input />
-                                </td>
-                            </tr>
-                        </table>
-                        break;
+                            break;
+                    }
                 }
-            }
+            </div>
         </div>
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.js"></script>
+
+<script>
+
+    document.getElementById('GuardarDatos').addEventListener('click', function () {
+
+        const element = document.getElementById('contenido-reporte-gas'); 
+        const elementDiv = document.getElementById('contendor-datos-gas');
+        const elementUltimoDiv = document.getElementById('tabla-contenedor27');
+
+        const delimitador = document.getElementById('delimitador');
+        console.log("delimitador ",delimitador);
+        delimitador.classList.add('delimitador-tablas');
+
+        element.classList.add('savePDF');
+        elementDiv.style.overflowX = "clip";
+        elementDiv.style.color = "black";
+        elementDiv.style.height = "753";
+       // elementUltimoDiv.style.display = "revert";
+   
+
+        var $inputs = $('#tabla-contenedor27 input');
+        var $tablas = $('#contenido-reporte-gas table');
+        $tablas.css('height', '100%');
+        $tablas.css('overflow', 'inherit');
+        $inputs.prop('disabled', !this.checked);
+        $inputs.css('border', 'none');
+
+        var doc = new jsPDF({
+            orientation: 'landscape', // Orientación horizontal
+            unit: 'mm',
+            format: 'letter',
+        });
+
+        html2canvas(element, {
+            scale: 1,
+            useCORS: true,
+            allowTaint: true,
+            logging: true,
+        }).then(function (canvas) {
+            var imgData = canvas.toDataURL('image/png');
+
+            // Ajusta las coordenadas x e y para agregar márgenes
+            var marginLeft = 10;
+            var marginTop = 10;
+            // doc.addImage(imgData, 'PNG', marginLeft, marginTop, 259.4, 195.89999999999998);
+
+            doc.addImage(imgData, 'PNG', marginLeft, marginTop, doc.internal.pageSize.getWidth() - marginLeft * 2, doc.internal.pageSize.getHeight() - marginTop * 2);
+            console.log("pdf : ", marginLeft, marginTop, doc.internal.pageSize.getWidth() - marginLeft * 2, doc.internal.pageSize.getHeight() - marginTop * 2);
+            // Guardar el PDF
+            doc.save(`Boleta-Julio-2023.pdf`);
+        });
+        //   element.classList.remove('savePDF');
+    });
+
+</script>
 <script>
     var fechaid;
 
@@ -655,7 +777,7 @@
 
         var linea6 = document.getElementById('linea6');
         var linea18 = document.getElementById('linea18');
-        if (this.textContent === "Ver Linea2") {
+        if (vistaActual === 1) {
 
             linea6.style.display = "flex";
             linea18.style.display = "none";
@@ -671,11 +793,33 @@
     });
 
 
+
+    let mostrartodo = 0;
+    document.getElementById('mostrar-todo').addEventListener('click', function () {
+        var linea6 = document.getElementById('linea6');
+        var linea18 = document.getElementById('linea18');
+
+
+        if (mostrartodo === 1) {
+
+            linea6.style.display = "none";
+            linea18.style.display = "flex";
+            this.textContent = "Mostrar Ambos";
+            mostrartodo = 0;
+
+        } else {
+            linea6.style.display = "flex";
+            linea18.style.display = "flex";
+            this.textContent = "Ocultar";
+            mostrartodo = 1;
+        }
+    });
+
+
     document.getElementById('iniciar').addEventListener('click', function () {
 
         var btnMostrar = document.getElementById('mostrar-linea');
         var contenedordDatos = document.getElementById('contendor-datos-gas');
-
         var tblMostrar = document.getElementById('tabla-contenedor1');
 
         fechaid = obtenerFecha("format");
@@ -707,8 +851,6 @@
         var tablas = miDiv.getElementsByTagName('table');
         var tablas2 = miDiv2.getElementsByTagName('table');
 
-        console.log("tablas : ", tablas);
-        console.log("tablas2 : ", tablas2);
         if (vistaActual === 2) {
             if (horaActual >= 6 || horaActual < 18) {
                 listDetalleReporteGas = ObtenerDatosTabla('2', tablas2.length - 1);
@@ -724,7 +866,6 @@
             }
         }
 
-        console.log("listDetalleReporteGas : ", listDetalleReporteGas)
         if (listDetalleReporteGas != null) {
             fetch("/ReporteGAS/GuardarDetalle", {
                 method: "POST",
@@ -768,14 +909,8 @@
             if (fechaRegistro != null) {
                 idPredeterminado = fechaRegistro.getAttribute('versionReporte');
                 var fechaDato = fechaRegistro.getAttribute('fechaDato');
-                console.log("idPredeterminado : ", idPredeterminado);
-                console.log("idReporte : ", idReporte);
 
                 idReporte = idReporte == "" ? idPredeterminado : idReporte;
-                console.log("___________________");
-
-                console.log("idReporte : ", idReporte);
-
 
                 contenidoTabla = document.getElementById("tabla-contenedor" + idTabla + i);
                 checkIdTabla = document.getElementById("checkEdt" + idTabla + i);
@@ -868,7 +1003,6 @@
             }
         });
     });
-
 
 </script>
 

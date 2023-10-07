@@ -1,0 +1,44 @@
+﻿@using Generacion.Models.ION;
+@{
+    @model List<Revenue>
+
+}
+
+<div style="display: flex;">
+    <table class="table table-bordered EG">
+        <thead>
+            <tr>
+                <th>Date/Time</th>
+                <th>kVARh del int</th>
+                <th>kWh rec int</th>
+                <th>kVARh rec int</th>
+                <th>Vll avg</th>
+                <th>Freq</th>
+                <th>kW del int</th>
+                <th>kVAR del int</th>
+                <th>kW del int</th>
+                <th>kVAR rec int</th>
+                <th>kW rec int</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in @Model)
+            {
+                <tr>
+                    <td>@item.Date_Time</td>
+                    <td>@item.kWhDelInt</td>
+                    <td>@item.kVARhDelInt</td>
+                    <td>@item.kWhRecInt</td>
+                    <td>@item.kVARhRecInt</td>
+                    <td>@item.VllAvg</td>
+                    <td>@item.Freq</td>
+                    <td>@item.KWDelInt</td>
+                    <td>@item.KVARDelInt</td>
+                    <td>@item.KWRecInt</td>
+                    <td>@item.KVARRecInt</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

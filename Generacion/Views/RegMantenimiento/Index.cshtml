@@ -122,6 +122,18 @@
     textarea {
         resize: none;
     }
+
+
+    .floating-button {
+        position: fixed;
+        left: 10px;
+        bottom: 10px;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 </style>
 
 <div id="reportDealy" class="content-report">
@@ -135,7 +147,7 @@
                 <div class="content-img-logo">
                     <img class="image-logo" src="./img/logo_elec.png" />
                 </div>
-                <div><p>Horas motor EG01:</p><p>46851 H</p> </div>
+                <div><p style="width:50%">Horas motor EG01:</p><input style="width:50%; text-align: -webkit-center;" placeholder="0000 H" /> </div>
             </div>
             <div class="col-md-6">
                 <div>
@@ -160,7 +172,7 @@
                 </div>
                 <div>
                     <p1>Horas motor EG02:</p1>
-                    <p>46840 H</p>
+                    <input style="width:100%; text-align: -webkit-center;" placeholder="0000 H" />
                 </div>
             </div>
         </div>
@@ -685,8 +697,68 @@
         </div>
     </div>
 </div>
+
+
 <button id="descargarPDF">Descargar PDF</button>
-<button onclick="MostrarCampos()">Descargar PDF</button>
+<!--<button onclick="MostrarCampos()">Descargar PDF</button> -->
+
+
+<style>
+
+</style>
+
+<button class="btn btn-info floating-button" id="btnAbrirModal">Abrir Historial</button>
+<div id="miModal" class="modal" style="height: auto;width: 100%;display: flex;justify-content: center;">
+    <div class="modal-contenido" style="text-align: center;width: 65%;">
+        <!-- Contenido del modal se cargará aquí -->
+        <button class="btn btn-outline-danger boton-eliminar" class="cerrar" id="btnCerrarModal">&times;</button>
+        <div id="contenidoModal"></div>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $("#btnAbrirModal").click(function () {
+            $.ajax({
+                url: '/Historial/Index?idVista=' + 1,
+                method: 'POST',
+                success: function (data) {
+                    var $data = $(data);
+
+                    var $reportDealy = $data.find('#historialOperario');
+                    $reportDealy.css({
+                       // 'background- color': '#f8f9fc'
+                    });
+                    $reportDealy.find('button').remove();
+
+                    $('#contenidoModal').html($reportDealy);
+                    
+                    $reportDealy.find('input').prop('disabled', true);
+                    $reportDealy.find('input').css({
+                        'background-color': '#f8f9fc !important'
+                    });
+                    $reportDealy.find('textarea').prop('disabled', true);
+                    $reportDealy.find('textarea').css({
+                        'background-color': '#f8f9fc !important'
+                    });
+
+                    
+                    $('#miModal').show();
+                },
+                error: function () {
+                }
+            });
+        });
+
+        $("#btnCerrarModal").click(function () {
+            $("#miModal").hide();
+        });
+    });
+</script>
 
 <script>
 

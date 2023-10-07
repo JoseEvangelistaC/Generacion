@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Application\ION\Command\" />
     <Folder Include="Application\Mantenimiento\Query\" />
     <Folder Include="wwwroot\img\" />
     <Folder Include="wwwroot\js\PDF\" />

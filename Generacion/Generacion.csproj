@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Folder Include="Application\Mantenimiento\Query\" />
+    <Folder Include="Models\ReporteGas\" />
     <Folder Include="wwwroot\img\" />
     <Folder Include="wwwroot\js\PDF\" />
   </ItemGroup>

@@ -1,0 +1,1365 @@
+﻿@using Generacion.Models.LecturasCampo;
+@{
+    bool activar = true;
+    List<int> horasGenerador = new List<int>
+    {
+        4,8,12,16,20,0
+    };
+
+    List<int> horasEG = new List<int>
+    {
+        2,4,6,8,10,12,14,16,18,20,22,0
+    };
+
+    List<int> baa901 = new List<int>
+    {
+        6,12,18,0
+    };
+
+
+
+
+    // List<DatosFormatoCampo> GasCombustibles = ViewData["GasCombustible"] as List<DatosFormatoCampo>;
+    List<TiposRegistroCampo> DetalleRegistrCampo = ViewData["TipoRegistros"] as List<TiposRegistroCampo>;
+    // List<TiposDeRegistroConsola> detalleRegistro = ViewData["TipoRegistros"] as List<TiposDeRegistroConsola>;
+    // Dictionary<string, CabecerasTablaCampo> detalleCabecerasCampo = ViewData["DatoscabeceraCampo"] as Dictionary<string, CabecerasTablaCampo>;
+
+    //TRAENDO DATA DE  QUERY LECTURACAMPO PARA CABEZALES PRINCIPALES
+    var SistemaGasCombustible = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "SIST_GAS_COMBUSTIBLE").Select(x => x).FirstOrDefault();
+    var AguaRefrigMotor = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "SIST_AGUA_REFRIG_MOTOR").Select(x => x).FirstOrDefault();
+    var AguaRefrigLt = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "SIST_AGUA_REFRIG_LT").Select(x => x).FirstOrDefault();
+    var AguaRefrigHt = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "SIST_AGUA_REFRIG_HT").Select(x => x).FirstOrDefault();
+
+    var EntradaSalidaRad = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "ENTRADA_SALIDA_AGUA_RADIADORES").Select(x => x).FirstOrDefault();
+    var CompresIntrument = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "COMPRESOR_INSTRUMENTACION").Select(x => x).FirstOrDefault();
+    var CompresArranque = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "COMPRESOR_AIRE_ARRANQUE").Select(x => x).FirstOrDefault();
+    var Generador = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "GENERADOR").Select(x => x).FirstOrDefault();
+    var Complementario = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "COMPLEMENTARIOS").Select(x => x).FirstOrDefault();
+    var Inspecciones = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "INSPECCIONES").Select(x => x).FirstOrDefault();
+    var SistComunes = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "SIST_COMUNES").Select(x => x).FirstOrDefault();
+
+
+}
+
+<style>
+    .lectura input {
+        width: 130px;
+        height: 26px;
+    }
+
+    .lectura span {
+        width: 165px;
+        padding: 0px 35px 0 35px;
+        margin-bottom: 1rem;
+        color: #858796;
+    }
+
+    .lectura {
+        display: flex;
+        border: 1px solid #e3e6f0;
+    }
+
+        .lectura div {
+            width: 40%;
+            border: 1px solid #e3e6f0;
+        }
+
+    .EG td {
+        width: 65px !important;
+        text-align: center;
+    }
+
+    .LM td {
+        width: 115px !important;
+        text-align: center;
+    }
+
+    .EG input {
+        width: 65px !important;
+    }
+
+    .EG th {
+        text-align-last: center;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .title-table {
+        text-align-last: center;
+        background: gainsboro;
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .content-report {
+        border: solid;
+        padding: 40px;
+    }
+
+    .row {
+        margin-right: inherit;
+        margin-left: inherit;
+    }
+
+    .subTitulo-consola {
+        text-align: inherit;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 0 0 0 10px;
+        background: darkgray;
+    }
+
+    .btnMostrarGE {
+        border-block-end-color: red;
+    }
+
+    .btnMostrarGE1 {
+        display: none;
+    }
+
+
+
+    table {
+        table-layout: fixed;
+    }
+
+    .sticky-header {
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 2;
+       
+        font-size:13px;
+    }
+
+    th.static {
+        font-size:14px;
+        position: sticky;
+        top: 0;
+        background-color: #fff; /* Fondo blanco para las etiquetas fijas */
+        z-index: 2; 
+    }
+
+    .Title-Column{
+        font-size:14px;
+    }
+
+    .space{
+        width:60px;
+    }
+    .colortitle{
+        width: 130px;
+        background: darkgray;
+        color:black;
+    }
+
+    .new thead th[colspan="6"] {
+        width: 100%; /* Hacer que la celda ocupe el 100% del ancho de la tabla */
+    }
+    .letraInspeccion{
+        font-size:12px;
+    }
+
+
+    th:nth-child(n+10),
+    td:nth-child(n+10) {
+        display: none;
+    }
+
+    .principal {
+        cursor: pointer; /* Cambia el cursor al pasar por encima */
+    }
+    .principal2 {
+        cursor: pointer; /* Cambia el cursor al pasar por encima */
+    }
+    .principal3 {
+        cursor: pointer; /* Cambia el cursor al pasar por encima */
+    }
+
+    .principal4 {
+        cursor: pointer; /* Cambia el cursor al pasar por encima */
+    }
+</style>
+
+
+<div class="header-detail-report">
+    <div class="title-report col-md-12">
+        <h2>Central Termica Luren EG - 01</h2>
+        <h3 style="font-size: inherit;">LECTURAS DE CAMPO</h3>
+    </div>
+    <div class="row">
+        <div class="col-md-6" style="display: flow;">
+            <img class="image-logo" src="./img/logo_elec.png" />
+        </div>
+        <div class="col-md-6">
+            <div>
+                <p>Versión 00 ELD-CTL-OM002</p>
+            </div>
+            <div>
+                <p1>Fecha</p1>
+               
+            </div>
+            <div class="subTitulo-consola">
+                <p1 style="text-align: inherit;">Operadores</p1>
+
+            </div>
+            <div>
+                <p1>Turno 1</p1>
+                <p>E. Codarlupo / R. Ramos</p>
+            </div>
+            <div>
+                <p1>Turno 2</p1>
+                <p>R. Ramos / R.More</p>
+            </div>
+            <div>
+                <p1>Turno 3</p1>
+                <p>H. Cerron / W. Arevalo</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="text-align: right;">
+    <button class="btn btn-primary " id="GuardarDatos">Guardar Datos</button>
+</div>
+<div>
+    <button class="btn btn-light btnMostrarGE btnMostrarGE1" id="EG1">EG01</button>
+    <button class="btn btn-light btnMostrarGE" id="EG2">EG02</button>
+</div>
+<div class="console-content">
+    <div id="datos-EG1">
+        <div style="padding :10px;" >
+            <div style="overflow: auto; width: 100%; height: 85vh;">
+                <button id="mostrarOcultar">+</button>
+                <div class="title-table principal">
+                        <p id="idRegistro" claveRegistro='##'>
+                            PRINCIPAL
+                        </p>
+                    
+                </div>
+
+                <table class="table table-bordered EG ocultar boton1" id="tabla-EG1">
+                    <thead>
+                        <tr>
+                            <th class="sticky-header space" scope="col" style="width: 232px;">#</th>
+                            <th class="sticky-header space" scope="col">Und</th>
+                            <th class="sticky-header space" scope="col">Rango</th>
+                            <th class="sticky-header space" scope="col">2:00</th>
+                            <th class="sticky-header space" scope="col">4:00</th>
+                            <th class="sticky-header space" scope="col">6:00</th>
+                            <th class="sticky-header space" scope="col">8:00</th>
+                            <th class="sticky-header space" scope="col">10:00</th>
+                            <th class="sticky-header space" scope="col">12:00</th>
+                            <th class="sticky-header space" scope="col">14:00</th>
+                            <th class="sticky-header space" scope="col">16:00</th>
+                            <th class="sticky-header space" scope="col">18:00</th>
+                            <th class="sticky-header space" scope="col">20:00</th>
+                            <th class="sticky-header space" scope="col">22:00</th>
+                            <th class="sticky-header space" scope="col">00:00</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="static" scope="row">POTENCIA ACTIVA</th>
+                            <td></td>
+                            <td></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion static" scope="row">HORAS DE OPERACION</th>
+                            <td></td>
+                            <td></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion static" scope="row">TEMPERATURA AMBIENTE</th>
+                            <td></td>
+                            <td></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion static" scope="row">HUMEDAD RELATIVA</th>
+                            <td></td>
+                            <td></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                            <td><input type="text" value="0"></td>
+                        </tr>
+                    </tbody>
+
+                   
+                </table>
+                @* SISTEMA DE GAS COMBUSTIBLE *@
+                <div class="title-table principal2">
+                    <p id="idRegistro" claveRegistro='@SistemaGasCombustible.IdRegistroConsola'>@SistemaGasCombustible.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG ocultar boton2" id="tabla-EG2">
+                    <tbody>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+                @* sISTEMA DE AGUA REFRIGERACION AL MOTOR *@
+                <div class="title-table principal3">
+                    <p id="idRegistro" claveRegistro='@AguaRefrigMotor.IdRegistroConsola'>@AguaRefrigMotor.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG ocultar boton3" id="tabla-EG3">
+                    <tbody>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">TEMPERATURA DE ENTRADA PRINC. DE AGUA AL MOTOR(T001)</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">PRESION DE ENTRADA PRINC. DE AGUA AL MOTOR(P001)</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                @* sISTEMA DE AGUA REFRIGERACION POR LT *@
+                <div class="title-table principal4">
+                    <p id="idRegistro" claveRegistro='@AguaRefrigLt.IdRegistroConsola'>@AguaRefrigLt.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG boton4" id="tabla-EG4">
+                    <tbody>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                @* sISTEMA DE AGUA REFRIGERACION POR HT *@
+                <div class="title-table principal5">
+                    <p id="idRegistro" claveRegistro='@AguaRefrigHt.IdRegistroConsola'>@AguaRefrigHt.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG boton5" id="tabla-EG1">
+                    <tbody>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                @* ENTRADA Y SALIDA AGUA A LOS RADIADORES*@
+                <div class="title-table principal6">
+                    <p id="idRegistro" claveRegistro='@EntradaSalidaRad.IdRegistroConsola'>@EntradaSalidaRad.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG boton6" id="tabla-EG1">
+                    <tbody>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                @* COMPRESOR DE INSTRUMENTACION*@
+                <div class="title-table" id="principal7">
+                    <p id="idRegistro" claveRegistro='@CompresIntrument.IdRegistroConsola'>@CompresIntrument.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG boton7" id="tabla-EG1">
+                    <tbody>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                @* COMPRESOR DE AIRE DE ARRANQUE*@
+                <div class="title-table" id="principal8">
+                    <p id="idRegistro" claveRegistro='@CompresArranque.IdRegistroConsola'>@CompresArranque.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG boton8" id="tabla-EG1">
+                    <tbody>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                @* GENERADOR*@
+                <div class="title-table" id="principal9">
+                    <p id="idRegistro" claveRegistro='@Generador.IdRegistroConsola'>@Generador.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG boton9" id="tabla-EG1">
+                    <tbody>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                @* COMPLEMENTARIOS*@
+                <div class="title-table" id="principal10">
+                    <p id="idRegistro" claveRegistro='@Complementario.IdRegistroConsola'>@Complementario.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG boton10" id="tabla-EG1">
+                    <tbody>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td><input type="text" value="0"></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            
+            </div>
+
+            <br /><br />
+            <div>
+                <table class="table table-bordered EG new" id="tabla-EG1">
+
+                        <thead>
+                            <tr>
+                                <th class="sticky-header" scope="col" style="width: 200px;">INSPECCIONES</th>
+                                <th class="sticky-header space" scope="col" style="width: 90px;">Turno 1</th>
+                                <th class="sticky-header space" scope="col" style="width: 90px;">Turno 2</th>
+                                <th class="sticky-header space" scope="col" style="width: 90px;">Turno 3</th>
+                                <th scope="col" style="color:black;  background: darkgray;" colspan="9">Observaciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th class="Title-Column letraInspeccion" scope="row">REVISION DE FUGAS</th>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                
+                                
+                            
+                            </tr>
+                            <tr>
+                                <th class="Title-Column letraInspeccion" scope="row">REVISION DE FUGAS DE AIRE</th>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                
+                                
+                          
+                            </tr>
+                            <tr>
+                                <th class="Title-Column letraInspeccion" scope="row">REVISION DE FUGAS DE AGUA</th>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                
+                                
+                            
+                            </tr>
+                            <tr>
+                                <th class="Title-Column letraInspeccion" scope="row">REVISION DE FUGAS DE ACIETE</th>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                
+                                
+                            
+                            </tr>
+                            <tr>
+                                <th class="Title-Column letraInspeccion" scope="row">NIVEL TANQUE DE EXPANCION</th>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                
+                                
+                            
+                            </tr>
+                            <tr>
+                                <th class="Title-Column letraInspeccion" scope="row">LIMPIEZA EGOT Y SISTEMA AUXILIARES</th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                               
+                               
+                            
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th scope="col" style="color:black;  background: darkgray;" colspan="4">SISTEMA COMUNES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th class="Title-Column letraInspeccion" scope="row">NIVEL DEL TANQUE DE ACIETE</th>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                
+                                
+                            
+                            </tr>
+                            <tr>
+                                <th class="Title-Column letraInspeccion" scope="row">NIVEL DEL TANQUE DEL SISTEMA</th>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                
+                                
+                            
+                            </tr>
+                            <tr>
+                                <th class="Title-Column letraInspeccion" scope="row">LIMPIEZA DE SALA DE MAQUINAS</th>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                
+                                
+                            
+                            </tr>
+                        </tbody>
+@*                     <tfoot>
+                        <tr>
+                            <th colspan="9"></th>
+                            <!-- Agrega un campo de entrada de texto debajo de la columna "Observaciones" -->
+                            <td><textarea style="width: 100%;"></textarea></td>
+                        </tr>
+                    </tfoot> *@
+                </table>
+                
+            </div>
+        </div>
+</div>
+</div>
+
+<script>
+    const mostrarOcultarButton = document.getElementById("mostrarOcultar");
+    let columnasOcultas = true;
+
+    mostrarOcultarButton.addEventListener("click", () => {
+        const columnasCabeceras = document.querySelectorAll(".ocultar th:nth-child(n+10)");
+        const columnasDatos = document.querySelectorAll(".ocultar td:nth-child(n+10)");
+
+        const columnasCabeceras1 = document.querySelectorAll("#OculatarPrimerasHoras");
+        const columnasDatos1 = document.querySelectorAll("#OculatarPrimerasHoras");
+
+        if (columnasOcultas) {
+            columnasCabeceras.forEach((columna) => {
+                columna.style.display = "table-cell";
+            });
+            columnasDatos.forEach((columna) => {
+                columna.style.display = "table-cell";
+            });
+            mostrarOcultarButton.textContent = "-";
+        } else {
+            columnasCabeceras.forEach((columna) => {
+                columna.style.display = "none";
+            });
+            columnasDatos.forEach((columna) => {
+                columna.style.display = "none";
+            });
+            columnasCabeceras1.forEach((columna) => {
+                columna.style.display = "none";
+            });
+            columnasDatos1.forEach((columna) => {
+                columna.style.display = "none";
+            });
+            mostrarOcultarButton.textContent = "+";
+        }
+
+        columnasOcultas = !columnasOcultas;
+    });
+
+    // const mostrarOcultarButton = document.getElementById("mostrarOcultar");
+    // const columnasCabeceras = document.querySelectorAll(".ocultar th:nth-child(n+10)");
+    // const columnasDatos = document.querySelectorAll(".ocultar td:nth-child(n+10)");
+
+    // mostrarOcultarButton.addEventListener("click", () => {
+    //     const columnasOcultas = Array.from(columnasCabeceras).some((columna) => columna.style.display === "none");
+
+    //     if (columnasOcultas) {
+    //         columnasCabeceras.forEach((columna) => {
+    //             columna.style.display = "table-cell";
+    //         });
+    //         columnasDatos.forEach((columna) => {
+    //             columna.style.display = "table-cell";
+    //         });
+    //         mostrarOcultarButton.textContent = "-";
+    //     } else {
+    //         columnasCabeceras.forEach((columna) => {
+    //             columna.style.display = "none";
+    //         });
+    //         columnasDatos.forEach((columna) => {
+    //             columna.style.display = "none";
+    //         });
+    //         mostrarOcultarButton.textContent = "+";
+    //     }
+    // });
+
+
+
+
+    // Obtén referencias a los elementos del DOM
+    // const principalElement = document.getElementById("principal");
+    const principalElement = document.querySelector(".principal"); // Selecciona por clase
+    const tablaEG1 = document.querySelector(".boton1");
+
+    // Agrega un controlador de eventos al elemento "Principal"
+    principalElement.addEventListener("click", () => {
+        // Verifica si la tabla está actualmente visible
+        if (tablaEG1.style.display === "none" || tablaEG1.style.display === "") {
+            // Si está oculta, muéstrala
+            tablaEG1.style.display = "table";
+        } else {
+            // Si está visible, ocúltala
+            tablaEG1.style.display = "none";
+        }
+    });
+
+    const principalElement2 = document.querySelector(".principal2"); // Selecciona por clase
+    const tablaEG2 = document.querySelector(".boton2");
+
+    // Agrega un controlador de eventos al elemento "Principal"
+    principalElement2.addEventListener("click", () => {
+        // Verifica si la tabla está actualmente visible
+        if (tablaEG2.style.display === "none" || tablaEG2.style.display === "") {
+            // Si está oculta, muéstrala
+            tablaEG2.style.display = "table";
+        } else {
+            // Si está visible, ocúltala
+            tablaEG2.style.display = "none";
+        }
+    });
+    const principalElement3 = document.querySelector(".principal3"); // Selecciona por clase
+    const tablaEG3 = document.querySelector(".boton3");
+
+    // Agrega un controlador de eventos al elemento "Principal"
+    principalElement3.addEventListener("click", () => {
+        // Verifica si la tabla está actualmente visible
+        if (tablaEG3.style.display === "none" || tablaEG3.style.display === "") {
+            // Si está oculta, muéstrala
+            tablaEG3.style.display = "table";
+        } else {
+            // Si está visible, ocúltala
+            tablaEG3.style.display = "none";
+        }
+    });
+
+    const principalElement4 = document.querySelector(".principal4"); // Selecciona por clase
+    const tablaEG4 = document.querySelector(".boton4");
+
+    // Agrega un controlador de eventos al elemento "Principal"
+    principalElement4.addEventListener("click", () => {
+        // Verifica si la tabla está actualmente visible
+        if (tablaEG4.style.display === "none" || tablaEG4.style.display === "") {
+            // Si está oculta, muéstrala
+            tablaEG4.style.display = "table";
+        } else {
+            // Si está visible, ocúltala
+            tablaEG4.style.display = "none";
+        }
+    });
+
+    const principalElement5 = document.querySelector(".principal5"); // Selecciona por clase
+    const tablaEG5 = document.querySelector(".boton5");
+
+    // Agrega un controlador de eventos al elemento "Principal"
+    principalElement5.addEventListener("click", () => {
+        // Verifica si la tabla está actualmente visible
+        if (tablaEG5.style.display === "none" || tablaEG5.style.display === "") {
+            // Si está oculta, muéstrala
+            tablaEG5.style.display = "table";
+        } else {
+            // Si está visible, ocúltala
+            tablaEG5.style.display = "none";
+        }
+    });
+
+    const principalElement6 = document.querySelector(".principal6"); // Selecciona por clase
+    const tablaEG6 = document.querySelector(".boton6");
+
+    // Agrega un controlador de eventos al elemento "Principal"
+    principalElement6.addEventListener("click", () => {
+        // Verifica si la tabla está actualmente visible
+        if (tablaEG6.style.display === "none" || tablaEG6.style.display === "") {
+            // Si está oculta, muéstrala
+            tablaEG6.style.display = "table";
+        } else {
+            // Si está visible, ocúltala
+            tablaEG6.style.display = "none";
+        }
+    });
+
+    const principalElement7 = document.querySelector(".principal7"); // Selecciona por clase
+    const tablaEG7 = document.querySelector(".boton7");
+
+    // Agrega un controlador de eventos al elemento "Principal"
+    principalElement7.addEventListener("click", () => {
+        // Verifica si la tabla está actualmente visible
+        if (tablaEG7.style.display === "none" || tablaEG7.style.display === "") {
+            // Si está oculta, muéstrala
+            tablaEG7.style.display = "table";
+        } else {
+            // Si está visible, ocúltala
+            tablaEG7.style.display = "none";
+        }
+    });
+
+    const principalElement8 = document.querySelector(".principal8"); // Selecciona por clase
+    const tablaEG8 = document.querySelector(".boton8");
+
+    // Agrega un controlador de eventos al elemento "Principal"
+    principalElement8.addEventListener("click", () => {
+        // Verifica si la tabla está actualmente visible
+        if (tablaEG8.style.display === "none" || tablaEG8.style.display === "") {
+            // Si está oculta, muéstrala
+            tablaEG8.style.display = "table";
+        } else {
+            // Si está visible, ocúltala
+            tablaEG8.style.display = "none";
+        }
+    });
+
+    const principalElement9 = document.querySelector(".principal9"); // Selecciona por clase
+    const tablaEG9 = document.querySelector(".boton9");
+
+    // Agrega un controlador de eventos al elemento "Principal"
+    principalElement9.addEventListener("click", () => {
+        // Verifica si la tabla está actualmente visible
+        if (tablaEG9.style.display === "none" || tablaEG9.style.display === "") {
+            // Si está oculta, muéstrala
+            tablaEG9.style.display = "table";
+        } else {
+            // Si está visible, ocúltala
+            tablaEG9.style.display = "none";
+        }
+    });
+
+    const principalElement10 = document.querySelector(".principal10"); // Selecciona por clase
+    const tablaEG10 = document.querySelector(".boton10");
+
+    // Agrega un controlador de eventos al elemento "Principal"
+    principalElement10.addEventListener("click", () => {
+        // Verifica si la tabla está actualmente visible
+        if (tablaEG10.style.display === "none" || tablaEG10.style.display === "") {
+            // Si está oculta, muéstrala
+            tablaEG10.style.display = "table";
+        } else {
+            // Si está visible, ocúltala
+            tablaEG10.style.display = "none";
+        }
+    });
+
+
+
+</script>

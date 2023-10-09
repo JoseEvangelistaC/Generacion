@@ -1,5 +1,9 @@
-﻿using Generacion.Application.Usuario;
+﻿using Generacion.Application.DatosConsola.Query;
+using Generacion.Application.LecturaCampo;
+using Generacion.Application.LecturaCampo.Query;
+using Generacion.Application.Usuario;
 using Generacion.Models;
+using Generacion.Models.DatosConsola;
 using Generacion.Models.Usuario;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,16 +17,25 @@ namespace Generacion.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IUsuario _usuario;
+        private readonly DatosConsola _datosConsola;
+        //private readonly LecturaCampo _lecturaCampo;
 
-        public HomeController(ILogger<HomeController> logger, IUsuario usuario)
+
+        public HomeController(ILogger<HomeController> logger, IUsuario usuario, DatosConsola datosConsola/*, LecturaCampo lecturaCampo*/)
         {
             _logger = logger;
             _usuario = usuario;
+            _datosConsola = datosConsola;
+            //_lecturaCampo = lecturaCampo;
         }
+      
 
         public async Task<IActionResult> Index()
         {
-            Respuesta<DetalleOperario> datos = await _usuario.ObtenerDatosOperario("jevangelista");
+            Respuesta<Dictionary<string, CabecerasTabla>> datoscabecera = await _datosConsola.ObtenerCabecerasDeTabla();
+            //Respuesta<Dictionary<string, LecturaCampo>> lecturacampo = await _lecturaCampo.ObtenerCabecerasDeTabla();
+            HttpContext.Session.SetString("datoscabecera", JsonConvert.SerializeObject(datoscabecera.Detalle));
+            Respuesta<DetalleOperario> datos = await _usuario.ObtenerDatosOperario("externo");
 
             if (datos.IdRespuesta ==0)
             {

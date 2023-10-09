@@ -132,7 +132,9 @@
 <div class="header-detail-report">
     <div class="title-report col-md-12">
         <h2>Central Termica Luren</h2>
-        <h3 style="font-size: inherit;">LECTURAS DE CONSOLA</h3>
+        <h3 style="font-size: inherit;">
+            REPORTE DIARIO DE GAS
+        </h3>
     </div>
     <div class="row">
         <div class="col-md-6" style="display: flow;">
@@ -913,12 +915,12 @@
                 <th colspan="2" data-info='@detalleCabeceras["Recived"].Descripcion' id=@detalleCabeceras["Recived"].IdTipoEngine>@detalleCabeceras["Recived"].Detalle</th>
             </tr>
             <tr>
-                <th  data-info='@detalleCabeceras["kwh"].Descripcion' id=@detalleCabeceras["kwh"].IdTipoEngine>@detalleCabeceras["kwh"].Detalle</th>
-                <th  data-info='@detalleCabeceras["kvarh"].Descripcion' id=@detalleCabeceras["kvarh"].IdTipoEngine>@detalleCabeceras["kvarh"].Detalle</th>
-                <th  data-info='@detalleCabeceras["kwh"].Descripcion' id=@detalleCabeceras["kwh"].IdTipoEngine>@detalleCabeceras["kwh"].Detalle</th>
+                <th data-info='@detalleCabeceras["kwh"].Descripcion' id=@detalleCabeceras["kwh"].IdTipoEngine>@detalleCabeceras["kwh"].Detalle</th>
+                <th data-info='@detalleCabeceras["kvarh"].Descripcion' id=@detalleCabeceras["kvarh"].IdTipoEngine>@detalleCabeceras["kvarh"].Detalle</th>
+                <th data-info='@detalleCabeceras["kwh"].Descripcion' id=@detalleCabeceras["kwh"].IdTipoEngine>@detalleCabeceras["kwh"].Detalle</th>
                 <th data-info='@detalleCabeceras["kvarh"].Descripcion' id=@detalleCabeceras["kvarh"].IdTipoEngine>@detalleCabeceras["kvarh"].Detalle</th>
             </tr>
-             <tr>
+            <tr>
                 <td id="idHoraBao" claveRegistro='6'>6:00</td>
                 <td id="de-kwh"><input /></td>
                 <td id="de-kvarh"><input /></td>
@@ -975,13 +977,13 @@
                                 </div>
                             </div>
                         }
-                       
+
 
                     }
                     <div style="display: flex; padding: 10px 0 0 0;">
                         <span style="padding: 0 10px 0 0;">Observaciones</span>
                         <textarea id="observacionesConsola" style="height: 113px; width: 90%;">
-                               </textarea>
+                                   </textarea>
                     </div>
                 }
             </div>
@@ -993,69 +995,17 @@
 <script>
 
     document.getElementById('EG2').addEventListener('click', function () {
-        var eg2Element = document.getElementById('EG1');
-        var datosEg1 = document.getElementById('datos-EG1');
-        var datosEg2 = document.getElementById('datos-EG2');
-
-
-        eg2Element.style.display = (eg2Element.style.display === 'none' || eg2Element.style.display === '') ? 'initial' : 'none';
-
-        this.style.display = 'none';
-        datosEg2.style.display = 'initial';
-        datosEg1.style.display = 'none';
+      
     });
 
     document.getElementById('EG1').addEventListener('click', function () {
-        var eg2Element = document.getElementById('EG2');
-        var datosEg1 = document.getElementById('datos-EG1');
-        var datosEg2 = document.getElementById('datos-EG2');
-
-        eg2Element.style.display = (eg2Element.style.display === 'none' || eg2Element.style.display === '') ? 'initial' : 'none';
-
-        this.style.display = 'none';
-        datosEg2.style.display = 'none';
-        datosEg1.style.display = 'initial';
-
+       
     });
 
 
     function ObtenerDatosLectMedianoche() {
-        for (let i = 1; i <= 2; i++) {
-            var inputGas = document.getElementById('GasCon' + i).querySelector('input');
-            var inputEnergia = document.getElementById('EnerProd' + i).querySelector('input');
-            var inputRead = document.getElementById('ReadingToday' + i).querySelector('input');
-            var idLecturas = "LectMed" + '-' + obtenerFecha("format") + '-' + i;
-
-            var datos = {
-                IdLecturas: idLecturas,
-                NumeroEG: ParseIntEmpty(i),
-                GasconsumedEG: parseFloat(inputGas.value),
-                GasEnergiaEG: parseFloat(inputEnergia.value),
-                ReadingToday: parseFloat(inputRead.value),
-                IdFormatoConsola: idFormatoConsola,
-            };
-
-            console.log("datos : ", datos);
-
-            fetch("/DatosConsola/GuardarDatosLectMedianoche", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(datos)
-            })
-                .then(function (response) {
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.error("Error:", error);
-                });
-        }
+      
     }
-
-
-
-
 
 
     var idFormatoConsola;
@@ -1064,266 +1014,34 @@
 
     botonGuardarDatos.addEventListener('click', function () {
 
-        var inputs = document.querySelectorAll('input');
-
-        inputs.forEach(function (input) {
-            if (input.value.trim() === '') {
-                input.value = 0;
-            }
-        });
-
-
-        idFormatoConsola = "ELD-CTL-OM002_" + obtenerFecha("fecha")
-
-        ObtenerDatosInput('tabla-EG1');
-        ObtenerDatosInput('tabla-Baa');
-        GuardarDatosEnginer(idFormatoConsola);
-        GuardarDatosGenerador(idFormatoConsola);
-        ObtenerDatosLectMedianoche();
-        // location.reload(true);
+ 
     });
 
     function GuardarDatosEG() {
-        ObtenerDatosInput('tabla-EG1');
-        ObtenerDatosInput('tabla-Baa');
+
     }
     function ObtenerDatosInput(tablaId) {
-        var inputP = document.getElementById(tablaId).querySelector('#P input');
-        var inputQ = document.getElementById(tablaId).querySelector('#Q input');
-        var inputE = document.getElementById(tablaId).querySelector('#E\\+ input');
-        var inputEq = document.getElementById(tablaId).querySelector('#Eq\\+ input');
-        var inputll1 = document.getElementById(tablaId).querySelector('#lL1 input');
-        var inputlL2 = document.getElementById(tablaId).querySelector('#lL2 input');
-        var inputlL3 = document.getElementById(tablaId).querySelector('#lL3 input');
-        var inputU12 = document.getElementById(tablaId).querySelector('#U12 input');
-        var inputU23 = document.getElementById(tablaId).querySelector('#U23 input');
-        var inputU31 = document.getElementById(tablaId).querySelector('#U31 input');
 
-        var etiquetaIdRegistro;
-        var claveRegistro;
-        var etiquetaIdHora;
-        if (tablaId == "tabla-Baa") {
-            etiquetaIdRegistro = document.getElementById('idRegistroBaa');
-            claveRegistro = etiquetaIdRegistro.getAttribute('claveRegistro');
-            etiquetaIdHora = document.getElementById('idHora');
-        }
-        if (tablaId == "tabla-EG1") {
-            etiquetaIdRegistro = document.getElementById('idRegistro');
-            claveRegistro = etiquetaIdRegistro.getAttribute('claveRegistro');
-            etiquetaIdHora = document.getElementById('idHora');
-        }
-
-        console.log("etiquetaIdHora : ", etiquetaIdHora);
-        var claveHora = etiquetaIdHora.getAttribute('claveRegistro');
-
-        var idDetalleConsola = claveRegistro + '-' + obtenerFecha("format") + '-' + claveHora
-        var idOperario = datosOperario.IdOperario;
-
-
-        var Datos = {
-            potenciaActiva: inputP.value,
-            potenciaReactiva: inputQ.value,
-            energiaActiva: inputE.value,
-            energiaReactiva: inputEq.value,
-            corrienteLinea1: inputll1.value,
-            corrienteLinea2: inputlL2.value,
-            corrienteLinea3: inputlL3.value,
-            voltaje: inputU12.value,
-            voltaje23: inputU23.value,
-            voltaje31: inputU31.value,
-            idDetalleConsola: idDetalleConsola,
-            fecha: obtenerFecha("fecha"),
-            hora: etiquetaIdHora.textContent,
-            idRegistroConsola: claveRegistro,
-            idOperario: idOperario,
-            idformatoConsola: idFormatoConsola
-        };
-
-        fetch("/DatosConsola/GuardarDatosConsola", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(Datos)
-        })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.error("Error:", error);
-            });
     }
 
 
 
     function GuardarDatosGenerador(idFormatoConsola) {
 
-        var inputl1 = document.getElementById('L1').querySelector('input');
-        var inputl2 = document.getElementById('L2').querySelector('input');
-        var inputl3 = document.getElementById('L3').querySelector('input');
-        var inputD = document.getElementById('D').querySelector('input');
-        var inputND = document.getElementById('ND').querySelector('input');
-        var inputTV = document.getElementById('TV').querySelector('input');
-
-
-        var etiquetaIdHora = document.getElementById('idHoraGen');
-        var claveHora = etiquetaIdHora.getAttribute('claveRegistro');
-
-        var etiquetaIdRegistro = document.getElementById('idRegistroGen');
-        var claveRegistro = etiquetaIdRegistro.getAttribute('claveRegistro');
-
-        var IdDetGeneratorConsola = claveRegistro + '-' + obtenerFecha("format") + '-' + claveHora
-
-        var detGeneratorTC;
-        var listDetGeneratorTC = [];
-
-
-
-        for (var i = 0; i < 2; i++) {
-            var id = i == 1 ? "A" : "B";
-            var inputTpOut = document.getElementById('TO-' + id).querySelector('input');
-            var inputSpeed = document.getElementById('Sp-' + id).querySelector('input');
-
-            detGeneratorTC = {
-                idDetGenerator: claveRegistro + "-Gen-" + id + "-" + obtenerFecha("format") + "-" + claveHora,
-                fecha: obtenerFecha("fecha"),
-                idTipoEngine: 'TC' + id,
-                tempOut: ParseIntEmpty(inputTpOut.value),
-                speed: ParseIntEmpty(inputSpeed.value),
-                idDetGeneratorConsola: IdDetGeneratorConsola
-            };
-            listDetGeneratorTC.push(detGeneratorTC);
-        }
-
-        var RegistroDatosGenerator = {
-            idDetGeneratorConsola: IdDetGeneratorConsola,
-            hora: etiquetaIdHora.textContent,
-            fecha: obtenerFecha("fecha"),
-            l1: ParseIntEmpty(inputl1.value),
-            l2: ParseIntEmpty(inputl2.value),
-            l3: ParseIntEmpty(inputl3.value),
-            d: ParseIntEmpty(inputD.value),
-            nD: ParseIntEmpty(inputND.value),
-            tersionalVibration: parseFloat(inputTV.value),
-            idFormatoConsola: idFormatoConsola,
-            detalleGeneradores: listDetGeneratorTC
-        };
-
-        fetch("/DatosConsola/GuardarDatosGenerador", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(RegistroDatosGenerator)
-        })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.error("Error:", error);
-            });
     }
 
     function GuardarDatosEnginer(idFormatoConsola) {
 
-        var horaRegistro = document.getElementById('idHoraEng');
-        var claveHora = horaRegistro.getAttribute('claveRegistro');
-
-        var inputHora = document.getElementById('idHoraEng').querySelector('input');
-        var inputRun = document.getElementById('Run-H').querySelector('input');
-
-        var inputCA_Temp = document.getElementById('CA-T').querySelector('input');
-
-        var inputDiff_P = document.getElementById('Diff-P').querySelector('input');
-        var inputCa_Press = document.getElementById('Ca-P').querySelector('input');
-        var inputEx_G = document.getElementById('Ex-G').querySelector('input');
-        var inputCy_P = document.getElementById('Cy-P').querySelector('input');
-
-        var etiquetaIdRegistro = document.getElementById('idRegistroGen');
-        var claveRegistro = etiquetaIdRegistro.getAttribute('claveRegistro');
-
-        var idDetEngineConsola = claveRegistro + '-' + obtenerFecha("format") + '-' + claveHora
-
-        var detEngine;
-        var listDetEngine = [];
-
-        for (var i = 0; i < 2; i++) {
-            var id = i == 1 ? "F" : "O";
-            var inputPresion = document.getElementById('P-' + id).querySelector('input');
-            var inputTemp = document.getElementById('T-' + id).querySelector('input');
-
-            detEngine = {
-                idDetEngine: claveRegistro + "-Eng-" + id + "-" + obtenerFecha("format") + "-" + claveHora,
-                idTipoEngine: id == "F" ? "FUEL" : "OIL",
-                fecha: obtenerFecha("fecha"),
-                presion: ParseIntEmpty(inputPresion.value),
-                temp: ParseIntEmpty(inputTemp.value),
-                idDetEngineConsola: idDetEngineConsola
-            };
-            listDetEngine.push(detEngine);
-        }
-
-        var RegistroDatosGenerator = {
-            idDetEngineConsola: idDetEngineConsola,
-            hora: horaRegistro.textContent,
-            runHours: inputRun.value,
-            caTemp: inputCA_Temp.value,
-            DiffPressJetPulse: inputDiff_P.value,
-            CAPress: inputCa_Press.value,
-            ExhGasAvgTemp: inputEx_G.value,
-            CylPressAvg: inputCy_P.value,
-            fecha: obtenerFecha("fecha"),
-            IdFormatoConsola: idFormatoConsola,
-            detalleEngines: listDetEngine
-        };
-
-
-        fetch("/DatosConsola/GuardarDatosEngine", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(RegistroDatosGenerator)
-        })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.error("Error:", error);
-            });
     }
 
     function ParseIntEmpty(value) {
-        return value == "" ? 0 : parseInt(value);
+    
     }
 
     const thElements = document.querySelectorAll('th');
 
-
-    // FUNCION DE PLACEHOLDER
     thElements.forEach(th => {
-        th.addEventListener('mouseover', function () {
-            const info = this.getAttribute('data-info');
-            if (info != "" && info != null) {
-                const tooltip = document.createElement('div');
-                tooltip.textContent = info;
-
-                tooltip.style.position = 'absolute';
-                tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-                tooltip.style.color = 'white';
-                tooltip.style.padding = '5px';
-                tooltip.style.borderRadius = '5px';
-
-                tooltip.style.left = (this.getBoundingClientRect().left + window.scrollX) + 'px';
-                tooltip.style.top = (this.getBoundingClientRect().top + window.scrollY - 30) + 'px';
-
-                document.body.appendChild(tooltip);
-
-                this.addEventListener('mouseout', function () {
-                    tooltip.remove();
-                });
-            }
-        });
+       
     });
 
 

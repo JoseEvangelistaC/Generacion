@@ -546,15 +546,15 @@
 </script>
 <script>
     var loader = document.getElementById('loader');
-    debugger;
+
     loader.style.display = 'none';
 
     function updateFileName() {
-        debugger
+
         var fileInput = document.getElementById("file-input");
         var fileNameDisplay = document.getElementById("file-name-display");
         var exampleCSV = document.getElementById("imgEjemploCSV");
-        debugger
+
         if (fileInput.files.length > 0) {
             fileNameDisplay.textContent = fileInput.files[0].name;
             exampleCSV.style.visibility = "hidden";

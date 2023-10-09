@@ -61,7 +61,8 @@ namespace Generacion
                    services.AddScoped<IDatosRegistroConsola, DatosRegistroConsola>();
                    services.AddScoped<IRegistroDatosGAS, RegistroDatosGAS>();
                    services.AddScoped<IDatosMGD, RegistroDatosMGD>();
-                   
+                   services.AddScoped<ILecturaCampo, DatosRegistroCampo>();
+
                    services.AddScoped(typeof(FotoServidor));
                    services.AddScoped(typeof(ConsultarUsuario));
                    services.AddScoped(typeof(DatosConsola));
@@ -71,7 +72,7 @@ namespace Generacion
                    services.AddScoped(typeof(CacheDatos));
                    services.AddScoped(typeof(LecturaCampo));
 
-                   // services.AddScoped(typeof(CacheDatos));
+                   services.AddScoped(typeof(CacheDatos));
                });
     }
 }

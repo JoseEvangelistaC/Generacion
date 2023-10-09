@@ -1,7 +1,9 @@
 ﻿using Generacion.Application.ION.Query;
 using Generacion.Application.MGD;
 using Generacion.Application.MGD.Query;
+using Generacion.Models.Usuario;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Generacion.Controllers
 {
@@ -15,8 +17,13 @@ namespace Generacion.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var datosMGD = await _consultarDatosMGD.ObtenerDatosMGD("2023/10/06");
+            DateTime dateTime = DateTime.Now;
+            var datosMGD = await _consultarDatosMGD.ObtenerDatosMGD(dateTime.ToString("yyyy/MM/dd"));
 
+            string usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
+            DetalleOperario detalleOperario = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);
+            
+            ViewData["DetalleOperario"] = detalleOperario;
 
             return View(datosMGD.Detalle);
         }

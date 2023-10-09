@@ -153,9 +153,87 @@ namespace Generacion.Application.Mantenimiento.Command
 
                             if (resultado != 0)
                             {
-                                break; 
+                                break;
                             }
-                        }                        
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return mensaje;
+        }
+
+        public async Task<string> GuardarDatosAceiteCarter(List<CilindroAceiteCarter> datos)
+        {
+            string mensaje = string.Empty;
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
+
+                    using (OracleCommand command = new OracleCommand("proc_InsertarAceiteCarter", connection))
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                       
+                        OracleParameter idCarter = new OracleParameter("p_IdCarter", OracleDbType.Varchar2);
+                        OracleParameter numeroGenerador = new OracleParameter("p_NumeroGenerador", OracleDbType.Varchar2);
+                        OracleParameter nivelCarterNuevo = new OracleParameter("p_NivelCarterNuevo", OracleDbType.Varchar2);
+                        OracleParameter nivelCarterAnt = new OracleParameter("p_NivelCarterAnt", OracleDbType.Varchar2);
+                        OracleParameter nivelTKNuevoNuevo = new OracleParameter("p_NivelTKNuevoNuevo", OracleDbType.Varchar2);
+                        OracleParameter nivelTKNuevoAnt = new OracleParameter("p_NivelTKNuevoAnt", OracleDbType.Varchar2);
+                        OracleParameter contometroNuevo = new OracleParameter("p_ContometroNuevo", OracleDbType.Varchar2);
+                        OracleParameter contometroAnt = new OracleParameter("p_ContometroAnt", OracleDbType.Varchar2);
+                        OracleParameter idReporteDiario = new OracleParameter("p_idReporteDiario", OracleDbType.Varchar2);
+                        OracleParameter fecha = new OracleParameter("p_Fecha", OracleDbType.Varchar2);
+
+                        OracleParameter outputParameter = new OracleParameter("p_resultado", OracleDbType.Decimal);
+                        outputParameter.Direction = System.Data.ParameterDirection.Output;
+
+                        command.Parameters.AddRange(new OracleParameter[] {
+                            idCarter,
+                            numeroGenerador,
+                            nivelCarterNuevo,
+                            nivelCarterAnt,
+                            nivelTKNuevoNuevo,
+                            nivelTKNuevoAnt,
+                            contometroNuevo,
+                            contometroAnt,
+                            idReporteDiario,
+                            fecha,
+                            outputParameter
+                        });
+
+
+                        foreach (CilindroAceiteCarter item in datos)
+                        {
+                            if (string.IsNullOrEmpty(item.IdCarter))
+                                continue;
+
+                            idCarter.Value = item.IdCarter;
+                            numeroGenerador.Value = item.NumeroGenerador;
+                            nivelCarterNuevo.Value = item.NivelCarterNuevo;
+                            nivelCarterAnt.Value = item.NivelCarterAnt;
+                            nivelTKNuevoNuevo.Value = item.NivelTKNuevo;
+                            nivelTKNuevoAnt.Value = item.NivelTKAnt;
+                            contometroNuevo.Value = item.ContometroNuevo;
+                            contometroAnt.Value = item.ContometroAnt;
+                            idReporteDiario.Value = item.IdReporteDiario;
+                            fecha.Value = item.Fecha;
+
+                            command.ExecuteNonQuery();
+
+                            OracleDecimal oracleDecimalValue = (OracleDecimal)outputParameter.Value;
+
+                            int resultado = (int)oracleDecimalValue.Value;
+
+                            if (resultado != 0)
+                            {
+                                break;
+                            }
+                        }
                     }
                 }
             }

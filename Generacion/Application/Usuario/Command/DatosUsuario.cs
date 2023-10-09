@@ -90,7 +90,7 @@ namespace Generacion.Application.Usuario.Command
                 {
                     connection.Open();
 
-                    string sqlQuery = @"select op.idOperario,op.idCargo,car.cargo,
+                    string sqlQuery = @"select op.idOperario,op.idCargo,car.cargo,op.idsitio,
                                         usu.nombre,usu.apellidos,op.idturno 
                                         from tbl_Operario op 
                                         inner join tbl_usuario usu on usu.numeroDocumento = op.numeroDocumento 
@@ -112,7 +112,8 @@ namespace Generacion.Application.Usuario.Command
                                 detalleOperario.DescripcionCargo = reader["cargo"].ToString();
                                 detalleOperario.Nombre = reader["nombre"].ToString();
                                 detalleOperario.Apellidos = reader["apellidos"].ToString();
-                                detalleOperario.IdTurno = reader["idturno"].ToString();
+                                detalleOperario.IdSitio = reader["idsitio"].ToString();
+                                //detalleOperario.IdTurno = reader["idturno"].ToString();
 
                                 respuesta.Detalle = new DetalleOperario();
                                 respuesta.Detalle = detalleOperario;

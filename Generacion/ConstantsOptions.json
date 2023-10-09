@@ -1,0 +1,7 @@
+{
+  "HorarioOperario": {
+    "mañana": [ 8, 16 ],
+    "Tarde": [ 16, 24 ],
+    "Noche": [ 8, 16 ]
+  }
+}

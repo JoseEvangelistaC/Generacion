@@ -1,6 +1,5 @@
 ﻿using Generacion.Application.ReporteDiarioGAS;
 using Generacion.Application.ReporteDiarioGAS.Query;
-using Generacion.Application.ReporteGAS;
 using Generacion.Models;
 using Generacion.Models.DatosConsola;
 using Generacion.Models.ReporteDiarioGAS;
@@ -20,6 +19,7 @@ namespace Generacion.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            DateTime dateTime   = DateTime.Now;
             // Obtener datos de la sesión
             string usuarioDetail = HttpContext.Session.GetString("datoscabecera");
             Dictionary<string, CabecerasTabla> datoscabecera = JsonConvert.DeserializeObject<Dictionary<string, CabecerasTabla>>(usuarioDetail);
@@ -27,7 +27,7 @@ namespace Generacion.Controllers
 
 
 
-            Respuesta<Dictionary<string, List<DetalleReporteGas>>> detalleReporte = await _obtenerDatosReporteGAS.ObtenerDetallesReporte("ELD.CTL-OM-003_01_10_2023");
+            Respuesta<Dictionary<string, List<DetalleReporteGas>>> detalleReporte = await _obtenerDatosReporteGAS.ObtenerDetallesReporte($"ELD.CTL-OM-003_01_10_2023");//{dateTime.ToString("dd_MM_yyyy")}");
 
             var idReporteGas = await _obtenerDatosReporteGAS.ObtenerIdReporteGAS();
 

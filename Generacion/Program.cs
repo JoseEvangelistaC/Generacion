@@ -1,4 +1,5 @@
 using Generacion.Application.DataBase;
+using Generacion.Application.DataBase.cache;
 using Generacion.Application.DatosConsola;
 using Generacion.Application.DatosConsola.Command;
 using Generacion.Application.DatosConsola.Query;
@@ -15,6 +16,8 @@ using Generacion.Application.ReporteGAS.Command;
 using Generacion.Application.Usuario;
 using Generacion.Application.Usuario.Command;
 using Generacion.Application.Usuario.Query;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace Generacion
 {
@@ -35,13 +38,19 @@ namespace Generacion
                {
                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
                    config.AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true);
+                   config.AddJsonFile("ConstantsOptions.json", false, true);
                    config.AddEnvironmentVariables();
                })
                .ConfigureServices((context, services) =>
                {
                    IConfiguration configuration = context.Configuration;
                    string cadenaConexion = configuration.GetConnectionString("DefaultConnection");
-                   services.AddSession();
+                   //services.AddSession();
+                   services.AddSession(options =>
+                   {
+                       options.IdleTimeout = TimeSpan.FromHours(8);
+                   });
+
                    services.AddScoped<IConexionBD>(_ => new ConexionBD(cadenaConexion));
                    services.AddScoped<IMantenimiento, Mantenimiento>();
                    services.AddScoped<IUsuario, DatosUsuario>();
@@ -55,10 +64,8 @@ namespace Generacion
                    services.AddScoped(typeof(ObtenerDatosReporteGAS));
                    services.AddScoped(typeof(ConsultarION));
                    services.AddScoped(typeof(ConsultarDatosMGD));
-                   
-                   // services.AddScoped(typeof(CacheDatos));
+                   services.AddScoped(typeof(CacheDatos));
                });
-
     }
 }
 

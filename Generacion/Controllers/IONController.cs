@@ -22,7 +22,7 @@ namespace Generacion.Controllers
         {
             string idSitio = "LUREN";
             DateTime fechaActual = DateTime.Now;
-            var respuesta = await _consultarION.ObtenerDatosION("1/06/2023");
+            var respuesta = await _consultarION.ObtenerDatosION("1/06/2023"); //(fechaActual.ToString("dd/MM/yyyy"));
 
             string usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
             DetalleOperario detalleOperario = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);

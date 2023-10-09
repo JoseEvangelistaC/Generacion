@@ -8,11 +8,15 @@
     MReporteGAS idReportegas = ViewData["idReporteGas"] as MReporteGAS;
 
 
-    string display6Count = detalleReporte["6"].Count != 0 ? "initial" : "none";
-    string display18Count = detalleReporte["18"].Count != 0 ? "initial" : "none";
+  /*  string display6Count = detalleReporte["6"].Count != 0 ? "initial" : "none";
+    string display18Count = detalleReporte["18"].Count != 0 ? "initial" : "none";*/
+    string display6Count = detalleReporte["6"].Count >= 0 ? "initial" : "none";
+    string display18Count = detalleReporte["18"].Count >= 0 ? "initial" : "none";
+
+
     string displayBtnIniciar = detalleReporte["18"].Count == 0 ? "initial" : "none";
-    bool displayNuevaTabla18 = detalleReporte["18"].Count <= 6 ? true : false;
-    bool displayNuevaTabla6 = detalleReporte["6"].Count <= 6 ? true : false;
+    bool displayNuevaTabla18 = detalleReporte["18"].Count >= 1 && detalleReporte["18"].Count <= 6 ? true : false;
+    bool displayNuevaTabla6 =  detalleReporte["6"].Count >= 1 && detalleReporte["6"].Count <= 6 ? true : false;
 
     var date = DateTime.Now;
 
@@ -68,6 +72,7 @@
         width: 100% !important;
         display: flex;
         height: 50px;
+        border: none !important;
     }
 
     .savePDF th {
@@ -108,7 +113,8 @@
     </div>
 
     <div>
-        <button style="display:@displayBtnIniciar;" id="iniciar">INICIAR</button>
+        @*  <button style="display:@displayBtnIniciar;" id="iniciar">INICIAR</button>*@
+         <button style="display:none;" id="iniciar">INICIAR</button>
 
         <button class="btn btn-outline-secondary" style="display:@(display18Count);" id="mostrar-linea">Ver Linea2</button>
         <button class="btn btn-outline-secondary" id="mostrar-todo">Mostrar Ambos</button>

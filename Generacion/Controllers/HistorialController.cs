@@ -39,20 +39,6 @@ namespace Generacion.Controllers
             return View(historialOperarios);
         }
 
-     /*   [HttpPost]
-        public async Task<IActionResult> Index([FromQuery] int idVista)
-        {
-            DateTime fecha = DateTime.Now;
-
-            if (Constante.idVistaReporteMantenimiento == idVista)
-            {
-                historialOperario = await _consultarUsuario.ObtenerDatosHistorialGeneral(fecha.ToString("dd-MM-yyyy"));
-
-            }
-            //historialOperario.Detalle = historialOperario.Detalle.OrderBy(h => TimeSpan.Parse(h.Hora)).ToList();
-
-            return View(historialOperario);
-        }*/
 
         [HttpPost]
         public async Task<JsonResult> GuardarHistorial([FromBody] List<HistorialUsuario> historialUsuarios)

@@ -1,4 +1,16 @@
-﻿<style>
+﻿@using System.Text;
+@{
+    Dictionary<int, List<string>> datoHorario = ViewData["horarioOperarios"] as Dictionary<int, List<string>>;
+
+    List<string> mañana = datoHorario.ContainsKey(1) ? datoHorario[1] : new List<string>();
+    List<string> tarde = datoHorario.ContainsKey(2) ? datoHorario[2] : new List<string>();
+    List<string> noche = datoHorario.ContainsKey(3) ? datoHorario[3] : new List<string>();
+
+    DateTime fechaActual = DateTime.Now;
+
+}
+
+<style>
     .row {
         margin: 0;
     }
@@ -150,26 +162,101 @@
                 <div><p style="width:50%">Horas motor EG01:</p><input style="width:50%; text-align: -webkit-center;" placeholder="0000 H" /> </div>
             </div>
             <div class="col-md-6">
-                <div>
-                    <p1>Código</p1>
-                    <p>ELD-REPORT 06 / 06 / 2023</p>
-                </div>
-                <div>
-                    <p1>Turno 1</p1>
-                    <p>E. Codarlupo / R. Ramos</p>
-                </div>
-                <div>
-                    <p1>Turno 2</p1>
-                    <p>R. Ramos / R.More</p>
-                </div>
-                <div>
-                    <p1>Turno 3</p1>
-                    <p>H. Cerron / W. Arevalo</p>
-                </div>
-                <div>
-                    <p1>Fecha</p1>
-                    <p>06 / 06 / 2023</p>
-                </div>
+                @{
+                    StringBuilder sb = new StringBuilder();
+                    int cantidadDeDatos = 0;
+                    <div>
+                        <p1>Código</p1>
+                        <p>ELD-REPORT @fechaActual.ToString("dd/MM/yyyy")</p>
+                    </div>
+                    <div>
+                        <p1>Turno 1</p1>
+                        @if (mañana.Count >= 1)
+                        {
+
+                            @foreach (string operarios in mañana)
+                            {
+                                cantidadDeDatos++;
+                                if (cantidadDeDatos == 2)
+                                {
+                                    sb.Append($"   /   {operarios} ");
+
+                                }
+                                else
+                                {
+                                    sb.Append($"{operarios}");
+                                }
+
+                            }
+                            <p> @sb.ToString() </p>
+                        }
+                        else
+                        {
+                            <p>             /             </p>
+                        }
+                    </div>
+
+                    <div>
+                        <p1>Turno 2</p1>
+                        @if (tarde.Count >= 1)
+                        {
+                             sb = new StringBuilder();
+                             cantidadDeDatos = 0;
+                            @foreach (string operarios in tarde)
+                            {
+                                cantidadDeDatos++;
+                                if (cantidadDeDatos == 2)
+                                {
+                                    sb.Append($"   /   {operarios} ");
+
+                                }
+                                else
+                                {
+                                    sb.Append($"{operarios}");
+                                }
+
+                            }
+                            <p> @sb.ToString() </p>
+                        }
+                        else
+                        {
+                            <p>             /             </p>
+                        }
+                    </div>
+
+                    <div>
+                        <p1>Turno 3</p1>
+                        @if (noche.Count >= 1)
+                        {
+                            sb = new StringBuilder();
+                            cantidadDeDatos = 0;
+                            @foreach (string operarios in noche)
+                            {
+                                cantidadDeDatos++;
+                                if (cantidadDeDatos == 2)
+                                {
+                                    sb.Append($"   /   {operarios} ");
+
+                                }
+                                else
+                                {
+                                    sb.Append($"{operarios}");
+                                }
+
+                            }
+                            <p> @sb.ToString() </p>
+                        }
+                        else
+                        {
+                            <p>             /             </p>
+                        }
+                    </div>
+                    <div>
+                        <p1>Fecha</p1>
+                        <p>@fechaActual.ToString("dd/MM/yyyy")</p>
+                    </div>
+                }
+
                 <div>
                     <p1>Horas motor EG02:</p1>
                     <input style="width:100%; text-align: -webkit-center;" placeholder="0000 H" />
@@ -232,7 +319,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td >Nivel Carter</td>
+                                            <td>Nivel Carter</td>
                                             <td descripcion="nivelCarterAnt"><input placeholder="16" /></td>
                                             <td descripcion="nivelCarterNuevo"><input placeholder="19" /></td>
                                         </tr>
@@ -244,7 +331,7 @@
                                         <tr>
                                             <td>Contometro</td>
                                             <td descripcion="contometroAnt"><input placeholder="130.448" /></td>
-                                            <td descripcion ="contometroNuevo"><input placeholder="130.656" /></td>
+                                            <td descripcion="contometroNuevo"><input placeholder="130.656" /></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -731,12 +818,12 @@
 
                     var $reportDealy = $data.find('#historialOperario');
                     $reportDealy.css({
-                       // 'background- color': '#f8f9fc'
+                        // 'background- color': '#f8f9fc'
                     });
                     $reportDealy.find('button').remove();
 
                     $('#contenidoModal').html($reportDealy);
-                    
+
                     $reportDealy.find('input').prop('disabled', true);
                     $reportDealy.find('input').css({
                         'background-color': '#f8f9fc !important'
@@ -746,7 +833,7 @@
                         'background-color': '#f8f9fc !important'
                     });
 
-                    
+
                     $('#miModal').show();
                 },
                 error: function () {
@@ -914,14 +1001,15 @@
     const datosServiciosAux = [];
     const datosServiciosSalud = [];
     const datosServiciosCont = [];
+    var idReporteDiario="";
 
     botonDescargarPDF.addEventListener('click', function () {
         const elementosGenerators = document.querySelectorAll('.content-generators');
-        /*const listaValores =*/ obtenerDetalleInput(elementosGenerators);
+            /*const listaValores =*/ obtenerDetalleInput(elementosGenerators);
 
         let countDatos = 1;
         let numGenerador = 0;
-
+        idReporteDiario = datosOperario.IdSitio + '-ELD-REPORT-' + obtenerFecha("format");
 
         const listaMotoGeneradores = [
         ];
@@ -933,7 +1021,7 @@
             if (item.value != '') {
                 var descripcionServicio = {
                     idServiciosAux: item.idItem,//idItem + obtenerFecha("format") + "-" + countItems,
-                    idReporteDiario: 'ELD-REPORT-' + obtenerFecha("format"),
+                    idReporteDiario: idReporteDiario,
                     fecha: obtenerFecha("fecha"),
                     descripcion: item.inputDescripcion,
                     detalleContenido: {
@@ -951,7 +1039,7 @@
 
                 var motoGenerador = {
                     idDescripDiario: item.idItem,//idItem + obtenerFecha("format") + "-" + countItems,
-                    idReporteDiario: 'ELD-REPORT-' + obtenerFecha("format"),
+                    idReporteDiario: idReporteDiario,
                     numeroGenerador: numGenerador,
                     fecha: obtenerFecha("fecha"),
                     hora: item.inputHours,
@@ -967,13 +1055,17 @@
             }
         });
 
+        var datosCartel = obtenerTablasConAtributo();
+
         const datosAEnviar = {
             motoGeneradores: listaMotoGeneradores,
-            mantenimientoServicios: listaDescripcionServicios
+            mantenimientoServicios: listaDescripcionServicios,
+            CilindroAceiteCarter: datosCartel
         };
 
         guardarImagenesEnServidor();
-        obtenerTablasConAtributo();
+        
+
         fetch("/RegMantenimiento/Index", {
             method: "POST",
             headers: {
@@ -1047,7 +1139,7 @@
 
 
 
- 
+
 
 
     let numeroDivImagen = 0;
@@ -1106,18 +1198,20 @@
                 const filas = tablaCarter.querySelectorAll('tbody tr');
                 let valoresFila = {
                     idCarter: "",//idTabla + obtenerFecha("format"),
-                    numeroGen: numeroEG,
+                    NumeroGenerador: parseInt(numeroEG),
                     nivelCarterAnt: "",
                     nivelCarterNuevo: "",
                     nivelTKAnt: "",
                     nivelTKNuevo: "",
                     contometroAnt: "",
-                    contometroNuevo: ""
+                    contometroNuevo: "",
+                    IdReporteDiario: idReporteDiario,
+                    Fecha: obtenerFecha("fecha")
                 };
-                console.log("filas :", filas);
+
                 filas.forEach(function (fila) {
-                    valoresFila['idCarter'] = idTabla + obtenerFecha("format");
-                        const celdas = fila.querySelectorAll('td');
+                    valoresFila['idCarter'] = idTabla + obtenerFecha("format") + numeroEG;
+                    const celdas = fila.querySelectorAll('td');
                     celdas.forEach(function (celda, index) {
                         if (celda.querySelector('input')) {
                             const contenedorId = celda.getAttribute('descripcion');
@@ -1135,7 +1229,7 @@
                                 valoresFila['nivelTKNuevo'] = valor;
                             }
 
-                            if ( contenedorId == "contometroAnt") {
+                            if (contenedorId == "contometroAnt") {
                                 valoresFila['contometroAnt'] = valor;
                             } else if (contenedorId == "contometroNuevo") {
                                 valoresFila['contometroNuevo'] = valor;
@@ -1146,13 +1240,13 @@
 
                 valoresTabla.push(valoresFila);
             }
-            
-          /*  if (tablaVerssel) {
 
-            }*/
+            /*  if (tablaVerssel) {
+
+              }*/
         });
 
-        console.log("valoresTabla : ", valoresTabla);
+        return valoresTabla;
     }
 
 

@@ -1,33 +1,67 @@
 ﻿@using Generacion.Models.ION;
+@using Generacion.Models.Usuario;
 @{
     @model List<DatosION>
 
+    DetalleOperario detalleOperario = ViewData["DetalleOperario"] as DetalleOperario;
+
+
+    DateTime fechaActual = DateTime.Now;
+
 }
 
-<div style="display: flex;">
-    <table class="table table-bordered EG">
-        <thead>
-            <tr>
-                <th>HORA</th>
-                <th>Potencia Activa (MW)</th>
-                <th>Potencia Reactiva (MVAR)</th>
-                <th>Tensión (kV)</th>
-                <th>Frecuencia (Hz)</th>
+<style>
+    .titulo-cabeceraMGD{
+        text-align: center;
+        font-size: 45px;
+        font-weight: bold;
+        border: 1px solid #e3e6f0;
+    }
+    .fechaMGD{
+        border: 1px solid #e3e6f0;
+        display: flex;
+        width: 200px;
+    }
+</style>
 
-            </tr>
-        </thead>
-        <tbody>
-
-            @foreach (var item in @Model)
-            {
+<div>
+    <div>
+        <div class="fechaMGD">
+            <div style="padding: 0 29px 0 20px;"> Fecha </div>
+            <div> @fechaActual.ToString("dd/MM/yyyy") </div>
+        </div>
+        <div style="padding: 20px 0 20px 0;">
+            <div class="titulo-cabeceraMGD">MGD @detalleOperario.IdSitio </div>
+        </div>
+    </div>
+    <div style="display: flex;">
+        <table class="table table-bordered EG">
+            <thead>
                 <tr>
-                    <td>00</td>
-                    <td>@item.KWDelInt</td>
-                    <td>@item.KVARDelInt</td>
-                    <td>@item.KWRecInt</td>
-                    <td>@item.KVARRecInt</td>
+                    <th>HORA</th>
+                    <th>Potencia Activa (MW)</th>
+                    <th>Potencia Reactiva (MVAR)</th>
+                    <th>Tensión (kV)</th>
+                    <th>Frecuencia (Hz)</th>
+
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+
+                @foreach (var item in @Model)
+                {
+                    <tr>
+                        <td>00</td>
+                        <td>@item.KWDelInt</td>
+                        <td>@item.KVARDelInt</td>
+                        <td>@item.KWRecInt</td>
+                        <td>@item.KVARRecInt</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
+
+

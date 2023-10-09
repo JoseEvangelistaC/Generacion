@@ -31,7 +31,6 @@ namespace Generacion.Controllers
             _usuario = usuario;
             _datosConsola = datosConsola;
         }
-      
 
         public async Task<IActionResult> Index()
         {

@@ -4,6 +4,7 @@ using Generacion.Models;
 using Microsoft.AspNetCore.Mvc;
 using Generacion.Application.DatosConsola;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Generacion.Controllers
 {
@@ -28,11 +29,12 @@ namespace Generacion.Controllers
 
             Respuesta<List<TiposDeRegistroConsola>> tipoRegistros = await _datosConsola.ObtenerTiposDeRegistro();
             Respuesta<Dictionary<string, List<DatosFormatoConsola>>> datosRegistro = await _datosConsola.ObtenerRegistroDeConsola(fechaActual.ToString("dd/MM/yyyy"), fechaMedianoche.ToString("dd/MM/yyyy"));
-            Respuesta<Dictionary<string, CabecerasTabla>> datoscabecera = await _datosConsola.ObtenerCabecerasDeTabla();
             Respuesta<List<RegistrosDatosGenerator>> datosGenerador = await _datosConsola.ObtenerDetalleGenerador(fechaActual.ToString("dd/MM/yyyy"));
             Respuesta<List<RegistrosDatosEngine>> datosEngine = await _datosConsola.ObtenerDatosEngine(fechaActual.ToString("dd/MM/yyyy"));
             Dictionary<string, LecturasMedianoche> datosLecturas = await _datosConsola.ObtenerLecturaMediaNoche("ELD-CTL-OM002_"+ fechaActual.ToString("yyyy-MM-dd"));
-            
+
+            string usuarioDetail = HttpContext.Session.GetString("datoscabecera");
+            Dictionary<string, CabecerasTabla> datoscabecera = JsonConvert.DeserializeObject<Dictionary<string, CabecerasTabla>>(usuarioDetail);
 
 
 
@@ -40,7 +42,7 @@ namespace Generacion.Controllers
             ViewData["EnergiaGenerada1"] = datosRegistro.Detalle["EG01"];
             ViewData["EnergiaGeneradaBAA"] = datosRegistro.Detalle["BAA901"];
             ViewData["TipoRegistros"] = tipoRegistros.Detalle;
-            ViewData["Datoscabecera"] = datoscabecera.Detalle;
+            ViewData["Datoscabecera"] = datoscabecera;
                 ViewData["DatosGenerador"] = datosGenerador.Detalle;
                 ViewData["DatosEng"] = datosEngine.Detalle;
 

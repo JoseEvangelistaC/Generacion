@@ -16,6 +16,7 @@ namespace Generacion.Application.DatosConsola.Query
         {
             _conexion = conexion;
         }
+        // AQUI TRAE DATA DE LA TABLA DET_CONSOLA DONDE LO ORDENA SEGUN LA FILE DE FOMRA DESCENDIENTE
         public async Task<Respuesta<Dictionary<string, List<DatosFormatoConsola>>>> ObtenerRegistroDeConsola(string fechaInicio, string fechaFin)
         {
             Respuesta<Dictionary<string, List<DatosFormatoConsola>>> respuesta = new Respuesta<Dictionary<string, List<DatosFormatoConsola>>>();

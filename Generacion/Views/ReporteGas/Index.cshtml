@@ -1,0 +1,1050 @@
+﻿@using Generacion.Models.DatosConsola;
+
+@{
+    bool activar = true;
+    List<int> horasGenerador = new List<int>
+    {
+        4,8,12,16,20,0
+    };
+
+    List<int> horasEG = new List<int>
+    {
+        2,4,6,8,10,12,14,16,18,20,22,0
+    };
+
+    List<int> baa901 = new List<int>
+    {
+        6,12,18,0
+    };
+
+
+
+
+    List<DatosFormatoConsola> energiaGenerada = ViewData["EnergiaGenerada1"] as List<DatosFormatoConsola>;
+    List<DatosFormatoConsola> energiaGeneradaBAA = ViewData["EnergiaGeneradaBAA"] as List<DatosFormatoConsola>;
+    List<TiposDeRegistroConsola> detalleRegistro = ViewData["TipoRegistros"] as List<TiposDeRegistroConsola>;
+    Dictionary<string, CabecerasTabla> detalleCabeceras = ViewData["Datoscabecera"] as Dictionary<string, CabecerasTabla>;
+    List<RegistrosDatosGenerator> datosGenerador = ViewData["DatosGenerador"] as List<RegistrosDatosGenerator>;
+    List<RegistrosDatosEngine> datosEngine = ViewData["DatosEng"] as List<RegistrosDatosEngine>;
+
+    Dictionary<string, LecturasMedianoche> lecturasMedianoche = ViewData["datosLecturas"] as Dictionary<string, LecturasMedianoche>;
+
+
+
+
+
+
+
+    var EG01 = detalleRegistro.Where(x => x.IdRegistroConsola == "EG01").Select(x => x).FirstOrDefault();
+    var EG02 = detalleRegistro.Where(x => x.IdRegistroConsola == "EG02").Select(x => x).FirstOrDefault();
+
+    var Generator1 = detalleRegistro.Where(x => x.IdRegistroConsola == "Generator1").Select(x => x).FirstOrDefault();
+    var Generator2 = detalleRegistro.Where(x => x.IdRegistroConsola == "Generator2").Select(x => x).FirstOrDefault();
+
+    var Engine1 = detalleRegistro.Where(x => x.IdRegistroConsola == "Engine1").Select(x => x).FirstOrDefault();
+    var Engine2 = detalleRegistro.Where(x => x.IdRegistroConsola == "Engine2").Select(x => x).FirstOrDefault();
+
+    var BAA1 = detalleRegistro.Where(x => x.IdRegistroConsola == "BAA901-Station").Select(x => x).FirstOrDefault();
+    var BAA2 = detalleRegistro.Where(x => x.IdRegistroConsola == "BAA901-VAMP96").Select(x => x).FirstOrDefault();
+
+    var LecMedianoche = detalleRegistro.Where(x => x.IdRegistroConsola == "LecMedianoche").Select(x => x).FirstOrDefault();
+
+}
+
+<style>
+    .lectura input {
+        width: 130px;
+        height: 26px;
+    }
+
+    .lectura span {
+        width: 165px;
+        padding: 0px 35px 0 35px;
+        margin-bottom: 1rem;
+        color: #858796;
+    }
+
+    .lectura {
+        display: flex;
+        border: 1px solid #e3e6f0;
+    }
+
+        .lectura div {
+            width: 40%;
+            border: 1px solid #e3e6f0;
+        }
+
+    .EG td {
+        width: 65px !important;
+        text-align: center;
+    }
+
+    .LM td {
+        width: 115px !important;
+        text-align: center;
+    }
+
+    .EG input {
+        width: 65px !important;
+    }
+
+    .EG th {
+        text-align-last: center;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .title-table {
+        text-align-last: center;
+        background: gainsboro;
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .content-report {
+        border: solid;
+        padding: 40px;
+    }
+
+    .row {
+        margin-right: inherit;
+        margin-left: inherit;
+    }
+
+    .subTitulo-consola {
+        text-align: inherit;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 0 0 0 10px;
+        background: darkgray;
+    }
+
+    .btnMostrarGE {
+        border-block-end-color: red;
+    }
+
+    .btnMostrarGE1 {
+        display: none;
+    }
+</style>
+
+<div class="header-detail-report">
+    <div class="title-report col-md-12">
+        <h2>Central Termica Luren</h2>
+        <h3 style="font-size: inherit;">
+            REPORTE DIARIO DE GAS
+        </h3>
+    </div>
+    <div class="row">
+        <div class="col-md-6" style="display: flow;">
+            <img class="image-logo" src="./img/logo_elec.png" />
+        </div>
+        <div class="col-md-6">
+            <div>
+                <p>Versión 00 ELD-CTL-OM002</p>
+            </div>
+            <div>
+                <p1>Fecha</p1>
+                @{
+                    var date = DateTime.Now;
+                    <p>@date.ToString("dd/MM/yyyy");</p>
+                }
+            </div>
+            <div class="subTitulo-consola">
+                <p1 style="text-align: inherit;">Operadores</p1>
+
+            </div>
+            <div>
+                <p1>Turno 1</p1>
+                <p>E. Codarlupo / R. Ramos</p>
+            </div>
+            <div>
+                <p1>Turno 2</p1>
+                <p>R. Ramos / R.More</p>
+            </div>
+            <div>
+                <p1>Turno 3</p1>
+                <p>H. Cerron / W. Arevalo</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="text-align: right;">
+    <button class="btn btn-primary " id="GuardarDatos">Guardar Datos</button>
+</div>
+<div>
+    <button class="btn btn-light btnMostrarGE btnMostrarGE1" id="EG1">EG01</button>
+    <button class="btn btn-light btnMostrarGE" id="EG2">EG02</button>
+</div>
+<div class="console-content">
+    <div id="datos-EG1">
+        <div style="padding :10px;">
+            <div class="title-table">
+                <p id="idRegistro" claveRegistro='@EG01.IdRegistroConsola'>@EG01.TipoRegistro</p>
+            </div>
+            <table class="table table-bordered EG" id="tabla-EG1">
+                <thead>
+                    <tr>
+                        <th>HORA</th>
+                        <th>P</th>
+                        <th>Q</th>
+                        <th>E+</th>
+                        <th>Eq+</th>
+                        <th>lL1</th>
+                        <th>lL2</th>
+                        <th>lL2</th>
+                        <th>U12</th>
+                        <th>U23</th>
+                        <th>U31</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        List<string> horasExistenteSet = energiaGenerada.Select(item => item.Hora).ToList();
+                        int horaSiguiente = 0;
+                        string[] horaSplit = date.ToString("HH").Split(':');
+                        if (energiaGenerada.Count != 0)
+                        {
+                            horaSiguiente = horasEG.Count == energiaGenerada.Count
+                            ? horasEG[energiaGenerada.Count - 1]
+                            : horasEG[energiaGenerada.Count];
+
+                            var horaSiguienteId = horaSiguiente == 0 ? 24 : horaSiguiente;
+
+                            foreach (EnergiaGenerada item in energiaGenerada)
+                            {
+                                string[] horaRegistroSplit = item.Hora.Split(':');
+
+                                if (horasEG[energiaGenerada.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                {
+                                    if (((int.Parse(horaRegistroSplit[0]) == horasEG[energiaGenerada.Count - 1] &&
+                                    int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                    (horaSiguiente > int.Parse(horaSplit[0]))) || horaRegistroSplit[0] == "0")
+                                    {
+                                        <tr>
+                                            <td id="idHora" claveRegistro=@horaRegistroSplit[0]>@item.Hora</td>
+                                            <td id="P"><input value=@item.PotenciaActiva></td>
+                                            <td id="Q"><input value=@item.PotenciaReactiva></td>
+                                            <td id="E+"><input value=@item.EnergiaActiva></td>
+                                            <td id="Eq+"><input value=@item.EnergiaReactiva></td>
+                                            <td id="lL1"><input value=@item.CorrienteLinea1></td>
+                                            <td id="lL2"><input value=@item.CorrienteLinea2></td>
+                                            <td id="lL3"><input value=@item.CorrienteLinea3></td>
+                                            <td id="U12"><input value=@item.Voltaje></td>
+                                            <td id="U23"><input value=@item.Voltaje23></td>
+                                            <td id="U31"><input value=@item.Voltaje31></td>
+                                        </tr>
+
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.Hora</td>
+                                            <td>@item.PotenciaActiva</td>
+                                            <td>@item.PotenciaReactiva</td>
+                                            <td>@item.EnergiaActiva</td>
+                                            <td>@item.EnergiaReactiva</td>
+                                            <td>@item.CorrienteLinea1</td>
+                                            <td>@item.CorrienteLinea2</td>
+                                            <td>@item.CorrienteLinea3</td>
+                                            <td>@item.Voltaje</td>
+                                            <td>@item.Voltaje23</td>
+                                            <td>@item.Voltaje31</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td id="idHora" claveRegistro=@horaSiguienteId>@horaSiguiente:00</td>
+                                            <td id="P"><input /></td>
+                                            <td id="Q"><input /></td>
+                                            <td id="E+"><input /></td>
+                                            <td id="Eq+"><input /></td>
+                                            <td id="lL1"><input /></td>
+                                            <td id="lL2"><input /></td>
+                                            <td id="lL3"><input /></td>
+                                            <td id="U12"><input /></td>
+                                            <td id="U23"><input /></td>
+                                            <td id="U31"><input /></td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>@item.Hora</td>
+                                        <td>@item.PotenciaActiva</td>
+                                        <td>@item.PotenciaReactiva</td>
+                                        <td>@item.EnergiaActiva</td>
+                                        <td>@item.EnergiaReactiva</td>
+                                        <td>@item.CorrienteLinea1</td>
+                                        <td>@item.CorrienteLinea2</td>
+                                        <td>@item.CorrienteLinea3</td>
+                                        <td>@item.Voltaje</td>
+                                        <td>@item.Voltaje23</td>
+                                        <td>@item.Voltaje31</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td id="idHora" claveRegistro='2'>2:00</td>
+                                <td id="P"><input /></td>
+                                <td id="Q"><input /></td>
+                                <td id="E+"><input /></td>
+                                <td id="Eq+"><input /></td>
+                                <td id="lL1"><input /></td>
+                                <td id="lL2"><input /></td>
+                                <td id="lL3"><input /></td>
+                                <td id="U12"><input /></td>
+                                <td id="U23"><input /></td>
+                                <td id="U31"><input /></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <div class="title-table">
+                <p id="idRegistroGen" claveRegistro='@Generator1.IdRegistroConsola'>@Generator1.TipoRegistro</p>
+            </div>
+            <div style="display: flex;">
+                <table class="table table-bordered EG">
+                    <thead>
+                        <tr style="height: 100px;">
+                            <th>HORA</th>
+                            <th>L1</th>
+                            <th>L2</th>
+                            <th>L3</th>
+                            <th>D</th>
+                            <th>ND</th>
+                            <th>Torcional vibration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (datosGenerador.Count != 0)
+                            {
+                                horaSiguiente = horasGenerador.Count == datosGenerador.Count
+                                ? horasGenerador[datosGenerador.Count - 1]
+                                : horasGenerador[datosGenerador.Count];
+                                // horaSiguiente = horaSiguiente == 0 ? 24 : horaSiguiente;
+
+                                var horaSiguienteId = horaSiguiente == 0 ? 24 : horaSiguiente;
+
+                                foreach (var item in datosGenerador)
+                                {
+                                    string[] horaRegistroSplit = item.Hora.Split(':');
+                                    var horaRegistro = int.Parse(horaRegistroSplit[0]);
+
+                                    if (horasGenerador[datosGenerador.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                    {
+
+                                        if ((int.Parse(horaRegistroSplit[0]) == horasGenerador[datosGenerador.Count - 1] &&
+                                        int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                        (horaSiguiente > int.Parse(horaSplit[0])) || horaRegistroSplit[0] == "0")
+                                        {
+
+                                            <tr>
+                                                <td id="idHoraGen" claveRegistro=@horaRegistroSplit[0]>@item.Hora</td>
+                                                <td id="L1"><input value=@item.L1 /></td>
+                                                <td id="L2"><input value=@item.L2 /></td>
+                                                <td id="L3"><input value=@item.L3 /></td>
+                                                <td id="D"><input value=@item.D /></td>
+                                                <td id="ND"><input value=@item.ND /></td>
+                                                <td id="TV"><input value=@item.TersionalVibration /></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.Hora</td>
+                                                <td>@item.L1</td>
+                                                <td>@item.L2</td>
+                                                <td>@item.L3</td>
+                                                <td>@item.D</td>
+                                                <td>@item.ND</td>
+                                                <td>@item.TersionalVibration</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="idHoraGen" claveRegistro=@horaSiguienteId>@horaSiguiente:00</td>
+                                                <td id="L1"><input /></td>
+                                                <td id="L2"><input /></td>
+                                                <td id="L3"><input /></td>
+                                                <td id="D"><input /></td>
+                                                <td id="ND"><input /></td>
+                                                <td id="TV"><input /></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.Hora</td>
+                                            <td>@item.L1</td>
+                                            <td>@item.L2</td>
+                                            <td>@item.L3</td>
+                                            <td>@item.D</td>
+                                            <td>@item.ND</td>
+                                            <td>@item.TersionalVibration</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td id="idHoraGen" claveRegistro=@horasGenerador[0]>@horasGenerador[0]:00</td>
+                                    <td id="L1"><input /></td>
+                                    <td id="L2"><input /></td>
+                                    <td id="L3"><input /></td>
+                                    <td id="D"><input /></td>
+                                    <td id="ND"><input /></td>
+                                    <td id="TV"><input /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+                <table class="table table-bordered EG">
+                    <thead>
+                        <tr>
+                            <th data-info='@detalleCabeceras["TCA"].Descripcion' colspan="2" id=@detalleCabeceras["TCA"].IdTipoEngine>@detalleCabeceras["TCA"].Detalle</th>
+                            <th data-info='@detalleCabeceras["TCB"].Descripcion' colspan="2" id=@detalleCabeceras["TCB"].IdTipoEngine>@detalleCabeceras["TCB"].Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th data-info='@detalleCabeceras["TpOut-A"].Descripcion' id=@detalleCabeceras["TpOut-A"].IdTipoEngine>@detalleCabeceras["TpOut-A"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Speed-A"].Descripcion' id=@detalleCabeceras["Speed-A"].IdTipoEngine>@detalleCabeceras["Speed-A"].Detalle</th>
+                            <th data-info='@detalleCabeceras["TpOut-B"].Descripcion' id=@detalleCabeceras["TpOut-B"].IdTipoEngine>@detalleCabeceras["TpOut-B"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Speed-B"].Descripcion' id=@detalleCabeceras["Speed-B"].IdTipoEngine>@detalleCabeceras["Speed-B"].Detalle</th>
+                        </tr>
+                        @{
+
+                            if (datosGenerador.Count != 0)
+                            {
+                                foreach (var item in datosGenerador)
+                                {
+                                    string[] horaRegistroSplit = item.Hora.Split(':');
+
+                                    if (horasGenerador[datosGenerador.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                    {
+
+                                        if (((int.Parse(horaRegistroSplit[0]) == horasGenerador[datosGenerador.Count - 1] &&
+                                        int.Parse(horaRegistroSplit[0]) <= horaSiguiente) &&
+                                        (horaSiguiente >= int.Parse(horaSplit[0]))) || horaRegistroSplit[0] == "0")
+                                        {
+                                            <tr>
+                                                <td id="TO-A"><input value=@item.detalleGeneradores["TCA"].TempOut /></td>
+                                                <td id="Sp-A"><input value=@item.detalleGeneradores["TCA"].Speed /></td>
+                                                <td id="TO-B"><input value=@item.detalleGeneradores["TCB"].TempOut /></td>
+                                                <td id="Sp-B"><input value=@item.detalleGeneradores["TCB"].Speed /></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.detalleGeneradores["TCA"].TempOut</td>
+                                                <td>@item.detalleGeneradores["TCA"].Speed</td>
+                                                <td>@item.detalleGeneradores["TCB"].TempOut</td>
+                                                <td>@item.detalleGeneradores["TCB"].Speed</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td id="TO-A"><input /></td>
+                                                <td id="Sp-A"><input /></td>
+                                                <td id="TO-B"><input /></td>
+                                                <td id="Sp-B"><input /></td>
+                                            </tr>
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.detalleGeneradores["TCA"].TempOut</td>
+                                            <td>@item.detalleGeneradores["TCA"].Speed</td>
+                                            <td>@item.detalleGeneradores["TCB"].TempOut</td>
+                                            <td>@item.detalleGeneradores["TCB"].Speed</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td id="TO-A"><input /></td>
+                                    <td id="Sp-A"><input /></td>
+                                    <td id="TO-B"><input /></td>
+                                    <td id="Sp-B"><input /></td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <div class="title-table">
+                <p id="idRegistroEng" claveRegistro='@Engine1.IdRegistroConsola'>@Engine1.TipoRegistro</p>
+            </div>
+            <div style="display: flex;">
+                <table class="table table-bordered EG" style="width: 52% !important;">
+                    <thead>
+                        <tr style="height: 100px;">
+                            <th>HORA</th>
+                            <th data-info='@detalleCabeceras["Run-Hours"].Descripcion' id=@detalleCabeceras["Run-Hours"].IdTipoEngine>@detalleCabeceras["Run-Hours"].Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (datosEngine.Count != 0)
+                            {
+                                horaSiguiente = horasGenerador.Count == datosEngine.Count
+                                ? horasGenerador[datosEngine.Count - 1]
+                                : horasGenerador[datosEngine.Count];
+                                //horaSiguiente = horaSiguiente == 0 ? 24 : horaSiguiente;
+                                var horaSiguienteId = horaSiguiente == 0 ? 24 : horaSiguiente;
+
+                                foreach (var item in datosEngine)
+                                {
+                                    string[] horaRegistroSplit = item.Hora.Split(':');
+                                    var horaRegistro = int.Parse(horaRegistroSplit[0]);
+
+                                    if (horasGenerador[datosEngine.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                    {
+                                        if (((int.Parse(horaRegistroSplit[0]) == horasGenerador[datosEngine.Count - 1] &&
+                                        int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                        (horaSiguiente > int.Parse(horaSplit[0]))) || horaRegistroSplit[0] == "0")
+                                        {
+                                            <tr>
+                                                <td id="idHoraEng" claveRegistro=@horaRegistroSplit[0]>@item.Hora</td>
+                                                <td id="Run-H"><input value="@item.RunHours" /></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.Hora</td>
+                                                <td>@item.RunHours</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td id="idHoraEng" claveRegistro=@horaSiguienteId>@horaSiguiente:00</td>
+                                                <td id="Run-H"><input /></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.Hora</td>
+                                            <td>@item.RunHours</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td id="idHoraEng" claveRegistro=@horasGenerador[0]>@horasGenerador[0]:00</td>
+                                    <td id="Run-H"><input /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <table class="table table-bordered EG" style="width: 75% !important;">
+                    <thead>
+                        <tr>
+                            <th data-info='@detalleCabeceras["Fuel"].Descripcion' colspan="2" id=@detalleCabeceras["Fuel"].IdTipoEngine>@detalleCabeceras["Fuel"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Oil"].Descripcion' colspan="2" id=@detalleCabeceras["Oil"].IdTipoEngine>@detalleCabeceras["Oil"].Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th data-info='@detalleCabeceras["Presion-F"].Descripcion' id=@detalleCabeceras["Presion-F"].IdTipoEngine>@detalleCabeceras["Presion-F"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Temp-F"].Descripcion' id=@detalleCabeceras["Temp-F"].IdTipoEngine>@detalleCabeceras["Temp-F"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Presion-O"].Descripcion' id=@detalleCabeceras["Presion-O"].IdTipoEngine>@detalleCabeceras["Presion-O"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Temp-O"].Descripcion' id=@detalleCabeceras["Temp-O"].IdTipoEngine>@detalleCabeceras["Temp-O"].Detalle</th>
+                        </tr>
+                        @{
+                            if (datosEngine.Count != 0)
+                            {
+                                foreach (var item in datosEngine)
+                                {
+                                    string[] horaRegistroSplit = item.Hora.Split(':');
+                                    var horaRegistro = int.Parse(horaRegistroSplit[0]);
+
+                                    if (horasGenerador[datosEngine.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                    {
+                                        if (((int.Parse(horaRegistroSplit[0]) == horasGenerador[datosEngine.Count - 1] &&
+                                        int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                        (horaSiguiente > int.Parse(horaSplit[0]))) || horaRegistroSplit[0] == "0")
+                                        {
+                                            <tr>
+                                                <td id="P-F"><input value="@item.detalleEngine["FUEL"].Presion" /></td>
+                                                <td id="T-F"><input value="@item.detalleEngine["FUEL"].Temp" /></td>
+                                                <td id="P-O"><input value="@item.detalleEngine["OIL"].Presion" /></td>
+                                                <td id="T-O"><input value="@item.detalleEngine["OIL"].Temp" /></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.detalleEngine["FUEL"].Presion</td>
+                                                <td>@item.detalleEngine["FUEL"].Temp</td>
+                                                <td>@item.detalleEngine["OIL"].Presion</td>
+                                                <td>@item.detalleEngine["OIL"].Temp</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td id="P-F"><input /></td>
+                                                <td id="T-F"><input /></td>
+                                                <td id="P-O"><input /></td>
+                                                <td id="T-O"><input /></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.detalleEngine["FUEL"].Presion</td>
+                                            <td>@item.detalleEngine["FUEL"].Temp</td>
+                                            <td>@item.detalleEngine["OIL"].Presion</td>
+                                            <td>@item.detalleEngine["OIL"].Temp</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td id="P-F"><input /></td>
+                                    <td id="T-F"><input /></td>
+                                    <td id="P-O"><input /></td>
+                                    <td id="T-O"><input /></td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+                <table class="table table-bordered EG" style="width: 25% !important;">
+                    <thead>
+                        <tr>
+                            <th data-info='@detalleCabeceras["Cooling"].Descripcion' id=@detalleCabeceras["Cooling"].IdTipoEngine>@detalleCabeceras["Cooling"].Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th data-info='@detalleCabeceras["Ca-Temp"].Descripcion' id=@detalleCabeceras["Ca-Temp"].IdTipoEngine>@detalleCabeceras["Ca-Temp"].Detalle</th>
+                        </tr>
+                        @{
+                            if (datosEngine.Count != 0)
+                            {
+                                var ultimaHoraGenerador = horasGenerador[datosEngine.Count - 1];
+
+                                foreach (var item in datosEngine)
+                                {
+
+                                    string[] horaRegistroSplit = item.Hora.Split(':');
+                                    // var horaRegistro = int.Parse(horaRegistroSplit[0]);
+                                    if (horasGenerador[datosEngine.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                    {
+                                        if (((int.Parse(horaRegistroSplit[0]) == horasGenerador[datosEngine.Count - 1] &&
+                                        int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                        (horaSiguiente > int.Parse(horaSplit[0]))) || horaRegistroSplit[0] == "0")
+                                        {
+                                            <tr>
+                                                <td id="CA-T"><input value="@item.CATemp" /></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.CATemp</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="CA-T"><input /></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.CATemp</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td id="CA-T"><input /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <table class="table table-bordered EG" style="width: 90% !important;">
+                    <thead>
+                        <tr style="height: 100px;">
+                            <th data-info='@detalleCabeceras["Diff-P-J-P"].Descripcion' id=@detalleCabeceras["Diff-P-J-P"].IdTipoEngine>@detalleCabeceras["Diff-P-J-P"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Ca-Press"].Descripcion' id=@detalleCabeceras["Ca-Press"].IdTipoEngine>@detalleCabeceras["Ca-Press"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Ex-G-A-T"].Descripcion' id=@detalleCabeceras["Ex-G-A-T"].IdTipoEngine>@detalleCabeceras["Ex-G-A-T"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Cy-P-A"].Descripcion' id=@detalleCabeceras["Cy-P-A"].IdTipoEngine>@detalleCabeceras["Cy-P-A"].Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (datosEngine.Count != 0)
+                            {
+                                var ultimaHoraGenerador = horasGenerador[datosEngine.Count - 1];
+
+                                foreach (var item in datosEngine)
+                                {
+                                    string[] horaRegistroSplit = item.Hora.Split(':');
+                                    //   var horaRegistro = int.Parse(horaRegistroSplit[0]);
+
+                                    if (horasGenerador[datosEngine.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                    {
+                                        if (((int.Parse(horaRegistroSplit[0]) == horasGenerador[datosEngine.Count - 1] &&
+                                        int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                        (horaSiguiente > int.Parse(horaSplit[0]))) || horaRegistroSplit[0] == "0")
+                                        {
+                                            <tr>
+                                                <td id="Diff-P"><input value="@item.DiffPressJetPulse" /></td>
+                                                <td id="Ca-P"><input value="@item.CAPress" /></td>
+                                                <td id="Ex-G"><input value="@item.ExhGasAvgTemp" /></td>
+                                                <td id="Cy-P"><input value="@item.CylPressAvg" /></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.DiffPressJetPulse</td>
+                                                <td>@item.CAPress</td>
+                                                <td>@item.ExhGasAvgTemp</td>
+                                                <td>@item.CylPressAvg</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td id="Diff-P"><input /></td>
+                                                <td id="Ca-P"><input /></td>
+                                                <td id="Ex-G"><input /></td>
+                                                <td id="Cy-P"><input /></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.DiffPressJetPulse</td>
+                                            <td>@item.CAPress</td>
+                                            <td>@item.ExhGasAvgTemp</td>
+                                            <td>@item.CylPressAvg</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td id="Diff-P"><input /></td>
+                                    <td id="Ca-P"><input /></td>
+                                    <td id="Ex-G"><input /></td>
+                                    <td id="Cy-P"><input /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div style="padding :10px;">
+            <div class="title-table">
+                <p id="idRegistroBaa" claveRegistro='@BAA1.IdRegistroConsola'>@BAA1.TipoRegistro</p>
+            </div>
+            <table class="table table-bordered EG" id="tabla-Baa">
+                <thead>
+                    <tr>
+                        <th>HORA</th>
+                        <th>P</th>
+                        <th>Q</th>
+                        <th>E+</th>
+                        <th>Eq+</th>
+                        <th>lL1</th>
+                        <th>lL2</th>
+                        <th>lL2</th>
+                        <th>U12</th>
+                        <th>U23</th>
+                        <th>U31</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        horasExistenteSet = energiaGeneradaBAA.Select(item => item.Hora).ToList();
+
+                        horaSplit = date.ToString("HH").Split(':');
+
+                        if (energiaGeneradaBAA.Count != 0)
+                        {
+                            horaSiguiente = horasEG.Count == energiaGeneradaBAA.Count
+                            ? horasEG[energiaGeneradaBAA.Count - 1]
+                            : horasEG[energiaGeneradaBAA.Count];
+                            //  horaSiguiente = horaSiguiente == 0 ? 24 : horaSiguiente;
+                            var horaSiguienteId = horaSiguiente == 0 ? 24 : horaSiguiente;
+                            var ultimaHoraGenerador = horasEG[energiaGeneradaBAA.Count - 1];
+
+                            foreach (EnergiaGenerada item in energiaGeneradaBAA)
+                            {
+                                string[] horaRegistroSplit = item.Hora.Split(':');
+                                var horaRegistro = int.Parse(horaRegistroSplit[0]);
+
+                                if (horasEG[energiaGeneradaBAA.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                {
+                                    if ((int.Parse(horaRegistroSplit[0]) == horasEG[energiaGeneradaBAA.Count - 1] &&
+                                    int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                    (horaSiguiente > int.Parse(horaSplit[0])) || horaRegistroSplit[0] == "0")
+                                    {
+                                        <tr>
+                                            <td id="idHoraBaa" claveRegistro=@horaRegistroSplit[0]>@item.Hora</td>
+                                            <td id="P"><input value=@item.PotenciaActiva></td>
+                                            <td id="Q"><input value=@item.PotenciaReactiva></td>
+                                            <td id="E+"><input value=@item.EnergiaActiva></td>
+                                            <td id="Eq+"><input value=@item.EnergiaReactiva></td>
+                                            <td id="lL1"><input value=@item.CorrienteLinea1></td>
+                                            <td id="lL2"><input value=@item.CorrienteLinea2></td>
+                                            <td id="lL3"><input value=@item.CorrienteLinea3></td>
+                                            <td id="U12"><input value=@item.Voltaje></td>
+                                            <td id="U23"><input value=@item.Voltaje23></td>
+                                            <td id="U31"><input value=@item.Voltaje31></td>
+                                        </tr>
+
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.Hora</td>
+                                            <td>@item.PotenciaActiva</td>
+                                            <td>@item.PotenciaReactiva</td>
+                                            <td>@item.EnergiaActiva</td>
+                                            <td>@item.EnergiaReactiva</td>
+                                            <td>@item.CorrienteLinea1</td>
+                                            <td>@item.CorrienteLinea2</td>
+                                            <td>@item.CorrienteLinea3</td>
+                                            <td>@item.Voltaje</td>
+                                            <td>@item.Voltaje23</td>
+                                            <td>@item.Voltaje31</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td id="idHoraBaa" claveRegistro=@horaSiguienteId>@horaSiguiente:00</td>
+                                            <td id="P"><input /></td>
+                                            <td id="Q"><input /></td>
+                                            <td id="E+"><input /></td>
+                                            <td id="Eq+"><input /></td>
+                                            <td id="lL1"><input /></td>
+                                            <td id="lL2"><input /></td>
+                                            <td id="lL3"><input /></td>
+                                            <td id="U12"><input /></td>
+                                            <td id="U23"><input /></td>
+                                            <td id="U31"><input /></td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>@item.Hora</td>
+                                        <td>@item.PotenciaActiva</td>
+                                        <td>@item.PotenciaReactiva</td>
+                                        <td>@item.EnergiaActiva</td>
+                                        <td>@item.EnergiaReactiva</td>
+                                        <td>@item.CorrienteLinea1</td>
+                                        <td>@item.CorrienteLinea2</td>
+                                        <td>@item.CorrienteLinea3</td>
+                                        <td>@item.Voltaje</td>
+                                        <td>@item.Voltaje23</td>
+                                        <td>@item.Voltaje31</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td id="idHoraBaa" claveRegistro='2'>2:00</td>
+                                <td id="P"><input /></td>
+                                <td id="Q"><input /></td>
+                                <td id="E+"><input /></td>
+                                <td id="Eq+"><input /></td>
+                                <td id="lL1"><input /></td>
+                                <td id="lL2"><input /></td>
+                                <td id="lL3"><input /></td>
+                                <td id="U12"><input /></td>
+                                <td id="U23"><input /></td>
+                                <td id="U31"><input /></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <div id="datos-EG2">
+    </div>
+
+    <div>
+        <table class="table table-bordered EG" id="">
+            <tr>
+                <th rowspan="2">HORA</th>
+                <th colspan="2" data-info='@detalleCabeceras["Delivered"].Descripcion' id=@detalleCabeceras["Delivered"].IdTipoEngine>@detalleCabeceras["Delivered"].Detalle</th>
+                <th colspan="2" data-info='@detalleCabeceras["Recived"].Descripcion' id=@detalleCabeceras["Recived"].IdTipoEngine>@detalleCabeceras["Recived"].Detalle</th>
+            </tr>
+            <tr>
+                <th data-info='@detalleCabeceras["kwh"].Descripcion' id=@detalleCabeceras["kwh"].IdTipoEngine>@detalleCabeceras["kwh"].Detalle</th>
+                <th data-info='@detalleCabeceras["kvarh"].Descripcion' id=@detalleCabeceras["kvarh"].IdTipoEngine>@detalleCabeceras["kvarh"].Detalle</th>
+                <th data-info='@detalleCabeceras["kwh"].Descripcion' id=@detalleCabeceras["kwh"].IdTipoEngine>@detalleCabeceras["kwh"].Detalle</th>
+                <th data-info='@detalleCabeceras["kvarh"].Descripcion' id=@detalleCabeceras["kvarh"].IdTipoEngine>@detalleCabeceras["kvarh"].Detalle</th>
+            </tr>
+            <tr>
+                <td id="idHoraBao" claveRegistro='6'>6:00</td>
+                <td id="de-kwh"><input /></td>
+                <td id="de-kvarh"><input /></td>
+                <td id="re-kwh"><input /></td>
+                <td id="re-kvarh"><input /></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="lecturasMedianoche">
+        <div style="padding :10px;">
+            <div class="title-table">
+                <p id="idRegistro12" claveRegistro='@LecMedianoche.IdRegistroConsola'>@LecMedianoche.TipoRegistro</p>
+            </div>
+            <div>
+
+                @{
+                    if (lecturasMedianoche != null && lecturasMedianoche.Count() != 0)
+                    {
+
+                        foreach (var item in lecturasMedianoche)
+                        {
+                            <div class="lectura">
+                                <div data-info='@detalleCabeceras["GasCon"].Descripcion' id=@detalleCabeceras["GasCon"].IdTipoEngine@item.Value.NumeroEG>
+                                    <span> @detalleCabeceras["GasCon"].Detalle@item.Value.NumeroEG &nbsp;</span> <input value=@item.Value.GasconsumedEG />
+                                </div>
+                                <div data-info='@detalleCabeceras["EnerProd"].Descripcion' id=@detalleCabeceras["EnerProd"].IdTipoEngine@item.Value.NumeroEG>
+                                    <span> @detalleCabeceras["EnerProd"].Detalle@item.Value.NumeroEG &nbsp;</span>
+                                    <input value=@item.Value.GasEnergiaEG />
+                                </div>
+                                <div data-info='@detalleCabeceras["ReadingToday"].Descripcion' id=@detalleCabeceras["ReadingToday"].IdTipoEngine@item.Value.NumeroEG>
+                                    <span> @detalleCabeceras["ReadingToday"].Detalle &nbsp;</span>
+                                    <input value=@item.Value.ReadingToday />
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 1; i <= 2; i++)
+                        {
+                            <div class="lectura">
+                                <div data-info='@detalleCabeceras["GasCon"].Descripcion' id=@detalleCabeceras["GasCon"].IdTipoEngine@i>
+                                    <span> @detalleCabeceras["GasCon"].Detalle@i &nbsp;</span>
+                                    <input />
+                                </div>
+                                <div data-info='@detalleCabeceras["EnerProd"].Descripcion' id=@detalleCabeceras["EnerProd"].IdTipoEngine@i>
+                                    <span> @detalleCabeceras["EnerProd"].Detalle@i &nbsp;</span>
+                                    <input />
+                                </div>
+                                <div data-info='@detalleCabeceras["ReadingToday"].Descripcion' id=@detalleCabeceras["ReadingToday"].IdTipoEngine@i>
+                                    <span> @detalleCabeceras["ReadingToday"].Detalle &nbsp;</span>
+                                    <input />
+                                </div>
+                            </div>
+                        }
+
+
+                    }
+                    <div style="display: flex; padding: 10px 0 0 0;">
+                        <span style="padding: 0 10px 0 0;">Observaciones</span>
+                        <textarea id="observacionesConsola" style="height: 113px; width: 90%;">
+                                   </textarea>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    document.getElementById('EG2').addEventListener('click', function () {
+      
+    });
+
+    document.getElementById('EG1').addEventListener('click', function () {
+       
+    });
+
+
+    function ObtenerDatosLectMedianoche() {
+      
+    }
+
+
+    var idFormatoConsola;
+    botonGuardarDatos = document.getElementById('GuardarDatos');
+
+
+    botonGuardarDatos.addEventListener('click', function () {
+
+ 
+    });
+
+    function GuardarDatosEG() {
+
+    }
+    function ObtenerDatosInput(tablaId) {
+
+    }
+
+
+
+    function GuardarDatosGenerador(idFormatoConsola) {
+
+    }
+
+    function GuardarDatosEnginer(idFormatoConsola) {
+
+    }
+
+    function ParseIntEmpty(value) {
+    
+    }
+
+    const thElements = document.querySelectorAll('th');
+
+    thElements.forEach(th => {
+       
+    });
+
+
+
+
+</script>

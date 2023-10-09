@@ -3,6 +3,9 @@ using Generacion.Application.DataBase.cache;
 using Generacion.Application.DatosConsola;
 using Generacion.Application.DatosConsola.Command;
 using Generacion.Application.DatosConsola.Query;
+using Generacion.Application.LecturaCampo.Command;
+using Generacion.Application.LecturaCampo;
+using Generacion.Application.LecturaCampo.Query;
 using Generacion.Application.Funciones;
 using Generacion.Application.ION.Query;
 using Generacion.Application.Mantenimiento;
@@ -54,6 +57,7 @@ namespace Generacion
                    services.AddScoped<IConexionBD>(_ => new ConexionBD(cadenaConexion));
                    services.AddScoped<IMantenimiento, Mantenimiento>();
                    services.AddScoped<IUsuario, DatosUsuario>();
+
                    services.AddScoped<IDatosRegistroConsola, DatosRegistroConsola>();
                    services.AddScoped<IRegistroDatosGAS, RegistroDatosGAS>();
                    services.AddScoped<IDatosMGD, RegistroDatosMGD>();
@@ -65,6 +69,9 @@ namespace Generacion
                    services.AddScoped(typeof(ConsultarION));
                    services.AddScoped(typeof(ConsultarDatosMGD));
                    services.AddScoped(typeof(CacheDatos));
+                   services.AddScoped(typeof(LecturaCampo));
+
+                   // services.AddScoped(typeof(CacheDatos));
                });
     }
 }

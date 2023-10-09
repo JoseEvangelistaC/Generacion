@@ -1,1015 +1,1050 @@
 ﻿@using Generacion.Models.DatosConsola;
-@using Generacion.Models.ReporteDiarioGAS;
-@using MReporteGAS =Generacion.Models.ReporteDiarioGAS.ReporteGAS;
 
 @{
+    bool activar = true;
+    List<int> horasGenerador = new List<int>
+    {
+        4,8,12,16,20,0
+    };
+
+    List<int> horasEG = new List<int>
+    {
+        2,4,6,8,10,12,14,16,18,20,22,0
+    };
+
+    List<int> baa901 = new List<int>
+    {
+        6,12,18,0
+    };
+
+
+
+
+    List<DatosFormatoConsola> energiaGenerada = ViewData["EnergiaGenerada1"] as List<DatosFormatoConsola>;
+    List<DatosFormatoConsola> energiaGeneradaBAA = ViewData["EnergiaGeneradaBAA"] as List<DatosFormatoConsola>;
+    List<TiposDeRegistroConsola> detalleRegistro = ViewData["TipoRegistros"] as List<TiposDeRegistroConsola>;
     Dictionary<string, CabecerasTabla> detalleCabeceras = ViewData["Datoscabecera"] as Dictionary<string, CabecerasTabla>;
-    Dictionary<string, List<DetalleReporteGas>> detalleReporte = ViewData["detalleReporte"] as Dictionary<string, List<DetalleReporteGas>>;
-    MReporteGAS idReportegas = ViewData["idReporteGas"] as MReporteGAS;
+    List<RegistrosDatosGenerator> datosGenerador = ViewData["DatosGenerador"] as List<RegistrosDatosGenerator>;
+    List<RegistrosDatosEngine> datosEngine = ViewData["DatosEng"] as List<RegistrosDatosEngine>;
+
+    Dictionary<string, LecturasMedianoche> lecturasMedianoche = ViewData["datosLecturas"] as Dictionary<string, LecturasMedianoche>;
 
 
-  /*  string display6Count = detalleReporte["6"].Count != 0 ? "initial" : "none";
-    string display18Count = detalleReporte["18"].Count != 0 ? "initial" : "none";*/
-    string display6Count = detalleReporte["6"].Count >= 0 ? "initial" : "none";
-    string display18Count = detalleReporte["18"].Count >= 0 ? "initial" : "none";
 
 
-    string displayBtnIniciar = detalleReporte["18"].Count == 0 ? "initial" : "none";
-    bool displayNuevaTabla18 = detalleReporte["18"].Count >= 1 && detalleReporte["18"].Count <= 6 ? true : false;
-    bool displayNuevaTabla6 =  detalleReporte["6"].Count >= 1 && detalleReporte["6"].Count <= 6 ? true : false;
 
-    var date = DateTime.Now;
+
+
+    var EG01 = detalleRegistro.Where(x => x.IdRegistroConsola == "EG01").Select(x => x).FirstOrDefault();
+    var EG02 = detalleRegistro.Where(x => x.IdRegistroConsola == "EG02").Select(x => x).FirstOrDefault();
+
+    var Generator1 = detalleRegistro.Where(x => x.IdRegistroConsola == "Generator1").Select(x => x).FirstOrDefault();
+    var Generator2 = detalleRegistro.Where(x => x.IdRegistroConsola == "Generator2").Select(x => x).FirstOrDefault();
+
+    var Engine1 = detalleRegistro.Where(x => x.IdRegistroConsola == "Engine1").Select(x => x).FirstOrDefault();
+    var Engine2 = detalleRegistro.Where(x => x.IdRegistroConsola == "Engine2").Select(x => x).FirstOrDefault();
+
+    var BAA1 = detalleRegistro.Where(x => x.IdRegistroConsola == "BAA901-Station").Select(x => x).FirstOrDefault();
+    var BAA2 = detalleRegistro.Where(x => x.IdRegistroConsola == "BAA901-VAMP96").Select(x => x).FirstOrDefault();
+
+    var LecMedianoche = detalleRegistro.Where(x => x.IdRegistroConsola == "LecMedianoche").Select(x => x).FirstOrDefault();
 
 }
+
 <style>
-
-    .Head-table-consola td, th {
-        width: 130px !important;
-        text-align: center;
+    .lectura input {
+        width: 130px;
+        height: 26px;
     }
 
-    .datos-table-consola td, th {
-        width: 160px !important;
-        text-align: center;
+    .lectura span {
+        width: 165px;
+        padding: 0px 35px 0 35px;
+        margin-bottom: 1rem;
+        color: #858796;
     }
 
-    .dato-visible-sobreado {
-        background: gainsboro;
+    .lectura {
+        display: flex;
+        border: 1px solid #e3e6f0;
     }
 
-        .dato-visible-sobreado input {
-            background: gainsboro;
+        .lectura div {
+            width: 40%;
+            border: 1px solid #e3e6f0;
         }
 
-    .datos-table-consola input {
-        height: 24px;
+    .EG td {
+        width: 65px !important;
+        text-align: center;
+    }
+
+    .LM td {
+        width: 115px !important;
+        text-align: center;
+    }
+
+    .EG input {
+        width: 65px !important;
+    }
+
+    .EG th {
         text-align-last: center;
+        font-weight: bold;
+        text-align: center;
+        vertical-align: middle;
     }
 
-    .datos-anteriores input {
-        border: none;
-        width: 100%;
-    }
-
-    .titulo-tabla-horas {
-        border: none;
-        /*position: absolute;*/
-        padding: 0 0 0 50px;
-    }
-
-    .subtitulo-reporte-gas {
-        float: right;
-        border: none;
-    }
-
-    .titulo-reporte-gas {
-        border: none;
+    .title-table {
         text-align-last: center;
+        background: gainsboro;
+        font-weight: bold;
+        font-size: 20px;
     }
 
-    .cabecera-fecha-tabla {
-        place-content: center;
-        width: 100% !important;
-        display: flex;
-        height: 50px;
-        border: none !important;
+    .content-report {
+        border: solid;
+        padding: 40px;
     }
 
-    .savePDF th {
-        /*height: 35px;*/
-        height: 49px;
-        border: none;
+    .row {
+        margin-right: inherit;
+        margin-left: inherit;
     }
 
-    .savePDF td {
-        height: 35px;
+    .subTitulo-consola {
+        text-align: inherit;
+        font-size: 20px;
+        font-weight: bold;
+        padding: 0 0 0 10px;
+        background: darkgray;
     }
 
-    .savePDF tr {
-        height: 35px;
-        font-size: 10px;
+    .btnMostrarGE {
+        border-block-end-color: red;
     }
 
-    .savePDF p {
-        position: inherit;
-        padding: 0;
-    }
-
-    .savePDF th input {
+    .btnMostrarGE1 {
         display: none;
-        height: 10px !important;
     }
-    .delimitador-tablas{
-        padding: 10px;
-        background: #666EFA;
-        width:92%;
-        
-    }
-
 </style>
+
+<div class="header-detail-report">
+    <div class="title-report col-md-12">
+        <h2>Central Termica Luren</h2>
+        <h3 style="font-size: inherit;">
+            REPORTE DIARIO DE GAS
+        </h3>
+    </div>
+    <div class="row">
+        <div class="col-md-6" style="display: flow;">
+            <img class="image-logo" src="./img/logo_elec.png" />
+        </div>
+        <div class="col-md-6">
+            <div>
+                <p>Versión 00 ELD-CTL-OM002</p>
+            </div>
+            <div>
+                <p1>Fecha</p1>
+                @{
+                    var date = DateTime.Now;
+                    <p>@date.ToString("dd/MM/yyyy");</p>
+                }
+            </div>
+            <div class="subTitulo-consola">
+                <p1 style="text-align: inherit;">Operadores</p1>
+
+            </div>
+            <div>
+                <p1>Turno 1</p1>
+                <p>E. Codarlupo / R. Ramos</p>
+            </div>
+            <div>
+                <p1>Turno 2</p1>
+                <p>R. Ramos / R.More</p>
+            </div>
+            <div>
+                <p1>Turno 3</p1>
+                <p>H. Cerron / W. Arevalo</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="text-align: right;">
+    <button class="btn btn-primary " id="GuardarDatos">Guardar Datos</button>
+</div>
 <div>
-    <div style="text-align: right;">
-        <button class="btn btn-primary " id="GuardarDatos">Guardar Datos</button>
+    <button class="btn btn-light btnMostrarGE btnMostrarGE1" id="EG1">EG01</button>
+    <button class="btn btn-light btnMostrarGE" id="EG2">EG02</button>
+</div>
+<div class="console-content">
+    <div id="datos-EG1">
+        <div style="padding :10px;">
+            <div class="title-table">
+                <p id="idRegistro" claveRegistro='@EG01.IdRegistroConsola'>@EG01.TipoRegistro</p>
+            </div>
+            <table class="table table-bordered EG" id="tabla-EG1">
+                <thead>
+                    <tr>
+                        <th>HORA</th>
+                        <th>P</th>
+                        <th>Q</th>
+                        <th>E+</th>
+                        <th>Eq+</th>
+                        <th>lL1</th>
+                        <th>lL2</th>
+                        <th>lL2</th>
+                        <th>U12</th>
+                        <th>U23</th>
+                        <th>U31</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        List<string> horasExistenteSet = energiaGenerada.Select(item => item.Hora).ToList();
+                        int horaSiguiente = 0;
+                        string[] horaSplit = date.ToString("HH").Split(':');
+                        if (energiaGenerada.Count != 0)
+                        {
+                            horaSiguiente = horasEG.Count == energiaGenerada.Count
+                            ? horasEG[energiaGenerada.Count - 1]
+                            : horasEG[energiaGenerada.Count];
+
+                            var horaSiguienteId = horaSiguiente == 0 ? 24 : horaSiguiente;
+
+                            foreach (EnergiaGenerada item in energiaGenerada)
+                            {
+                                string[] horaRegistroSplit = item.Hora.Split(':');
+
+                                if (horasEG[energiaGenerada.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                {
+                                    if (((int.Parse(horaRegistroSplit[0]) == horasEG[energiaGenerada.Count - 1] &&
+                                    int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                    (horaSiguiente > int.Parse(horaSplit[0]))) || horaRegistroSplit[0] == "0")
+                                    {
+                                        <tr>
+                                            <td id="idHora" claveRegistro=@horaRegistroSplit[0]>@item.Hora</td>
+                                            <td id="P"><input value=@item.PotenciaActiva></td>
+                                            <td id="Q"><input value=@item.PotenciaReactiva></td>
+                                            <td id="E+"><input value=@item.EnergiaActiva></td>
+                                            <td id="Eq+"><input value=@item.EnergiaReactiva></td>
+                                            <td id="lL1"><input value=@item.CorrienteLinea1></td>
+                                            <td id="lL2"><input value=@item.CorrienteLinea2></td>
+                                            <td id="lL3"><input value=@item.CorrienteLinea3></td>
+                                            <td id="U12"><input value=@item.Voltaje></td>
+                                            <td id="U23"><input value=@item.Voltaje23></td>
+                                            <td id="U31"><input value=@item.Voltaje31></td>
+                                        </tr>
+
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.Hora</td>
+                                            <td>@item.PotenciaActiva</td>
+                                            <td>@item.PotenciaReactiva</td>
+                                            <td>@item.EnergiaActiva</td>
+                                            <td>@item.EnergiaReactiva</td>
+                                            <td>@item.CorrienteLinea1</td>
+                                            <td>@item.CorrienteLinea2</td>
+                                            <td>@item.CorrienteLinea3</td>
+                                            <td>@item.Voltaje</td>
+                                            <td>@item.Voltaje23</td>
+                                            <td>@item.Voltaje31</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td id="idHora" claveRegistro=@horaSiguienteId>@horaSiguiente:00</td>
+                                            <td id="P"><input /></td>
+                                            <td id="Q"><input /></td>
+                                            <td id="E+"><input /></td>
+                                            <td id="Eq+"><input /></td>
+                                            <td id="lL1"><input /></td>
+                                            <td id="lL2"><input /></td>
+                                            <td id="lL3"><input /></td>
+                                            <td id="U12"><input /></td>
+                                            <td id="U23"><input /></td>
+                                            <td id="U31"><input /></td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>@item.Hora</td>
+                                        <td>@item.PotenciaActiva</td>
+                                        <td>@item.PotenciaReactiva</td>
+                                        <td>@item.EnergiaActiva</td>
+                                        <td>@item.EnergiaReactiva</td>
+                                        <td>@item.CorrienteLinea1</td>
+                                        <td>@item.CorrienteLinea2</td>
+                                        <td>@item.CorrienteLinea3</td>
+                                        <td>@item.Voltaje</td>
+                                        <td>@item.Voltaje23</td>
+                                        <td>@item.Voltaje31</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td id="idHora" claveRegistro='2'>2:00</td>
+                                <td id="P"><input /></td>
+                                <td id="Q"><input /></td>
+                                <td id="E+"><input /></td>
+                                <td id="Eq+"><input /></td>
+                                <td id="lL1"><input /></td>
+                                <td id="lL2"><input /></td>
+                                <td id="lL3"><input /></td>
+                                <td id="U12"><input /></td>
+                                <td id="U23"><input /></td>
+                                <td id="U31"><input /></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <div class="title-table">
+                <p id="idRegistroGen" claveRegistro='@Generator1.IdRegistroConsola'>@Generator1.TipoRegistro</p>
+            </div>
+            <div style="display: flex;">
+                <table class="table table-bordered EG">
+                    <thead>
+                        <tr style="height: 100px;">
+                            <th>HORA</th>
+                            <th>L1</th>
+                            <th>L2</th>
+                            <th>L3</th>
+                            <th>D</th>
+                            <th>ND</th>
+                            <th>Torcional vibration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (datosGenerador.Count != 0)
+                            {
+                                horaSiguiente = horasGenerador.Count == datosGenerador.Count
+                                ? horasGenerador[datosGenerador.Count - 1]
+                                : horasGenerador[datosGenerador.Count];
+                                // horaSiguiente = horaSiguiente == 0 ? 24 : horaSiguiente;
+
+                                var horaSiguienteId = horaSiguiente == 0 ? 24 : horaSiguiente;
+
+                                foreach (var item in datosGenerador)
+                                {
+                                    string[] horaRegistroSplit = item.Hora.Split(':');
+                                    var horaRegistro = int.Parse(horaRegistroSplit[0]);
+
+                                    if (horasGenerador[datosGenerador.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                    {
+
+                                        if ((int.Parse(horaRegistroSplit[0]) == horasGenerador[datosGenerador.Count - 1] &&
+                                        int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                        (horaSiguiente > int.Parse(horaSplit[0])) || horaRegistroSplit[0] == "0")
+                                        {
+
+                                            <tr>
+                                                <td id="idHoraGen" claveRegistro=@horaRegistroSplit[0]>@item.Hora</td>
+                                                <td id="L1"><input value=@item.L1 /></td>
+                                                <td id="L2"><input value=@item.L2 /></td>
+                                                <td id="L3"><input value=@item.L3 /></td>
+                                                <td id="D"><input value=@item.D /></td>
+                                                <td id="ND"><input value=@item.ND /></td>
+                                                <td id="TV"><input value=@item.TersionalVibration /></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.Hora</td>
+                                                <td>@item.L1</td>
+                                                <td>@item.L2</td>
+                                                <td>@item.L3</td>
+                                                <td>@item.D</td>
+                                                <td>@item.ND</td>
+                                                <td>@item.TersionalVibration</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="idHoraGen" claveRegistro=@horaSiguienteId>@horaSiguiente:00</td>
+                                                <td id="L1"><input /></td>
+                                                <td id="L2"><input /></td>
+                                                <td id="L3"><input /></td>
+                                                <td id="D"><input /></td>
+                                                <td id="ND"><input /></td>
+                                                <td id="TV"><input /></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.Hora</td>
+                                            <td>@item.L1</td>
+                                            <td>@item.L2</td>
+                                            <td>@item.L3</td>
+                                            <td>@item.D</td>
+                                            <td>@item.ND</td>
+                                            <td>@item.TersionalVibration</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td id="idHoraGen" claveRegistro=@horasGenerador[0]>@horasGenerador[0]:00</td>
+                                    <td id="L1"><input /></td>
+                                    <td id="L2"><input /></td>
+                                    <td id="L3"><input /></td>
+                                    <td id="D"><input /></td>
+                                    <td id="ND"><input /></td>
+                                    <td id="TV"><input /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+                <table class="table table-bordered EG">
+                    <thead>
+                        <tr>
+                            <th data-info='@detalleCabeceras["TCA"].Descripcion' colspan="2" id=@detalleCabeceras["TCA"].IdTipoEngine>@detalleCabeceras["TCA"].Detalle</th>
+                            <th data-info='@detalleCabeceras["TCB"].Descripcion' colspan="2" id=@detalleCabeceras["TCB"].IdTipoEngine>@detalleCabeceras["TCB"].Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th data-info='@detalleCabeceras["TpOut-A"].Descripcion' id=@detalleCabeceras["TpOut-A"].IdTipoEngine>@detalleCabeceras["TpOut-A"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Speed-A"].Descripcion' id=@detalleCabeceras["Speed-A"].IdTipoEngine>@detalleCabeceras["Speed-A"].Detalle</th>
+                            <th data-info='@detalleCabeceras["TpOut-B"].Descripcion' id=@detalleCabeceras["TpOut-B"].IdTipoEngine>@detalleCabeceras["TpOut-B"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Speed-B"].Descripcion' id=@detalleCabeceras["Speed-B"].IdTipoEngine>@detalleCabeceras["Speed-B"].Detalle</th>
+                        </tr>
+                        @{
+
+                            if (datosGenerador.Count != 0)
+                            {
+                                foreach (var item in datosGenerador)
+                                {
+                                    string[] horaRegistroSplit = item.Hora.Split(':');
+
+                                    if (horasGenerador[datosGenerador.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                    {
+
+                                        if (((int.Parse(horaRegistroSplit[0]) == horasGenerador[datosGenerador.Count - 1] &&
+                                        int.Parse(horaRegistroSplit[0]) <= horaSiguiente) &&
+                                        (horaSiguiente >= int.Parse(horaSplit[0]))) || horaRegistroSplit[0] == "0")
+                                        {
+                                            <tr>
+                                                <td id="TO-A"><input value=@item.detalleGeneradores["TCA"].TempOut /></td>
+                                                <td id="Sp-A"><input value=@item.detalleGeneradores["TCA"].Speed /></td>
+                                                <td id="TO-B"><input value=@item.detalleGeneradores["TCB"].TempOut /></td>
+                                                <td id="Sp-B"><input value=@item.detalleGeneradores["TCB"].Speed /></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.detalleGeneradores["TCA"].TempOut</td>
+                                                <td>@item.detalleGeneradores["TCA"].Speed</td>
+                                                <td>@item.detalleGeneradores["TCB"].TempOut</td>
+                                                <td>@item.detalleGeneradores["TCB"].Speed</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td id="TO-A"><input /></td>
+                                                <td id="Sp-A"><input /></td>
+                                                <td id="TO-B"><input /></td>
+                                                <td id="Sp-B"><input /></td>
+                                            </tr>
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.detalleGeneradores["TCA"].TempOut</td>
+                                            <td>@item.detalleGeneradores["TCA"].Speed</td>
+                                            <td>@item.detalleGeneradores["TCB"].TempOut</td>
+                                            <td>@item.detalleGeneradores["TCB"].Speed</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td id="TO-A"><input /></td>
+                                    <td id="Sp-A"><input /></td>
+                                    <td id="TO-B"><input /></td>
+                                    <td id="Sp-B"><input /></td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div>
+            <div class="title-table">
+                <p id="idRegistroEng" claveRegistro='@Engine1.IdRegistroConsola'>@Engine1.TipoRegistro</p>
+            </div>
+            <div style="display: flex;">
+                <table class="table table-bordered EG" style="width: 52% !important;">
+                    <thead>
+                        <tr style="height: 100px;">
+                            <th>HORA</th>
+                            <th data-info='@detalleCabeceras["Run-Hours"].Descripcion' id=@detalleCabeceras["Run-Hours"].IdTipoEngine>@detalleCabeceras["Run-Hours"].Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (datosEngine.Count != 0)
+                            {
+                                horaSiguiente = horasGenerador.Count == datosEngine.Count
+                                ? horasGenerador[datosEngine.Count - 1]
+                                : horasGenerador[datosEngine.Count];
+                                //horaSiguiente = horaSiguiente == 0 ? 24 : horaSiguiente;
+                                var horaSiguienteId = horaSiguiente == 0 ? 24 : horaSiguiente;
+
+                                foreach (var item in datosEngine)
+                                {
+                                    string[] horaRegistroSplit = item.Hora.Split(':');
+                                    var horaRegistro = int.Parse(horaRegistroSplit[0]);
+
+                                    if (horasGenerador[datosEngine.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                    {
+                                        if (((int.Parse(horaRegistroSplit[0]) == horasGenerador[datosEngine.Count - 1] &&
+                                        int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                        (horaSiguiente > int.Parse(horaSplit[0]))) || horaRegistroSplit[0] == "0")
+                                        {
+                                            <tr>
+                                                <td id="idHoraEng" claveRegistro=@horaRegistroSplit[0]>@item.Hora</td>
+                                                <td id="Run-H"><input value="@item.RunHours" /></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.Hora</td>
+                                                <td>@item.RunHours</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td id="idHoraEng" claveRegistro=@horaSiguienteId>@horaSiguiente:00</td>
+                                                <td id="Run-H"><input /></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.Hora</td>
+                                            <td>@item.RunHours</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td id="idHoraEng" claveRegistro=@horasGenerador[0]>@horasGenerador[0]:00</td>
+                                    <td id="Run-H"><input /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <table class="table table-bordered EG" style="width: 75% !important;">
+                    <thead>
+                        <tr>
+                            <th data-info='@detalleCabeceras["Fuel"].Descripcion' colspan="2" id=@detalleCabeceras["Fuel"].IdTipoEngine>@detalleCabeceras["Fuel"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Oil"].Descripcion' colspan="2" id=@detalleCabeceras["Oil"].IdTipoEngine>@detalleCabeceras["Oil"].Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th data-info='@detalleCabeceras["Presion-F"].Descripcion' id=@detalleCabeceras["Presion-F"].IdTipoEngine>@detalleCabeceras["Presion-F"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Temp-F"].Descripcion' id=@detalleCabeceras["Temp-F"].IdTipoEngine>@detalleCabeceras["Temp-F"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Presion-O"].Descripcion' id=@detalleCabeceras["Presion-O"].IdTipoEngine>@detalleCabeceras["Presion-O"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Temp-O"].Descripcion' id=@detalleCabeceras["Temp-O"].IdTipoEngine>@detalleCabeceras["Temp-O"].Detalle</th>
+                        </tr>
+                        @{
+                            if (datosEngine.Count != 0)
+                            {
+                                foreach (var item in datosEngine)
+                                {
+                                    string[] horaRegistroSplit = item.Hora.Split(':');
+                                    var horaRegistro = int.Parse(horaRegistroSplit[0]);
+
+                                    if (horasGenerador[datosEngine.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                    {
+                                        if (((int.Parse(horaRegistroSplit[0]) == horasGenerador[datosEngine.Count - 1] &&
+                                        int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                        (horaSiguiente > int.Parse(horaSplit[0]))) || horaRegistroSplit[0] == "0")
+                                        {
+                                            <tr>
+                                                <td id="P-F"><input value="@item.detalleEngine["FUEL"].Presion" /></td>
+                                                <td id="T-F"><input value="@item.detalleEngine["FUEL"].Temp" /></td>
+                                                <td id="P-O"><input value="@item.detalleEngine["OIL"].Presion" /></td>
+                                                <td id="T-O"><input value="@item.detalleEngine["OIL"].Temp" /></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.detalleEngine["FUEL"].Presion</td>
+                                                <td>@item.detalleEngine["FUEL"].Temp</td>
+                                                <td>@item.detalleEngine["OIL"].Presion</td>
+                                                <td>@item.detalleEngine["OIL"].Temp</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td id="P-F"><input /></td>
+                                                <td id="T-F"><input /></td>
+                                                <td id="P-O"><input /></td>
+                                                <td id="T-O"><input /></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.detalleEngine["FUEL"].Presion</td>
+                                            <td>@item.detalleEngine["FUEL"].Temp</td>
+                                            <td>@item.detalleEngine["OIL"].Presion</td>
+                                            <td>@item.detalleEngine["OIL"].Temp</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td id="P-F"><input /></td>
+                                    <td id="T-F"><input /></td>
+                                    <td id="P-O"><input /></td>
+                                    <td id="T-O"><input /></td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+                <table class="table table-bordered EG" style="width: 25% !important;">
+                    <thead>
+                        <tr>
+                            <th data-info='@detalleCabeceras["Cooling"].Descripcion' id=@detalleCabeceras["Cooling"].IdTipoEngine>@detalleCabeceras["Cooling"].Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th data-info='@detalleCabeceras["Ca-Temp"].Descripcion' id=@detalleCabeceras["Ca-Temp"].IdTipoEngine>@detalleCabeceras["Ca-Temp"].Detalle</th>
+                        </tr>
+                        @{
+                            if (datosEngine.Count != 0)
+                            {
+                                var ultimaHoraGenerador = horasGenerador[datosEngine.Count - 1];
+
+                                foreach (var item in datosEngine)
+                                {
+
+                                    string[] horaRegistroSplit = item.Hora.Split(':');
+                                    // var horaRegistro = int.Parse(horaRegistroSplit[0]);
+                                    if (horasGenerador[datosEngine.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                    {
+                                        if (((int.Parse(horaRegistroSplit[0]) == horasGenerador[datosEngine.Count - 1] &&
+                                        int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                        (horaSiguiente > int.Parse(horaSplit[0]))) || horaRegistroSplit[0] == "0")
+                                        {
+                                            <tr>
+                                                <td id="CA-T"><input value="@item.CATemp" /></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.CATemp</td>
+                                            </tr>
+                                            <tr>
+                                                <td id="CA-T"><input /></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.CATemp</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td id="CA-T"><input /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <table class="table table-bordered EG" style="width: 90% !important;">
+                    <thead>
+                        <tr style="height: 100px;">
+                            <th data-info='@detalleCabeceras["Diff-P-J-P"].Descripcion' id=@detalleCabeceras["Diff-P-J-P"].IdTipoEngine>@detalleCabeceras["Diff-P-J-P"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Ca-Press"].Descripcion' id=@detalleCabeceras["Ca-Press"].IdTipoEngine>@detalleCabeceras["Ca-Press"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Ex-G-A-T"].Descripcion' id=@detalleCabeceras["Ex-G-A-T"].IdTipoEngine>@detalleCabeceras["Ex-G-A-T"].Detalle</th>
+                            <th data-info='@detalleCabeceras["Cy-P-A"].Descripcion' id=@detalleCabeceras["Cy-P-A"].IdTipoEngine>@detalleCabeceras["Cy-P-A"].Detalle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (datosEngine.Count != 0)
+                            {
+                                var ultimaHoraGenerador = horasGenerador[datosEngine.Count - 1];
+
+                                foreach (var item in datosEngine)
+                                {
+                                    string[] horaRegistroSplit = item.Hora.Split(':');
+                                    //   var horaRegistro = int.Parse(horaRegistroSplit[0]);
+
+                                    if (horasGenerador[datosEngine.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                    {
+                                        if (((int.Parse(horaRegistroSplit[0]) == horasGenerador[datosEngine.Count - 1] &&
+                                        int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                        (horaSiguiente > int.Parse(horaSplit[0]))) || horaRegistroSplit[0] == "0")
+                                        {
+                                            <tr>
+                                                <td id="Diff-P"><input value="@item.DiffPressJetPulse" /></td>
+                                                <td id="Ca-P"><input value="@item.CAPress" /></td>
+                                                <td id="Ex-G"><input value="@item.ExhGasAvgTemp" /></td>
+                                                <td id="Cy-P"><input value="@item.CylPressAvg" /></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@item.DiffPressJetPulse</td>
+                                                <td>@item.CAPress</td>
+                                                <td>@item.ExhGasAvgTemp</td>
+                                                <td>@item.CylPressAvg</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td id="Diff-P"><input /></td>
+                                                <td id="Ca-P"><input /></td>
+                                                <td id="Ex-G"><input /></td>
+                                                <td id="Cy-P"><input /></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.DiffPressJetPulse</td>
+                                            <td>@item.CAPress</td>
+                                            <td>@item.ExhGasAvgTemp</td>
+                                            <td>@item.CylPressAvg</td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td id="Diff-P"><input /></td>
+                                    <td id="Ca-P"><input /></td>
+                                    <td id="Ex-G"><input /></td>
+                                    <td id="Cy-P"><input /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div style="padding :10px;">
+            <div class="title-table">
+                <p id="idRegistroBaa" claveRegistro='@BAA1.IdRegistroConsola'>@BAA1.TipoRegistro</p>
+            </div>
+            <table class="table table-bordered EG" id="tabla-Baa">
+                <thead>
+                    <tr>
+                        <th>HORA</th>
+                        <th>P</th>
+                        <th>Q</th>
+                        <th>E+</th>
+                        <th>Eq+</th>
+                        <th>lL1</th>
+                        <th>lL2</th>
+                        <th>lL2</th>
+                        <th>U12</th>
+                        <th>U23</th>
+                        <th>U31</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @{
+                        horasExistenteSet = energiaGeneradaBAA.Select(item => item.Hora).ToList();
+
+                        horaSplit = date.ToString("HH").Split(':');
+
+                        if (energiaGeneradaBAA.Count != 0)
+                        {
+                            horaSiguiente = horasEG.Count == energiaGeneradaBAA.Count
+                            ? horasEG[energiaGeneradaBAA.Count - 1]
+                            : horasEG[energiaGeneradaBAA.Count];
+                            //  horaSiguiente = horaSiguiente == 0 ? 24 : horaSiguiente;
+                            var horaSiguienteId = horaSiguiente == 0 ? 24 : horaSiguiente;
+                            var ultimaHoraGenerador = horasEG[energiaGeneradaBAA.Count - 1];
+
+                            foreach (EnergiaGenerada item in energiaGeneradaBAA)
+                            {
+                                string[] horaRegistroSplit = item.Hora.Split(':');
+                                var horaRegistro = int.Parse(horaRegistroSplit[0]);
+
+                                if (horasEG[energiaGeneradaBAA.Count - 1] == int.Parse(horaRegistroSplit[0]))
+                                {
+                                    if ((int.Parse(horaRegistroSplit[0]) == horasEG[energiaGeneradaBAA.Count - 1] &&
+                                    int.Parse(horaRegistroSplit[0]) < horaSiguiente) &&
+                                    (horaSiguiente > int.Parse(horaSplit[0])) || horaRegistroSplit[0] == "0")
+                                    {
+                                        <tr>
+                                            <td id="idHoraBaa" claveRegistro=@horaRegistroSplit[0]>@item.Hora</td>
+                                            <td id="P"><input value=@item.PotenciaActiva></td>
+                                            <td id="Q"><input value=@item.PotenciaReactiva></td>
+                                            <td id="E+"><input value=@item.EnergiaActiva></td>
+                                            <td id="Eq+"><input value=@item.EnergiaReactiva></td>
+                                            <td id="lL1"><input value=@item.CorrienteLinea1></td>
+                                            <td id="lL2"><input value=@item.CorrienteLinea2></td>
+                                            <td id="lL3"><input value=@item.CorrienteLinea3></td>
+                                            <td id="U12"><input value=@item.Voltaje></td>
+                                            <td id="U23"><input value=@item.Voltaje23></td>
+                                            <td id="U31"><input value=@item.Voltaje31></td>
+                                        </tr>
+
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>@item.Hora</td>
+                                            <td>@item.PotenciaActiva</td>
+                                            <td>@item.PotenciaReactiva</td>
+                                            <td>@item.EnergiaActiva</td>
+                                            <td>@item.EnergiaReactiva</td>
+                                            <td>@item.CorrienteLinea1</td>
+                                            <td>@item.CorrienteLinea2</td>
+                                            <td>@item.CorrienteLinea3</td>
+                                            <td>@item.Voltaje</td>
+                                            <td>@item.Voltaje23</td>
+                                            <td>@item.Voltaje31</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td id="idHoraBaa" claveRegistro=@horaSiguienteId>@horaSiguiente:00</td>
+                                            <td id="P"><input /></td>
+                                            <td id="Q"><input /></td>
+                                            <td id="E+"><input /></td>
+                                            <td id="Eq+"><input /></td>
+                                            <td id="lL1"><input /></td>
+                                            <td id="lL2"><input /></td>
+                                            <td id="lL3"><input /></td>
+                                            <td id="U12"><input /></td>
+                                            <td id="U23"><input /></td>
+                                            <td id="U31"><input /></td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>@item.Hora</td>
+                                        <td>@item.PotenciaActiva</td>
+                                        <td>@item.PotenciaReactiva</td>
+                                        <td>@item.EnergiaActiva</td>
+                                        <td>@item.EnergiaReactiva</td>
+                                        <td>@item.CorrienteLinea1</td>
+                                        <td>@item.CorrienteLinea2</td>
+                                        <td>@item.CorrienteLinea3</td>
+                                        <td>@item.Voltaje</td>
+                                        <td>@item.Voltaje23</td>
+                                        <td>@item.Voltaje31</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td id="idHoraBaa" claveRegistro='2'>2:00</td>
+                                <td id="P"><input /></td>
+                                <td id="Q"><input /></td>
+                                <td id="E+"><input /></td>
+                                <td id="Eq+"><input /></td>
+                                <td id="lL1"><input /></td>
+                                <td id="lL2"><input /></td>
+                                <td id="lL3"><input /></td>
+                                <td id="U12"><input /></td>
+                                <td id="U23"><input /></td>
+                                <td id="U31"><input /></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <div id="datos-EG2">
     </div>
 
     <div>
-        @*  <button style="display:@displayBtnIniciar;" id="iniciar">INICIAR</button>*@
-         <button style="display:none;" id="iniciar">INICIAR</button>
-
-        <button class="btn btn-outline-secondary" style="display:@(display18Count);" id="mostrar-linea">Ver Linea2</button>
-        <button class="btn btn-outline-secondary" id="mostrar-todo">Mostrar Ambos</button>
+        <table class="table table-bordered EG" id="">
+            <tr>
+                <th rowspan="2">HORA</th>
+                <th colspan="2" data-info='@detalleCabeceras["Delivered"].Descripcion' id=@detalleCabeceras["Delivered"].IdTipoEngine>@detalleCabeceras["Delivered"].Detalle</th>
+                <th colspan="2" data-info='@detalleCabeceras["Recived"].Descripcion' id=@detalleCabeceras["Recived"].IdTipoEngine>@detalleCabeceras["Recived"].Detalle</th>
+            </tr>
+            <tr>
+                <th data-info='@detalleCabeceras["kwh"].Descripcion' id=@detalleCabeceras["kwh"].IdTipoEngine>@detalleCabeceras["kwh"].Detalle</th>
+                <th data-info='@detalleCabeceras["kvarh"].Descripcion' id=@detalleCabeceras["kvarh"].IdTipoEngine>@detalleCabeceras["kvarh"].Detalle</th>
+                <th data-info='@detalleCabeceras["kwh"].Descripcion' id=@detalleCabeceras["kwh"].IdTipoEngine>@detalleCabeceras["kwh"].Detalle</th>
+                <th data-info='@detalleCabeceras["kvarh"].Descripcion' id=@detalleCabeceras["kvarh"].IdTipoEngine>@detalleCabeceras["kvarh"].Detalle</th>
+            </tr>
+            <tr>
+                <td id="idHoraBao" claveRegistro='6'>6:00</td>
+                <td id="de-kwh"><input /></td>
+                <td id="de-kvarh"><input /></td>
+                <td id="re-kwh"><input /></td>
+                <td id="re-kvarh"><input /></td>
+            </tr>
+        </table>
     </div>
-    <div id="contenido-reporte-gas">
-        <div class="row">
-            <div class="col-md-3" style="display: flow;">
-                <img class="image-logo" src="./img/logo_elec.png" />
-            </div>
-            <div class="col-md-9" style="display: flow;">
-                <p class="titulo-reporte-gas">
-                    CENTRAL TERMICA LUREN - ELECTRODUNAS S.A. <br />
-                    ESTACIÓN DE REGULACIÓN Y MEDICIÓN DE GAS - ERM <br />
-                    REPORTE DIARIO DE GAS <br />
-                </p>
-                <p class="subtitulo-reporte-gas">ELD.CTL-OM-003 Versión:00</p>
-            </div>
-        </div>
-        <div style="display: flex;" id="linea18">
-            <div style="width: 260px;">
-                <table class="table table-bordered Head-table-consola">
-                    <tbody>
-                        <tr>
-                            <th colspan="2">FECHA</th>
-                        </tr>
-                        <tr>
-                            <td colspan="2">HORA</td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["VC"].Detalle </td>
-                            <td>@detalleCabeceras["SM3"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["VN"].Detalle </td>
-                            <td>@detalleCabeceras["M3"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["PL"].Detalle </td>
-                            <td>@detalleCabeceras["BAR"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["FL"].Detalle </td>
-                            <td>@detalleCabeceras["M3H"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["SV"].Detalle </td>
-                            <td>@detalleCabeceras["DC"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["TL"].Detalle </td>
-                            <td>@detalleCabeceras["C"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["FC"].Detalle </td>
-                            <td>@detalleCabeceras["E"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["FS"].Detalle </td>
-                            <td>@detalleCabeceras["CM3"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["DA"].Detalle </td>
-                            <td>@detalleCabeceras["M3"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["DP"].Detalle </td>
-                            <td>@detalleCabeceras["M3"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["PR"].Detalle </td>
-                            <td>@detalleCabeceras["BAR"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["D1"].Detalle </td>
-                            <td>@detalleCabeceras["MBAR"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["D2"].Detalle </td>
-                            <td>@detalleCabeceras["MBAR"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["L"].Detalle </td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["Caudalimetro"].Detalle </td>
-                            <td>@detalleCabeceras["M3"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <th colspan="2">Presión de ingreso (bar)</th>
-                        </tr>
-                    </tbody>
-                </table>
 
+    <div id="lecturasMedianoche">
+        <div style="padding :10px;">
+            <div class="title-table">
+                <p id="idRegistro12" claveRegistro='@LecMedianoche.IdRegistroConsola'>@LecMedianoche.TipoRegistro</p>
             </div>
-            <div id="contendor-datos-gas" style="display:flex;  ">
+            <div>
+
                 @{
-                    int cantidadTablas = 1;
-                    DateTime fechaObjeto = DateTime.Now;
-                    switch (displayNuevaTabla18)
+                    if (lecturasMedianoche != null && lecturasMedianoche.Count() != 0)
                     {
-                        case true:
 
-                            foreach (var item in detalleReporte["18"])
-                            {
-                                fechaObjeto = DateTime.ParseExact(item.Fecha, "d/M/yyyy HH:mm:ss", null);
-
-                                <table id='tabla-contenedor@(cantidadTablas)' class="table table-bordered datos-table-consola datos-anteriores">
-                                    <tr>
-                                        <th class="cabecera-fecha-tabla">
-                                            <p class="titulo-tabla-horas" @*style="border: none; position: absolute;" *@ id="fechaRegistroGas@(cantidadTablas)" fechaDato="@item.Fecha" versionReporte='@idReportegas.IdReporteGas'>@fechaObjeto.ToString("dd/MM/yyyy")</p>
-                                            @if (date.ToString("dd/MM/yyyy") == fechaObjeto.ToString("dd/MM/yyyy"))
-                                            {
-                                             <input @*style="margin-left: 80%; display: flex; padding: 0 0 0 0;" *@ type="checkbox" valueId='@item.IdDetalleReporte' id='checkEdt@(cantidadTablas)' />
-                                            }
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th id="horaReporte@(cantidadTablas)">18:00</th>
-                                    </tr>
-                                    <tr>
-                                        <td id="vc">
-                                            <input disabled value=@item.VC />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="vn">
-                                            <input disabled value=@item.VN />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="pl">
-                                            <input disabled value=@item.PL />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="fl" class="dato-visible-sobreado">
-                                            <input disabled value=@item.FL />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="sv">
-                                            <input disabled value=@item.SV />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="tl">
-                                            <input disabled value=@item.TL />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="fc">
-                                            <input disabled value=@item.FC />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="fs">
-                                            <input disabled value=@item.FS />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="da">
-                                            <input disabled value=@item.DA />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="dp" class="dato-visible-sobreado">
-                                            <input disabled value=@item.DP />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="pr">
-                                            <input disabled value=@item.PR />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="d1">
-                                            <input disabled value=@item.D1 />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="d2">
-                                            <input disabled value=@item.D2 />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="l">
-                                            <input disabled value=@item.L />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="caudalimetro" class="dato-visible-sobreado">
-                                            <input disabled value=@item.Caudalimetro />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="presionIngreso">
-                                            <input disabled value=@item.PresionIngreso />
-                                        </td>
-                                    </tr>
-                                </table>
-                                cantidadTablas++;
-                            }
-                            if (date.ToString("dd/MM/yyyy") != fechaObjeto.ToString("dd/MM/yyyy"))
-                            {
-                                fechaObjeto = fechaObjeto.AddDays(1);
-                                goto case false;
-                            }
-                            break;
-                        case false:
-                            <table  style="display:@(display18Count);" id="tabla-contenedor@(cantidadTablas)" class="table table-bordered datos-table-consola">
-                                <tr>
-                                    <th style="height: 50px;">
-                                        <p class="titulo-tabla-horas" id="fechaRegistroGas@(cantidadTablas)" fechaDato='@fechaObjeto.ToString("dd/MM/yyyy")' versionReporte='@idReportegas.IdReporteGas'> @fechaObjeto.ToString("dd/MM/yyyy")</p>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th id="horaReporte@(cantidadTablas)">18:00</th>
-                                </tr>
-                                <tr>
-                                    <td id="vc">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="vn">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="pl">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="fl" class="dato-visible-sobreado">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="sv">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="tl">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="fc">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="fs">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="da">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="dp" class="dato-visible-sobreado">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="pr">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="d1">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="d2">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="l">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="caudalimetro" class="dato-visible-sobreado">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="presionIngreso">
-                                        <input />
-                                    </td>
-                                </tr>
-                            </table>
-                            break;
+                        foreach (var item in lecturasMedianoche)
+                        {
+                            <div class="lectura">
+                                <div data-info='@detalleCabeceras["GasCon"].Descripcion' id=@detalleCabeceras["GasCon"].IdTipoEngine@item.Value.NumeroEG>
+                                    <span> @detalleCabeceras["GasCon"].Detalle@item.Value.NumeroEG &nbsp;</span> <input value=@item.Value.GasconsumedEG />
+                                </div>
+                                <div data-info='@detalleCabeceras["EnerProd"].Descripcion' id=@detalleCabeceras["EnerProd"].IdTipoEngine@item.Value.NumeroEG>
+                                    <span> @detalleCabeceras["EnerProd"].Detalle@item.Value.NumeroEG &nbsp;</span>
+                                    <input value=@item.Value.GasEnergiaEG />
+                                </div>
+                                <div data-info='@detalleCabeceras["ReadingToday"].Descripcion' id=@detalleCabeceras["ReadingToday"].IdTipoEngine@item.Value.NumeroEG>
+                                    <span> @detalleCabeceras["ReadingToday"].Detalle &nbsp;</span>
+                                    <input value=@item.Value.ReadingToday />
+                                </div>
+                            </div>
+                        }
                     }
-                }
-            </div>
-        </div>
-
-        <div id="delimitador">
-
-        </div>
-
-        <div style="display: none;" id="linea6">
-            <div style="width: 260px;">
-                <table class="table table-bordered Head-table-consola">
-                    <tbody>
-                        <tr>
-                            <th colspan="2">FECHA2</th>
-                        </tr>
-                        <tr>
-                            <th colspan="2">HORA</th>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["VC"].Detalle </td>
-                            <td>@detalleCabeceras["SM3"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["VN"].Detalle </td>
-                            <td>@detalleCabeceras["M3"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["PL"].Detalle </td>
-                            <td>@detalleCabeceras["BAR"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["FL"].Detalle </td>
-                            <td>@detalleCabeceras["M3H"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["SV"].Detalle </td>
-                            <td>@detalleCabeceras["DC"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["TL"].Detalle </td>
-                            <td>@detalleCabeceras["C"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["FC"].Detalle </td>
-                            <td>@detalleCabeceras["E"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["FS"].Detalle </td>
-                            <td>@detalleCabeceras["CM3"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["DA"].Detalle </td>
-                            <td>@detalleCabeceras["M3"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["DP"].Detalle </td>
-                            <td>@detalleCabeceras["M3"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["PR"].Detalle </td>
-                            <td>@detalleCabeceras["BAR"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["D1"].Detalle </td>
-                            <td>@detalleCabeceras["MBAR"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["D2"].Detalle </td>
-                            <td>@detalleCabeceras["MBAR"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["L"].Detalle </td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>@detalleCabeceras["Caudalimetro"].Detalle </td>
-                            <td>@detalleCabeceras["M3"].Detalle </td>
-                        </tr>
-                        <tr>
-                            <th colspan="2">Presión de ingreso (bar)</th>
-                        </tr>
-                    </tbody>
-                </table>
-
-            </div>
-            <div id="contendor-datos-gas" style="display:flex; ">
-                @{
-                    fechaObjeto = DateTime.Now;
-                    cantidadTablas = 1;
-                    switch (displayNuevaTabla6)
+                    else
                     {
-                        case true:
+                        for (int i = 1; i <= 2; i++)
+                        {
+                            <div class="lectura">
+                                <div data-info='@detalleCabeceras["GasCon"].Descripcion' id=@detalleCabeceras["GasCon"].IdTipoEngine@i>
+                                    <span> @detalleCabeceras["GasCon"].Detalle@i &nbsp;</span>
+                                    <input />
+                                </div>
+                                <div data-info='@detalleCabeceras["EnerProd"].Descripcion' id=@detalleCabeceras["EnerProd"].IdTipoEngine@i>
+                                    <span> @detalleCabeceras["EnerProd"].Detalle@i &nbsp;</span>
+                                    <input />
+                                </div>
+                                <div data-info='@detalleCabeceras["ReadingToday"].Descripcion' id=@detalleCabeceras["ReadingToday"].IdTipoEngine@i>
+                                    <span> @detalleCabeceras["ReadingToday"].Detalle &nbsp;</span>
+                                    <input />
+                                </div>
+                            </div>
+                        }
 
-                            foreach (var item in detalleReporte["6"])
-                            {
-                                fechaObjeto = DateTime.ParseExact(item.Fecha, "d/M/yyyy HH:mm:ss", null);
 
-                                <table id='tabla-contenedor2@(cantidadTablas)' class="table table-bordered datos-table-consola datos-anteriores">
-                                    <tr>
-                                        <th class="cabecera-fecha-tabla">
-                                            <p class="titulo-tabla-horas" @*style="border: none; position: absolute;"*@ id="fechaRegistroGas2@(cantidadTablas)" fechaDato="@item.Fecha" versionReporte='@(idReportegas.IdReporteGas)'>@fechaObjeto.ToString("dd/MM/yyyy")</p>
-                                            @if (date.ToString("dd/MM/yyyy") == fechaObjeto.ToString("dd/MM/yyyy"))
-                                            {
-                                              <input @*style="margin-left: 80%; display: flex; padding: 0 0 0 0;"*@ type="checkbox" valueId='@item.IdDetalleReporte' id='checkEdt2@(cantidadTablas)' />
-
-                                            }
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th id="horaReporte2@(cantidadTablas)">6:00</th>
-                                    </tr>
-                                    <tr>
-                                        <td id="vc">
-                                            <input disabled value=@item.VC />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="vn">
-                                            <input disabled value=@item.VN />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="pl">
-                                            <input disabled value=@item.PL />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="fl" class="dato-visible-sobreado">
-                                            <input disabled value=@item.FL />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="sv">
-                                            <input disabled value=@item.SV />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="tl">
-                                            <input disabled value=@item.TL />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="fc">
-                                            <input disabled value=@item.FC />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="fs">
-                                            <input disabled value=@item.FS />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="da">
-                                            <input disabled value=@item.DA />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="dp" class="dato-visible-sobreado">
-                                            <input disabled value=@item.DP />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="pr">
-                                            <input disabled value=@item.PR />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="d1">
-                                            <input disabled value=@item.D1 />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="d2">
-                                            <input disabled value=@item.D2 />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="l">
-                                            <input disabled value=@item.L />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="caudalimetro" class="dato-visible-sobreado">
-                                            <input disabled value=@item.Caudalimetro />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td id="presionIngreso">
-                                            <input disabled value=@item.PresionIngreso />
-                                        </td>
-                                    </tr>
-                                </table>
-                                cantidadTablas++;
-                            }
-                            if (date.ToString("dd/MM/yyyy") != fechaObjeto.ToString("dd/MM/yyyy"))
-                            {
-                                fechaObjeto = fechaObjeto.AddDays(1);
-                                goto case false;
-                            }
-                            break;
-
-                        case false:
-                            <table style="display:@(display6Count);" id="tabla-contenedor2@(cantidadTablas)" class="table table-bordered datos-table-consola">
-                                <tr>
-                                    <th style="height: 50px;">
-                                        <p class="titulo-tabla-horas" id="fechaRegistroGas2@(cantidadTablas)" fechaDato='@fechaObjeto.ToString("dd/MM/yyyy")' versionReporte='@idReportegas.IdReporteGas'> @fechaObjeto.ToString("dd/MM/yyyy")</p>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th id="horaReporte2@(cantidadTablas)">6:00</th>
-                                </tr>
-                                <tr>
-                                    <td id="vc">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="vn">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="pl">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="fl" class="dato-visible-sobreado">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="sv">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="tl">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="fc">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="fs">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="da">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="dp" class="dato-visible-sobreado">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="pr">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="d1">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="d2">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="l">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="caudalimetro" class="dato-visible-sobreado">
-                                        <input />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td id="presionIngreso">
-                                        <input />
-                                    </td>
-                                </tr>
-                            </table>
-                            break;
                     }
+                    <div style="display: flex; padding: 10px 0 0 0;">
+                        <span style="padding: 0 10px 0 0;">Observaciones</span>
+                        <textarea id="observacionesConsola" style="height: 113px; width: 90%;">
+                                   </textarea>
+                    </div>
                 }
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.js"></script>
 
 <script>
 
-    document.getElementById('GuardarDatos').addEventListener('click', function () {
-
-        const element = document.getElementById('contenido-reporte-gas'); 
-        const elementDiv = document.getElementById('contendor-datos-gas');
-        const elementUltimoDiv = document.getElementById('tabla-contenedor27');
-
-        const delimitador = document.getElementById('delimitador');
-        console.log("delimitador ",delimitador);
-        delimitador.classList.add('delimitador-tablas');
-
-        element.classList.add('savePDF');
-        elementDiv.style.overflowX = "clip";
-        elementDiv.style.color = "black";
-        elementDiv.style.height = "753";
-       // elementUltimoDiv.style.display = "revert";
-   
-
-        var $inputs = $('#tabla-contenedor27 input');
-        var $tablas = $('#contenido-reporte-gas table');
-        $tablas.css('height', '100%');
-        $tablas.css('overflow', 'inherit');
-        $inputs.prop('disabled', !this.checked);
-        $inputs.css('border', 'none');
-
-        var doc = new jsPDF({
-            orientation: 'landscape', // Orientación horizontal
-            unit: 'mm',
-            format: 'letter',
-        });
-
-        html2canvas(element, {
-            scale: 1,
-            useCORS: true,
-            allowTaint: true,
-            logging: true,
-        }).then(function (canvas) {
-            var imgData = canvas.toDataURL('image/png');
-
-            // Ajusta las coordenadas x e y para agregar márgenes
-            var marginLeft = 10;
-            var marginTop = 10;
-            // doc.addImage(imgData, 'PNG', marginLeft, marginTop, 259.4, 195.89999999999998);
-
-            doc.addImage(imgData, 'PNG', marginLeft, marginTop, doc.internal.pageSize.getWidth() - marginLeft * 2, doc.internal.pageSize.getHeight() - marginTop * 2);
-            console.log("pdf : ", marginLeft, marginTop, doc.internal.pageSize.getWidth() - marginLeft * 2, doc.internal.pageSize.getHeight() - marginTop * 2);
-            // Guardar el PDF
-            doc.save(`Boleta-Julio-2023.pdf`);
-        });
-        //   element.classList.remove('savePDF');
+    document.getElementById('EG2').addEventListener('click', function () {
+      
     });
 
-</script>
-<script>
-    var fechaid;
-
-    var idReporte = "";
-    let vistaActual = 1;
-    document.getElementById('mostrar-linea').addEventListener('click', function () {
-
-        var linea6 = document.getElementById('linea6');
-        var linea18 = document.getElementById('linea18');
-        if (vistaActual === 1) {
-
-            linea6.style.display = "flex";
-            linea18.style.display = "none";
-            this.textContent = "Ver Linea1";
-            vistaActual = 2;
-
-        } else {
-            linea6.style.display = "none";
-            linea18.style.display = "flex";
-            this.textContent = "Ver Linea2";
-            vistaActual = 1;
-        }
+    document.getElementById('EG1').addEventListener('click', function () {
+       
     });
 
 
-
-    let mostrartodo = 0;
-    document.getElementById('mostrar-todo').addEventListener('click', function () {
-        var linea6 = document.getElementById('linea6');
-        var linea18 = document.getElementById('linea18');
-
-
-        if (mostrartodo === 1) {
-
-            linea6.style.display = "none";
-            linea18.style.display = "flex";
-            this.textContent = "Mostrar Ambos";
-            mostrartodo = 0;
-
-        } else {
-            linea6.style.display = "flex";
-            linea18.style.display = "flex";
-            this.textContent = "Ocultar";
-            mostrartodo = 1;
-        }
-    });
-
-
-    document.getElementById('iniciar').addEventListener('click', function () {
-
-        var btnMostrar = document.getElementById('mostrar-linea');
-        var contenedordDatos = document.getElementById('contendor-datos-gas');
-        var tblMostrar = document.getElementById('tabla-contenedor1');
-
-        fechaid = obtenerFecha("format");
-
-        contenedordDatos.style.display = 'initial';
-        btnMostrar.style.display = 'initial';
-        tblMostrar.style.display = 'initial';
-        this.style.display = 'none';
-        idReporte = "ELD.CTL-OM-003_" + fechaid;
-    });
-
-
-    document.getElementById('GuardarDatos').addEventListener('click', function () {
-
-        var inputs = document.querySelectorAll('input');
-
-        inputs.forEach(function (input) {
-            if (input.value.trim() === '') {
-                input.value = 0;
-            }
-        });
-
-        fechaid = obtenerFecha("format");
-        var listDetalleReporteGas;
-
-
-        var miDiv = document.getElementById('linea18');
-        var miDiv2 = document.getElementById('linea6');
-        var tablas = miDiv.getElementsByTagName('table');
-        var tablas2 = miDiv2.getElementsByTagName('table');
-
-        if (vistaActual === 2) {
-            if (horaActual >= 6 || horaActual < 18) {
-                listDetalleReporteGas = ObtenerDatosTabla('2', tablas2.length - 1);
-            } else {
-                console.log("No es posible Actualizar la tabla Intentelo a la hora correspondiente (6:00)");
-            }
-        }
-        if (vistaActual === 1) {
-            if (horaActual < 6 || horaActual >= 18) {
-                listDetalleReporteGas = ObtenerDatosTabla('', tablas.length - 1);
-            } else {
-                console.log("No es posible Actualizar la tabla Intentelo a la hora correspondiente (18:00)");
-            }
-        }
-
-        if (listDetalleReporteGas != null) {
-            fetch("/ReporteGAS/GuardarDetalle", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(listDetalleReporteGas)
-            })
-                .then(function (response) {
-                    console.log(response);
-                })
-                .catch(function (error) {
-                    console.error("Error:", error);
-                });
-        }
-
-    });
-
-
-
-
-
-    function ObtenerDatosTabla(idTabla, cantidadTablas) {
-
-        var listDetalleReporteGas = [];
-        var fechaRegistro;
-        var idPredeterminado;
-
-        var contenidoTabla;
-        var checkIdTabla;
-
-        for (var i = 1; i <= cantidadTablas; i++) {
-
-            var hora = document.getElementById("horaReporte" + idTabla + i);
-
-            var horaSplit = hora.textContent.split(':');
-
-            fechaRegistro = document.getElementById('fechaRegistroGas' + idTabla + i);
-
-
-            if (fechaRegistro != null) {
-                idPredeterminado = fechaRegistro.getAttribute('versionReporte');
-                var fechaDato = fechaRegistro.getAttribute('fechaDato');
-
-                idReporte = idReporte == "" ? idPredeterminado : idReporte;
-
-                contenidoTabla = document.getElementById("tabla-contenedor" + idTabla + i);
-                checkIdTabla = document.getElementById("checkEdt" + idTabla + i);
-
-                var claveRegistro = "";
-
-                if (checkIdTabla != null) {
-                    claveRegistro = checkIdTabla.getAttribute('valueId');
-                }
-
-                var nuevoIdDetalle = "DET-GAS-DIARIO_" + fechaid + "-" + horaSplit[0];
-
-                var inputVC = contenidoTabla.querySelector('#vc input');
-                var inputVN = contenidoTabla.querySelector('#vn input');
-                var inputPL = contenidoTabla.querySelector('#pl input');
-                var inputFL = contenidoTabla.querySelector('#fl input');
-                var inputSV = contenidoTabla.querySelector('#sv input');
-                var inputTL = contenidoTabla.querySelector('#tl input');
-                var inputFC = contenidoTabla.querySelector('#fc input');
-                var inputFS = contenidoTabla.querySelector('#fs input');
-                var inputDA = contenidoTabla.querySelector('#da input');
-                var inputDP = contenidoTabla.querySelector('#dp input');
-                var inputPR = contenidoTabla.querySelector('#pr input');
-                var inputD1 = contenidoTabla.querySelector('#d1 input');
-                var inputD2 = contenidoTabla.querySelector('#d2 input');
-                var inputL = contenidoTabla.querySelector('#l input');
-                var inputCaudalimetro = contenidoTabla.querySelector('#caudalimetro input');
-                var inputPresionIngreso = contenidoTabla.querySelector('#presionIngreso input');
-
-                var detalleReporteGas = {
-                    idDetalleReporte: claveRegistro == "" ? nuevoIdDetalle : claveRegistro,
-                    fecha: fechaDato,
-                    hora: hora.textContent,
-                    vc: parseFloat(inputVC.value),
-                    vn: parseFloat(inputVN.value),
-                    pl: parseFloat(inputPL.value),
-                    fl: parseFloat(inputFL.value),
-                    sv: parseFloat(inputSV.value),
-                    tl: parseFloat(inputTL.value),
-                    fc: parseFloat(inputFC.value),
-                    fs: parseFloat(inputFS.value),
-                    da: parseFloat(inputDA.value),
-                    dp: parseFloat(inputDP.value),
-                    pr: parseFloat(inputPR.value),
-                    d1: parseFloat(inputD1.value),
-                    d2: parseFloat(inputD2.value),
-                    l: parseFloat(inputL.value),
-                    caudalimetro: parseFloat(inputCaudalimetro.value),
-                    presionIngreso: parseFloat(inputPresionIngreso.value),
-                    idReporteGas: idReporte
-                };
-                listDetalleReporteGas.push(detalleReporteGas);
-            }
-        }
-        return listDetalleReporteGas;
+    function ObtenerDatosLectMedianoche() {
+      
     }
 
-</script>
+
+    var idFormatoConsola;
+    botonGuardarDatos = document.getElementById('GuardarDatos');
 
 
-<script>
-    $(document).ready(function () {
-        $('input[id^="checkEdt"]').change(function () {
-            var cantidadTablas = $(this).attr('id').match(/\d+/)[0];
+    botonGuardarDatos.addEventListener('click', function () {
 
-            var $inputs = $('#tabla-contenedor' + cantidadTablas + ' input:not([type="checkbox"])');
-
-            $inputs.prop('disabled', !this.checked);
-
-            if (this.checked) {
-                $inputs.css('border', 'groove 1px black');
-            } else {
-                $inputs.css('border', '');
-            }
-        });
+ 
     });
 
-    $(document).ready(function () {
-        $('input[id^="checkEdt2"]').change(function () {
-            var cantidadTablas = $(this).attr('id').match(/\d+/)[0];
+    function GuardarDatosEG() {
 
-            var $inputs = $('#tabla-contenedor2' + cantidadTablas + ' input:not([type="checkbox"])');
+    }
+    function ObtenerDatosInput(tablaId) {
 
-            $inputs.prop('disabled', !this.checked);
+    }
 
-            if (this.checked) {
-                $inputs.css('border', 'groove 1px black');
-            } else {
-                $inputs.css('border', '');
-            }
-        });
+
+
+    function GuardarDatosGenerador(idFormatoConsola) {
+
+    }
+
+    function GuardarDatosEnginer(idFormatoConsola) {
+
+    }
+
+    function ParseIntEmpty(value) {
+    
+    }
+
+    const thElements = document.querySelectorAll('th');
+
+    thElements.forEach(th => {
+       
     });
 
+
+
+
 </script>
-
-

@@ -1,11 +1,9 @@
-﻿using Generacion.Application.DatosConsola.Query;
-using Generacion.Application.LecturaCampo;
-using Generacion.Application.LecturaCampo.Query;
+﻿using Generacion.Application.DataBase.cache;
+using Generacion.Application.DatosConsola.Query;
 using Generacion.Application.Usuario;
 using Generacion.Models;
 using Generacion.Models.DatosConsola;
 using Generacion.Models.Usuario;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Data;
@@ -18,26 +16,37 @@ namespace Generacion.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IUsuario _usuario;
         private readonly DatosConsola _datosConsola;
-        //private readonly LecturaCampo _lecturaCampo;
-
-
-        public HomeController(ILogger<HomeController> logger, IUsuario usuario, DatosConsola datosConsola/*, LecturaCampo lecturaCampo*/)
+        private readonly IConfiguration _configuration;
+        private readonly CacheDatos _cacheDatos;
+        public HomeController(
+            ILogger<HomeController> logger,
+            IUsuario usuario,
+            DatosConsola datosConsola,
+            IConfiguration configuration,
+            CacheDatos cacheDatos)
         {
+            _configuration = configuration;
+            _cacheDatos = cacheDatos;
             _logger = logger;
             _usuario = usuario;
             _datosConsola = datosConsola;
-            //_lecturaCampo = lecturaCampo;
         }
       
 
         public async Task<IActionResult> Index()
         {
-            Respuesta<Dictionary<string, CabecerasTabla>> datoscabecera = await _datosConsola.ObtenerCabecerasDeTabla();
-            //Respuesta<Dictionary<string, LecturaCampo>> lecturacampo = await _lecturaCampo.ObtenerCabecerasDeTabla();
-            HttpContext.Session.SetString("datoscabecera", JsonConvert.SerializeObject(datoscabecera.Detalle));
-            Respuesta<DetalleOperario> datos = await _usuario.ObtenerDatosOperario("externo");
 
-            if (datos.IdRespuesta ==0)
+            Respuesta<Dictionary<string, CabecerasTabla>> datoscabecera = await _datosConsola.ObtenerCabecerasDeTabla();
+            HttpContext.Session.SetString("datoscabecera", JsonConvert.SerializeObject(datoscabecera.Detalle));
+
+            int horario = ObtenerTurnoHorario();
+            Respuesta<DetalleOperario> datos = await _usuario.ObtenerDatosOperario("jevangelista");
+            datos.Detalle.IdTurno = horario;
+
+            GuardarDatosHorario($"{datos.Detalle.Nombre} {datos.Detalle.Apellidos}", horario);
+
+
+            if (datos.IdRespuesta == 0)
             {
                 HttpContext.Session.SetString("usuarioDetail", JsonConvert.SerializeObject(datos.Detalle));
 
@@ -59,6 +68,83 @@ namespace Generacion.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public int ObtenerTurnoHorario()
+        {
+            var horarioOperario = _configuration.GetSection("HorarioOperario");
+            var manana = horarioOperario.GetSection("mañana").Get<int[]>();
+            var tarde = horarioOperario.GetSection("tarde").Get<int[]>();
+            DateTime horaActual = DateTime.Now;
+            int hora = horaActual.Hour;
+
+            if (hora >= manana[0] && hora < manana[1])
+            {
+                return 1;
+            }
+            else if (hora >= tarde[0] && hora < tarde[1])
+            {
+                return 2;
+            }
+            else
+            {
+                return 3;
+            }
+        }
+
+        public void GuardarDatosHorario(string idOperario , int idHorario)
+        {
+            Dictionary<int, List<string>> horarioOperario =
+                JsonConvert.DeserializeObject<Dictionary<int, List<string>>>(
+                    _cacheDatos.ObtenerContenidoCache("HorarioOperario")
+                );
+            string jsonConvert = string.Empty;
+
+            if (horarioOperario != null)
+            {
+                bool operarioExiste = false;
+                int horarioActual = 0;
+
+                foreach (var kvp in horarioOperario)
+                {
+                    if (kvp.Value.Contains(idOperario))
+                    {
+                        operarioExiste = true;
+                        horarioActual = kvp.Key;
+                        break;
+                    }
+                }
+
+                if (operarioExiste)
+                {
+                    horarioOperario[horarioActual].Remove(idOperario);
+
+                    if (!horarioOperario.ContainsKey(idHorario))
+                    {
+                        horarioOperario.Add(idHorario, new List<string>());
+                    }
+                    horarioOperario[idHorario].Add(idOperario);
+
+                    jsonConvert = JsonConvert.SerializeObject(horarioOperario);
+                }
+                else
+                {
+                    horarioOperario[idHorario].Add(idOperario);
+                    jsonConvert = JsonConvert.SerializeObject(horarioOperario);
+                }
+            }
+            else
+            {
+                List<string> idOperarios = new List<string>()
+                {
+                    idOperario
+                };
+                horarioOperario = new Dictionary<int, List<string>>();
+                horarioOperario.Add(idHorario, idOperarios);
+
+                jsonConvert = JsonConvert.SerializeObject(horarioOperario);
+            }
+            _cacheDatos.GuardarDatosCache("HorarioOperario", jsonConvert);
         }
     }
 }

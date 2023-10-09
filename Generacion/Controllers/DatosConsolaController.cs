@@ -21,8 +21,8 @@ namespace Generacion.Controllers
         {
             DateTime fechaActual = DateTime.Now;
             DateTime fechaMedianoche = DateTime.Now;
-      
-            if (int.Parse(fechaActual.ToString("HH")) >=0 && int.Parse(fechaActual.ToString("HH")) < 2)
+
+            if (int.Parse(fechaActual.ToString("HH")) >= 0 && int.Parse(fechaActual.ToString("HH")) < 2)
             {
                 fechaActual = fechaActual.AddDays(-1);
             }
@@ -31,20 +31,25 @@ namespace Generacion.Controllers
             Respuesta<Dictionary<string, List<DatosFormatoConsola>>> datosRegistro = await _datosConsola.ObtenerRegistroDeConsola(fechaActual.ToString("dd/MM/yyyy"), fechaMedianoche.ToString("dd/MM/yyyy"));
             Respuesta<List<RegistrosDatosGenerator>> datosGenerador = await _datosConsola.ObtenerDetalleGenerador(fechaActual.ToString("dd/MM/yyyy"));
             Respuesta<List<RegistrosDatosEngine>> datosEngine = await _datosConsola.ObtenerDatosEngine(fechaActual.ToString("dd/MM/yyyy"));
-            Dictionary<string, LecturasMedianoche> datosLecturas = await _datosConsola.ObtenerLecturaMediaNoche("ELD-CTL-OM002_"+ fechaActual.ToString("yyyy-MM-dd"));
+            Dictionary<string, LecturasMedianoche> datosLecturas = await _datosConsola.ObtenerLecturaMediaNoche("ELD-CTL-OM002_" + fechaActual.ToString("yyyy-MM-dd"));
+            Respuesta<List<OutGoingFeeder>> datosDelived = await _datosConsola.ObtenerDetalleBAO("DELIVERED", fechaActual.ToString("yyyy-MM-dd"));
+            Respuesta<List<OutGoingFeeder>> datosReceived = await _datosConsola.ObtenerDetalleBAO("RECIVED", fechaActual.ToString("yyyy-MM-dd"));
+            Respuesta<FormatoConsola> datoFormato = await _datosConsola.ObtenerFormatoConsola($"ELD-CTL-OM002_{fechaActual.ToString("yyyy-MM-dd")}");
 
             string usuarioDetail = HttpContext.Session.GetString("datoscabecera");
             Dictionary<string, CabecerasTabla> datoscabecera = JsonConvert.DeserializeObject<Dictionary<string, CabecerasTabla>>(usuarioDetail);
 
 
 
-            ViewData["datosLecturas"] = datosLecturas; 
-            ViewData["EnergiaGenerada1"] = datosRegistro.Detalle["EG01"];
-            ViewData["EnergiaGeneradaBAA"] = datosRegistro.Detalle["BAA901"];
+            ViewData["datoFormato"] = datoFormato.Detalle; 
+            ViewData["datosDelived"] = datosDelived.Detalle;
+            ViewData["datosReceived"] = datosReceived.Detalle;
+            ViewData["datosLecturas"] = datosLecturas;
+            ViewData["EnergiaGenerada"] = datosRegistro.Detalle;
             ViewData["TipoRegistros"] = tipoRegistros.Detalle;
             ViewData["Datoscabecera"] = datoscabecera;
-                ViewData["DatosGenerador"] = datosGenerador.Detalle;
-                ViewData["DatosEng"] = datosEngine.Detalle;
+            ViewData["DatosGenerador"] = datosGenerador.Detalle;
+            ViewData["DatosEng"] = datosEngine.Detalle;
 
             return View();
         }
@@ -73,6 +78,20 @@ namespace Generacion.Controllers
             Respuesta<string> respuesta = await _datrosconsolaRegistro.GuardarLectMedianoche(datos);
             return Json(respuesta = respuesta);
         }
-        
+
+        [HttpPost]
+        public async Task<JsonResult> GuardarDetalleBAO([FromBody] List<OutGoingFeeder> datos)
+        {
+            Respuesta<string> respuesta = await _datrosconsolaRegistro.GuardarDetallesBAO(datos);
+            return Json(respuesta = respuesta);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GuardarFormato([FromBody] FormatoConsola datos)
+        {
+            Respuesta<string> respuesta = await _datrosconsolaRegistro.GuardarDatoFormato(datos);
+            return Json(respuesta = respuesta);
+        }
+
     }
 }

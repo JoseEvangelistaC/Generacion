@@ -5,6 +5,7 @@ using Generacion.Models.DatosConsola;
 using Generacion.Models.Usuario;
 using Oracle.ManagedDataAccess.Types;
 using System.Collections.Generic;
+using System.Data;
 
 namespace Generacion.Application.DatosConsola.Query
 {
@@ -76,22 +77,38 @@ namespace Generacion.Application.DatosConsola.Query
                                 .Where(x => x.IdDetalleConsola.StartsWith("EG01"))
                                 .ToList();
 
+                            // Obtener la primera línea para ID "EG02"
+                            var primeraLineaEG2 = listaRegistroConsola
+                                .Where(x => x.IdDetalleConsola.StartsWith("EG02"))
+                                .ToList();
 
-                            //respuesta.Detalle = new Dictionary<string, List<DatosFormatoConsola>>();
+                            // Obtener la primera línea para ID "EG01"
+                            var primeraLineaBFA = listaRegistroConsola
+                                .Where(x => x.IdDetalleConsola.StartsWith("BFA901"))
+                                .ToList();
+
                             primeraLineaBAA = primeraLineaBAA
                                 .OrderBy(h => h.Fila)
                                 .ToList();
-                            
+
 
                             primeraLineaEG1 = primeraLineaEG1
                                 .OrderBy(h => h.Fila)
                                 .ToList();
-                            
-                            //primeraLineaBAA = primeraLineaBAA.OrderBy(h => TimeSpan.Parse(h.Hora)).ToList();
-                            //primeraLineaEG1 = primeraLineaEG1.OrderBy(h => TimeSpan.Parse(h.Hora)).ToList();
+
+                            primeraLineaEG2 = primeraLineaEG2
+                                .OrderBy(h => h.Fila)
+                                .ToList();
+
+                            primeraLineaBFA = primeraLineaBFA
+                                .OrderBy(h => h.Fila)
+                                .ToList();
+
 
                             datosFormatoConsola.Add("BAA901", primeraLineaBAA);
                             datosFormatoConsola.Add("EG01", primeraLineaEG1);
+                            datosFormatoConsola.Add("BFA901", primeraLineaBFA);
+                            datosFormatoConsola.Add("EG02", primeraLineaEG2);
 
                             respuesta.Detalle = datosFormatoConsola;
                             respuesta.IdRespuesta = 0;
@@ -487,6 +504,97 @@ namespace Generacion.Application.DatosConsola.Query
             }
             catch (Exception ex)
             {
+            }
+            return respuesta;
+        }
+
+        public async Task<Respuesta<List<OutGoingFeeder>>> ObtenerDetalleBAO(string id ,string fecha)
+        {
+            Respuesta<List<OutGoingFeeder>> respuesta = new Respuesta<List<OutGoingFeeder>>();
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
+
+                    using (OracleCommand command = new OracleCommand("proc_ObtenerDetalleBAO", connection))
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        command.Parameters.Add(new OracleParameter("p_IdTipoEngine", OracleDbType.Varchar2, id.ToUpper(), System.Data.ParameterDirection.Input));
+                        command.Parameters.Add(new OracleParameter("p_Fecha", OracleDbType.Varchar2, fecha, System.Data.ParameterDirection.Input));
+
+                        command.Parameters.Add(new OracleParameter("p_resultado", OracleDbType.Decimal, System.Data.ParameterDirection.Output));
+                        command.Parameters.Add(new OracleParameter("p_Cursor", OracleDbType.RefCursor, System.Data.ParameterDirection.Output));
+
+                        using (OracleDataReader reader = command.ExecuteReader())
+                        {
+                            List<OutGoingFeeder> datos = new List<OutGoingFeeder>();
+                            OutGoingFeeder outGoing = new OutGoingFeeder();
+
+                            while (reader.Read())
+                            {
+                                outGoing = new OutGoingFeeder();
+                                outGoing.IdOutGoing = reader["IdOutGoing"].ToString();
+                                outGoing.IdTipoEngine = reader["IdTipoEngine"].ToString();
+                                outGoing.kWh = decimal.Parse(reader["kWh"].ToString());
+                                outGoing.kVARh = decimal.Parse(reader["kVARh"].ToString());
+                                outGoing.Hora = reader["Hora"].ToString();
+                                outGoing.IdFormatoConsola = reader["IdFormatoConsola"].ToString();
+                                outGoing.Fila = int.Parse(reader["Fila"].ToString());
+
+                                datos.Add(outGoing);
+                            }
+
+                            datos = datos.OrderBy(h => h.Fila).ToList();
+                            respuesta.Detalle= datos;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return respuesta;
+        }
+        public async Task<Respuesta<FormatoConsola>> ObtenerFormatoConsola(string id)
+        {
+            Respuesta<FormatoConsola> respuesta = new Respuesta<FormatoConsola>();  
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
+
+                    using (OracleCommand command = new OracleCommand("proc_ConsFormatoConsola", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        command.Parameters.Add("p_IdFormatoConsola", OracleDbType.Varchar2).Value = id;
+                        command.Parameters.Add("p_Resultado", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                        {
+                            DataTable dataTable = new DataTable();
+                            adapter.Fill(dataTable);
+
+                            FormatoConsola formatoConsola = new FormatoConsola();
+                            foreach (DataRow row in dataTable.Rows)
+                            {
+                                formatoConsola = new FormatoConsola();
+                                formatoConsola.IdFormatoConsola = row["IdFormatoConsola"].ToString();
+                                formatoConsola.Observaciones = row["Observaciones"].ToString();
+                                formatoConsola.Fecha = row["Fecha"].ToString();
+                            }
+
+                            respuesta.Detalle = formatoConsola;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
             return respuesta;
         }

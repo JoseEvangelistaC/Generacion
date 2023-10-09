@@ -1,4 +1,5 @@
-﻿using Generacion.Application.Usuario;
+﻿using Generacion.Application.Common;
+using Generacion.Application.Usuario;
 using Generacion.Application.Usuario.Query;
 using Generacion.Models;
 using Generacion.Models.Usuario;
@@ -16,13 +17,28 @@ namespace Generacion.Controllers
             _usuario = usuario;
             _consultarUsuario = consultarUsuario;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] int idVista)
         {
-            Respuesta<List<HistorialUsuario>> historialOperario =  await _consultarUsuario.ObtenerDatosHistorial("op-47789733");
+            DateTime fecha = DateTime.Now;
+
+            string usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
+            DetalleOperario detalleOperario = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);
+            Respuesta<Dictionary<string, List<HistorialUsuario>>> historialOperarios = new Respuesta<Dictionary<string, List<HistorialUsuario>>>();
+            if (Constante.idVistaReporteMantenimiento == idVista)
+            {
+                historialOperarios = await _consultarUsuario.ObtenerDatosHistorialGeneral(fecha.ToString("dd-MM-yyyy"));
+
+            }
+            else
+            {
+                historialOperarios = await _consultarUsuario.ObtenerDatosHistorial(detalleOperario.IdOperario, fecha.ToString("dd-MM-yyyy"));
+
+            }
             //historialOperario.Detalle = historialOperario.Detalle.OrderBy(h => TimeSpan.Parse(h.Hora)).ToList();
 
-            return View(historialOperario);
+            return View(historialOperarios);
         }
+
 
         [HttpPost]
         public async Task<JsonResult> GuardarHistorial([FromBody] List<HistorialUsuario> historialUsuarios)

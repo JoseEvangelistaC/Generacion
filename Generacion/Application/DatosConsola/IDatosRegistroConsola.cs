@@ -10,6 +10,8 @@ namespace Generacion.Application.DatosConsola
         Task<Respuesta<string>> GuardarDatosGenerador(RegistroDatosGenerator datosConsola);
         Task<Respuesta<string>> GuardarDatosEngine(RegistroDetalleEngine datosConsola);
         Task<Respuesta<string>> GuardarLectMedianoche(LecturasMedianoche lecturasMedianoche);
+        Task<Respuesta<string>> GuardarDetallesBAO(List<OutGoingFeeder> datos);
+        Task<Respuesta<string>> GuardarDatoFormato(FormatoConsola datos);
 
     }
 }

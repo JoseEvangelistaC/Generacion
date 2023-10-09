@@ -6,7 +6,7 @@ namespace Generacion.Application.Mantenimiento
     {
         Task<string> GuardarDatosMotoGenerador(List<MotoGenerador> listaMotoGeneradores);
         Task<string> GuardarDatosServ(List<MantenimientoServicios> detalleServicio);
+        Task<string> GuardarDatosAceiteCarter(List<CilindroAceiteCarter> datos);
+
     }
-
-
 }

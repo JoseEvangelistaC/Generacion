@@ -360,5 +360,123 @@ namespace Generacion.Application.DatosConsola.Command
             }
             return respuesta;
         }
+
+        public async Task<Respuesta<string>> GuardarDetallesBAO(List<OutGoingFeeder> datos)
+        {
+            Respuesta<string> respuesta = new Respuesta<string>();
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
+
+                    using (OracleCommand command = new OracleCommand("proc_InsertarOutGoingFeeder", connection))
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+                        OracleParameter idOutGoing = new OracleParameter("p_IdOutGoing", OracleDbType.Varchar2);
+                        OracleParameter idTipoEngine = new OracleParameter("p_IdTipoEngine", OracleDbType.Varchar2);
+                        OracleParameter kWh = new OracleParameter("p_kWh", OracleDbType.Decimal);
+                        OracleParameter kVARh = new OracleParameter("p_kVARh", OracleDbType.Decimal);
+                        OracleParameter hora = new OracleParameter("p_Hora", OracleDbType.Varchar2);
+                        OracleParameter fecha = new OracleParameter("p_Fecha", OracleDbType.Varchar2);
+                        OracleParameter idFormatoConsola = new OracleParameter("p_IdFormatoConsola", OracleDbType.Varchar2);
+
+                        OracleParameter outputParameter = new OracleParameter("p_resultado", OracleDbType.Decimal);
+                        outputParameter.Direction = System.Data.ParameterDirection.Output;
+
+                        command.Parameters.AddRange(new OracleParameter[] {
+                            idOutGoing,
+                            idTipoEngine,
+                            kWh,
+                            kVARh,
+                            hora,
+                            fecha,
+                            idFormatoConsola,
+                            outputParameter
+                        });
+                        foreach (OutGoingFeeder item in datos)
+                        {
+                            if (string.IsNullOrEmpty(item.IdOutGoing))
+                                continue;
+
+                            idOutGoing.Value = item.IdOutGoing;
+                            idTipoEngine.Value = item.IdTipoEngine;
+                            kWh.Value = item.kWh;
+                            kVARh.Value = item.kVARh;
+                            hora.Value = item.Hora;
+                            fecha.Value = item.Fecha;
+                            idFormatoConsola.Value = item.IdFormatoConsola;
+
+                            command.ExecuteNonQuery();
+
+                            OracleDecimal oracleDecimalValue = (OracleDecimal)outputParameter.Value;
+
+                            respuesta.IdRespuesta = (int)oracleDecimalValue.Value;
+
+                            if (respuesta.IdRespuesta == 0)
+                            {
+                                respuesta.Mensaje = "Ok";
+                            }
+                            else
+                            {
+                                respuesta.Mensaje = "Error al Guardar ";
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                respuesta.IdRespuesta = 99;
+                respuesta.Mensaje = ex.Message.ToString();
+            }
+            return respuesta;
+        }
+
+        public async Task<Respuesta<string>> GuardarDatoFormato(FormatoConsola datos)
+        {
+            Respuesta<string> respuesta = new Respuesta<string>();
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
+
+                    using (OracleCommand command = new OracleCommand("proc_InsFormatoConsola", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros de entrada
+                        command.Parameters.Add("p_IdFormatoConsola", OracleDbType.Varchar2).Value = datos.IdFormatoConsola;
+                        command.Parameters.Add("p_Observaciones", OracleDbType.Varchar2).Value = datos.Observaciones;
+                        command.Parameters.Add("p_Observaciones1", OracleDbType.Varchar2).Value = string.Empty;
+                        command.Parameters.Add("p_Observaciones2", OracleDbType.Varchar2).Value = string.Empty;
+                        command.Parameters.Add("p_Fecha", OracleDbType.Varchar2).Value = datos.Fecha;
+
+                        command.Parameters.Add("p_resultado", OracleDbType.Decimal).Direction = ParameterDirection.Output;
+
+                        command.ExecuteNonQuery();
+
+                        OracleDecimal oracleDecimalValue = (OracleDecimal)command.Parameters["p_resultado"].Value;
+
+                        respuesta.IdRespuesta = (int)oracleDecimalValue.Value;
+                        if (respuesta.IdRespuesta == 0 || respuesta.IdRespuesta == 1)
+                        {
+                            respuesta.Mensaje = "Ok";
+                        }
+                        else
+                        {
+                            respuesta.Mensaje = "No pudo consultar.";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                respuesta.IdRespuesta = 99;
+                respuesta.Mensaje = ex.Message.ToString();
+            }
+            return respuesta;
+        }
     }
 }

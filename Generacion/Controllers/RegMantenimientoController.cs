@@ -1,7 +1,10 @@
-﻿using Generacion.Application.Funciones;
+﻿using Generacion.Application.DataBase.cache;
+using Generacion.Application.Funciones;
 using Generacion.Application.Mantenimiento;
 using Generacion.Models.Mantenimiento;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 
 namespace Generacion.Controllers
@@ -10,21 +13,33 @@ namespace Generacion.Controllers
     {
         private readonly IMantenimiento _mantenimiento;
         private readonly FotoServidor _fotoServidor;
-        public RegMantenimientoController(IMantenimiento mantenimiento , FotoServidor fotoServidor)
+        private readonly CacheDatos _cacheDatos;
+
+        public RegMantenimientoController(IMantenimiento mantenimiento , FotoServidor fotoServidor, CacheDatos cacheDatos)
         {
             _mantenimiento = mantenimiento;
             _fotoServidor = fotoServidor;
+            _cacheDatos = cacheDatos;
         }
         public async Task<IActionResult> Index()
         {
+            Dictionary<int, List<string>> horarioOperarios = JsonConvert.DeserializeObject<Dictionary<int, List<string>>>(_cacheDatos.ObtenerContenidoCache("HorarioOperario"));
+
+            ViewData["horarioOperarios"] = horarioOperarios;
+
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Index([FromBody] DatosAEnviar datosAEnviar)
         {
-            _mantenimiento.GuardarDatosMotoGenerador(datosAEnviar.motoGeneradores);
-            _mantenimiento.GuardarDatosServ(datosAEnviar.mantenimientoServicios);
+            _mantenimiento.GuardarDatosMotoGenerador(datosAEnviar.MotoGeneradores);
+            _mantenimiento.GuardarDatosServ(datosAEnviar.MantenimientoServicios);
+            _mantenimiento.GuardarDatosAceiteCarter(datosAEnviar.CilindroAceiteCarter);
+
+            Dictionary<int, List<string>> horarioOperarios = JsonConvert.DeserializeObject<Dictionary<int, List<string>>>(_cacheDatos.ObtenerContenidoCache("HorarioOperario"));
+
+            ViewData["horarioOperarios"] = horarioOperarios;
             return View();
         }
         [HttpPost]
@@ -54,7 +69,8 @@ namespace Generacion.Controllers
 
     public class DatosAEnviar
     {
-        public List<MotoGenerador> motoGeneradores { get; set; }
-        public List<MantenimientoServicios> mantenimientoServicios { get; set; }
+        public List<MotoGenerador> MotoGeneradores { get; set; }
+        public List<MantenimientoServicios> MantenimientoServicios { get; set; }
+        public List<CilindroAceiteCarter> CilindroAceiteCarter { get; set; }
     }
 }

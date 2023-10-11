@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace Generacion.Controllers
 {
+
     public class HistorialController : Controller
     {
         private readonly IUsuario _usuario;
@@ -27,14 +28,11 @@ namespace Generacion.Controllers
             if (Constante.idVistaReporteMantenimiento == idVista)
             {
                 historialOperarios = await _consultarUsuario.ObtenerDatosHistorialGeneral(fecha.ToString("dd-MM-yyyy"));
-
             }
             else
             {
                 historialOperarios = await _consultarUsuario.ObtenerDatosHistorial(detalleOperario.IdOperario, fecha.ToString("dd-MM-yyyy"));
-
             }
-            //historialOperario.Detalle = historialOperario.Detalle.OrderBy(h => TimeSpan.Parse(h.Hora)).ToList();
 
             return View(historialOperarios);
         }

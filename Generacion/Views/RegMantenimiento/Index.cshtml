@@ -200,8 +200,8 @@
                         <p1>Turno 2</p1>
                         @if (tarde.Count >= 1)
                         {
-                             sb = new StringBuilder();
-                             cantidadDeDatos = 0;
+                            sb = new StringBuilder();
+                            cantidadDeDatos = 0;
                             @foreach (string operarios in tarde)
                             {
                                 cantidadDeDatos++;
@@ -566,10 +566,10 @@
                         <tbody>
                             <tr>
                                 <td class="content-table ">
-                                    <input class="content-table-content" placeholder="88.5 cm">
+                                    <input position="1" class="content-table-content" placeholder="88.5 cm">
                                 </td>
                                 <td class="content-table ">
-                                    <input class="content-table-content" placeholder="56.5 cm">
+                                    <input position="2" class="content-table-content" placeholder="56.5 cm">
                                 </td>
                             </tr>
                         </tbody>
@@ -1001,11 +1001,11 @@
     const datosServiciosAux = [];
     const datosServiciosSalud = [];
     const datosServiciosCont = [];
-    var idReporteDiario="";
+    var idReporteDiario = "";
 
     botonDescargarPDF.addEventListener('click', function () {
         const elementosGenerators = document.querySelectorAll('.content-generators');
-            /*const listaValores =*/ obtenerDetalleInput(elementosGenerators);
+                /*const listaValores =*/ obtenerDetalleInput(elementosGenerators);
 
         let countDatos = 1;
         let numGenerador = 0;
@@ -1056,15 +1056,17 @@
         });
 
         var datosCartel = obtenerTablasConAtributo();
-
+        var datosexpansionVersel = ObtenerDatosVersel();
         const datosAEnviar = {
             motoGeneradores: listaMotoGeneradores,
             mantenimientoServicios: listaDescripcionServicios,
-            CilindroAceiteCarter: datosCartel
+            cilindroAceiteCarter: datosCartel,
+            listaExpansionVersel: datosexpansionVersel
         };
 
-        guardarImagenesEnServidor();
-        
+        console.log("ExpansionVersel antes de JSON.stringify:", datosAEnviar);
+        var expansionVerselJson = JSON.stringify(datosAEnviar);
+        console.log("ExpansionVersel después de JSON.stringify:", expansionVerselJson);
 
         fetch("/RegMantenimiento/Index", {
             method: "POST",
@@ -1079,6 +1081,9 @@
             .catch(function (error) {
                 console.error("Error:", error);
             });
+
+        guardarImagenesEnServidor();
+
     });
 
     function obtenerDetalleInput(elementosInputs) {
@@ -1189,7 +1194,6 @@
 
         contenedorImagenes.forEach(function (contenedor) {
             const tablaCarter = contenedor.querySelector(`table[position="tablaCarter"]`);
-            //const tablaVerssel = contenedor.querySelector(`table[position="tablaVerssel"]`);
 
             if (tablaCarter) {
                 const idTabla = tablaCarter.getAttribute('id');
@@ -1240,14 +1244,28 @@
 
                 valoresTabla.push(valoresFila);
             }
-
-            /*  if (tablaVerssel) {
-
-              }*/
-        });
+            });
 
         return valoresTabla;
     }
+
+    function ObtenerDatosVersel() {
+
+        var inputs = document.querySelectorAll('.table-serv input');
+        var datosExpansionVersel = [];
+
+        inputs.forEach(function (input) {
+            var datos = {
+                numeroGenerador: parseInt(input.getAttribute('position')),
+                medicion: parseInt(input.value),
+                idReporteDiario: idReporteDiario
+            };
+            datosExpansionVersel.push(datos);
+        });
+
+        return datosExpansionVersel;
+    }
+
 
 
 

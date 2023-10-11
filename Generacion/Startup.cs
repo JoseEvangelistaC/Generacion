@@ -21,6 +21,7 @@ namespace Generacion
             string cadenaConexion = Configuration.GetConnectionString("DefaultConnection");
 
             services.AddControllersWithViews();
+            services.AddHttpContextAccessor();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -47,7 +48,7 @@ namespace Generacion
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Login}/{action=Index}");
             });
         }
     }

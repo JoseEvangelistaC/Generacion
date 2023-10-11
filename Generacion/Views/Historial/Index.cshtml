@@ -125,7 +125,9 @@
 
 
 <script>
-    document.getElementById("agregarDiv").addEventListener('click', agregarDiv.bind(null, "op-88888888-content"));
+    document.addEventListener("DOMContentLoaded", function () {
+    console.log("datosOperario : ", datosOperario);
+        document.getElementById("agregarDiv").addEventListener('click', agregarDiv.bind(null, datosOperario.IdOperario + "-content"));
     function eliminarDiv(div) {
         const contenedor = div.parentNode;
 
@@ -156,6 +158,7 @@
             });
     }
 
+    });
 
     let contador = 1;
     let contadorUno = 1;

@@ -1,0 +1,201 @@
+﻿@{
+    Layout = null;
+}
+<style>
+    :root {
+        --celeste: #BCF4F5;
+        --celadon: #B4EBCA;
+        --VerdeTe: #D9F2B4;
+        --VerdePast: #D3FAC7;
+        --RosaCherry: #455a64;
+        --Blanco: #FFFFFF;
+        --fuente: 'Bungee', cursive;
+    }
+
+    body {
+        font-family: var(--fuente);
+        background-image: url('/img/Fondo_Generacion.png');
+        display: flex;
+        align-items: center;
+        height: 100vh;
+        backdrop-filter: blur(5px) !important;
+        background-size: cover;
+        background-repeat: no-repeat;
+        overflow: hidden;
+        background-position: center;
+    }
+
+    .container {
+        margin: 0 auto;
+        max-width: 1000px;
+        width: 95%;
+    }
+
+    .imagen-formulario {
+        background-image: url('Metricas/css/imágenes/usuario.png');
+        background-size: cover;
+        height: 1000px;
+        background-position: center center;
+        flex: 0 0 calc(60%);
+        position: relative;
+    }
+
+        .imagen-formulario::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+    .texto h2, .input label, .password a, .texto-formulario p {
+        color: var(--RosaCherry)
+    }
+
+    .texto-formulario p {
+        font-size: 22px;
+        text-align: center;
+    }
+
+    .input {
+        margin: 15px 0;
+    }
+
+        .input label {
+            display: block;
+            font-size: 22px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .input input {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 5px;
+            outline: none;
+            padding: 1px;
+            height: 50px;
+            box-shadow: 1px 4px 10px 1px gray;
+        }
+
+            .input input[type ="submit"] {
+                background-color: #2a9c60;
+                color: var(--Blanco);
+                font-size: 22px;
+                font-weight: bold;
+                border: none;
+                margin-top: 20px;
+                transition: background-color 3s ease-in-out;
+            }
+
+                .input input[type ="submit"]:hover {
+                    cursor: pointer;
+                    background-color: var(--celadon);
+                }
+
+    .password a {
+        display: inline-block;
+        margin-top: 20px;
+        font-size: 22px;
+    }
+
+    img {
+        height: 65px;
+        width: 125px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        margin: 0 0 0 46%;
+    }
+
+
+    .container-login {
+        padding: 200px;
+    }
+
+    .container-form {
+        border: 2px solid white;
+        padding: 21px;
+        box-shadow: 0 0 10px black;
+        background-color: white;
+        border-radius: 5px;
+    }
+</style>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Formulario CSS</title>
+    <link href="~/css/Display.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee+Shade&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="container-login">
+            <div class="container-form">
+                <div style="display: flex; align-items: center;">
+                    <h2 style="color: #455a64;">Inicia sesión</h2>
+                    <img src="~/img/logo_elec.png" />
+                </div>
+                <form class="formulario" action="@Url.Action("ValidarSession", "Login")" method="post">
+                    <!-- Otros campos del formulario -->
+                <div class="input">
+                    <input placeholder="Ingresa tu nombre" name="UsuarioRed" type="text" id="usuario">
+                </div>
+                <div class="input">
+                    <input placeholder="Ingrese contraseña" name="Clave" type="password" id="contraseña">
+                    <div class="input" aria-placeholder="">
+                        <input type="submit" id="validar" name="button" value="Enviar" />
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('form.formulario').submit(function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: '@Url.Action("ValidarSession", "Login")',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (result) {
+                    console.log(result)
+
+                    window.location.href = result.redirectUrl;
+
+                    /* if (result.Success.IdRespuesta != 0) {
+                         Swal.fire({
+                             title: "Error",
+                             text: result.Success.Message,
+                             icon: "error",
+                             button: "OK",
+                         });
+                     } else {
+                         Swal.fire({
+                             title: "Success!!",
+                             text: result.Success.Message,
+                             icon: "success",
+                             button: "Aww yiss!",
+                             willClose: () => {
+                                 window.location.href = result.RedirectUrl;
+                             }
+                         });
+                     }*/
+                },
+                error: function (error) {
+                }
+            });
+        });
+    });
+</script>

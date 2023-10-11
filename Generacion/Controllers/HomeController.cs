@@ -11,6 +11,7 @@ using System.Diagnostics;
 
 namespace Generacion.Controllers
 {
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -35,26 +36,22 @@ namespace Generacion.Controllers
         public async Task<IActionResult> Index()
         {
 
-            Respuesta<Dictionary<string, CabecerasTabla>> datoscabecera = await _datosConsola.ObtenerCabecerasDeTabla();
-            HttpContext.Session.SetString("datoscabecera", JsonConvert.SerializeObject(datoscabecera.Detalle));
-
-            int horario = ObtenerTurnoHorario();
-            Respuesta<DetalleOperario> datos = await _usuario.ObtenerDatosOperario("externo");
-            datos.Detalle.IdTurno = horario;
-
-            GuardarDatosHorario($"{datos.Detalle.Nombre} {datos.Detalle.Apellidos}", horario);
-
-
-            if (datos.IdRespuesta == 0)
+            if (user != null)
             {
-                HttpContext.Session.SetString("usuarioDetail", JsonConvert.SerializeObject(datos.Detalle));
+                Respuesta<Dictionary<string, CabecerasTabla>> datoscabecera = await _datosConsola.ObtenerCabecerasDeTabla();
+                HttpContext.Session.SetString("datoscabecera", JsonConvert.SerializeObject(datoscabecera.Detalle));
 
-                // Obtener datos de la sesión
-                string usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
-                DetalleOperario detalleOperario = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);
+                int horario = ObtenerTurnoHorario();
+                usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
+                DetalleOperario datos = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);
+
+                datos.IdTurno = horario;
+
+                GuardarDatosHorario($"{datos.Nombre} {datos.Apellidos}", horario);
+
+                ViewData["DetalleOperario"] = datos;
+
             }
-            ViewData["DetalleOperario"] = datos.Detalle;
-
             return View();
         }
 
@@ -91,7 +88,7 @@ namespace Generacion.Controllers
             }
         }
 
-        public void GuardarDatosHorario(string idOperario , int idHorario)
+        public void GuardarDatosHorario(string idOperario, int idHorario)
         {
             Dictionary<int, List<string>> horarioOperario =
                 JsonConvert.DeserializeObject<Dictionary<int, List<string>>>(

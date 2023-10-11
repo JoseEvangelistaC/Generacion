@@ -242,5 +242,62 @@ namespace Generacion.Application.Mantenimiento.Command
             }
             return mensaje;
         }
+
+        public async Task<string> GuardarExpansionVessel(List<ExpansionVersel> listamedicionesVercel)
+        {
+            string mensaje = string.Empty;
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
+
+                    using (OracleCommand command = new OracleCommand("PROC_InsertarExpansionVessel", connection))
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        OracleParameter idReporteDiario = new OracleParameter("p_idReporteDiario", OracleDbType.Varchar2);
+                        OracleParameter numeroGenerador = new OracleParameter("p_NumeroGenerador", OracleDbType.Varchar2);
+                        OracleParameter medicion = new OracleParameter("p_medicion", OracleDbType.Varchar2);
+
+                        OracleParameter outputParameter = new OracleParameter("p_resultado", OracleDbType.Decimal);
+                        outputParameter.Direction = System.Data.ParameterDirection.Output;
+
+                        command.Parameters.AddRange(new OracleParameter[] {
+                            idReporteDiario,
+                            numeroGenerador,
+                            medicion,
+                            outputParameter
+                        });
+
+
+                        foreach (ExpansionVersel item in listamedicionesVercel)
+                        {
+                            if (string.IsNullOrEmpty(item.IdReporteDiario))
+                                continue;
+
+                            idReporteDiario.Value = item.IdReporteDiario;
+                            numeroGenerador.Value = item.NumeroGenerador;
+                            medicion.Value = item.Medicion;
+
+                            command.ExecuteNonQuery();
+
+                            OracleDecimal oracleDecimalValue = (OracleDecimal)outputParameter.Value;
+
+                            int resultado = (int)oracleDecimalValue.Value;
+
+                            if (resultado != 0)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return mensaje;
+        }
     }
 }

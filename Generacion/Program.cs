@@ -19,8 +19,14 @@ using Generacion.Application.ReporteGAS.Command;
 using Generacion.Application.Usuario;
 using Generacion.Application.Usuario.Command;
 using Generacion.Application.Usuario.Query;
-using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using WebApi.Application.Common.Interfaces;
+using WebApi.Application.ValidatePassword.Queries;
+using System.DirectoryServices.AccountManagement;
+using Generacion.Application.Usuario.Session;
+using Generacion.Application.Usuario.Session.SessionStatus;
+using Generacion.Application.ValidationSession.Login;
+using static Generacion.Controllers.LoginController;
 
 
 
@@ -57,15 +63,13 @@ namespace Generacion
                    {
                        options.IdleTimeout = TimeSpan.FromHours(8);
                    });
-
-
-
+               
+                  // services.AddScoped<ValidarSesion>();
                    services.AddScoped<IConexionBD>(_ => new ConexionBD(cadenaConexion));
                    services.AddScoped<IMantenimiento, Mantenimiento>();
                    services.AddScoped<IUsuario, DatosUsuario>();
 
-
-
+                   services.AddScoped<IValidateUser, ValidateUser>();
                    services.AddScoped<IDatosRegistroConsola, DatosRegistroConsola>();
                    services.AddScoped<IRegistroDatosGAS, RegistroDatosGAS>();
                    services.AddScoped<IDatosMGD, RegistroDatosMGD>();
@@ -85,6 +89,17 @@ namespace Generacion
 
 
                    services.AddScoped(typeof(CacheDatos));
+
+                   services.AddSingleton<IActiveDirectoryProvider, ActiveDirectoryProvider>();
+
+                   var principalContext = new PrincipalContext(ContextType.Domain);
+                   
+                   services.AddSingleton(principalContext);
+
+                  /*  services.AddMvc(options =>
+                     {
+                         options.Filters.Add(typeof(ValidarSesion));
+                     });*/
                });
     }
 }

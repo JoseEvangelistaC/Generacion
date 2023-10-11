@@ -1,27 +1,44 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using Generacion.Application.Usuario.Session;
+using Generacion.Application.Usuario.Session.SessionStatus;
+using Generacion.Application.ValidationSession.Login;
+using Generacion.Models;
+using Generacion.Models.Session;
+using Generacion.Models.Usuario;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Generacion.Controllers
 {
     public class LoginController : Controller
     {
-        [HttpPost]
-        public ActionResult Login(/*User request*/)
+        private readonly IValidateUser _validateUser; 
+        public LoginController(IValidateUser validateUser)
         {
-            /*   ValidateSession validateSession = new ValidateSession();
-
-            var valid = validateSession.ValidateSessionUser(request);
-               if (valid.StateId == 0)
-               {
-                   Session["usuario"] = request;
-
-                   return Json(new { Success = valid, RedirectUrl = Url.Action("Index", "Inicio") });
-               }
-               else
-               {
-                   return Json(new { Success = valid });
-               }*/
+            _validateUser = validateUser;
+        }
+        [AllowAnonymous]
+        public IActionResult Index()
+        {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ValidarSession(UsuarioSession usuario)
+        {
+
+            var respuesta = await _validateUser.ValidateSessionUser(usuario);
+            if (respuesta.IdRespuesta == 0)
+            {
+                HttpContext.Session.SetString("usuarioDetail", JsonConvert.SerializeObject(respuesta.Detalle));
+
+                // Dentro del controlador
+                return Json(new { Success = true, RedirectUrl = Url.Action("Index", "Home") });
+            }
+            else
+            {
+                return Json(new { Success = respuesta.IdRespuesta });
+            }
         }
     }
 }

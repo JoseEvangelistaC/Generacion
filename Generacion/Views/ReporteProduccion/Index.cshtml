@@ -1,0 +1,233 @@
+﻿<style>
+    .operadores-posicion td {
+        height: 35px;
+        width: 200px;
+    }
+
+    .operadores-posicion {
+        width: 45%;
+        height: fit-content;
+        display: table-row;
+    }
+
+        .operadores-posicion th {
+            width: 300px;
+            height: auto;
+        }
+
+        .operadores-posicion tr {
+            width: 200px;
+        }
+
+    .titulo-produccion th {
+        height: 70px;
+        line-height: 3;
+        width: 280px;
+    }
+
+    table {
+        text-align: center;
+        font-size: 13px;
+    }
+
+        table th, td {
+            border: groove !important;
+        }
+
+
+    .contenedor-tablas {
+        display: flex;
+    }
+
+    .tabla-detalle-titulo {
+        width: 55%;
+        height: fit-content;
+    }
+
+    .contenido-nombres {
+        display: grid;
+    }
+
+    .subtitulo-generador th {
+        width: 200px;
+    }
+
+
+    .img-produccion {
+        float: left;
+        height: 70%;
+    }
+
+    .detalle-totales td {
+        display: block;
+        height: auto;
+    }
+</style>
+
+<div>
+    <div class="contenedor-tablas">
+        <table class="tabla-detalle-titulo">
+            <tbody class="table">
+                <tr>
+                    <th style="height: 210px;" colspan="2"> <img class="img-produccion" src="./img/logo_elec.png" /></th>
+                    <th style="height: 210px; text-align: -webkit-center;" colspan="4">
+                        <table style="width: 275px;">
+                            <tbody>
+                                <tr><td colspan="4">CENTRAL TERMICA LUREN</td></tr>
+                                <tr><td colspan="4">OPERATIONS REPORT FOR 24 HOURS</td></tr>
+                                <tr>
+                                    <th>DAY</th>
+                                    <th>MONTH</th>
+                                    <th>YEAR</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <th>06</th>
+                                    <th>06</th>
+                                    <th>2023</th>
+                                    <th></th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </th>
+                </tr>
+                <tr class="subtitulo-generador ">
+                    <th>STATUS</th>
+                    <th>INUTS</th>
+                    <th>ENG 1</th>
+                    <th>ENG 2</th>
+                    <th colspan="3"></th>
+                </tr>
+                <tr>
+                    <th>SERVICE ACCUMULATED</th>
+                    <td>hrs</td>
+                    <td><input /></td>
+                    <td><input /></td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <th>PLANNED MAINTEN</th>
+                    <td>hrs</td>
+                    <td><input /></td>
+                    <td><input /></td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <th>FORCED MAINT MECH</th>
+                    <td>hrs</td>
+                    <td><input /></td>
+                    <td><input /></td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <th>FORCED MAINT ELEC</th>
+                    <td>hrs</td>
+                    <td><input /></td>
+                    <td><input /></td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <th>FORCED AUXILIARIES</th>
+                    <td>hrs</td>
+                    <td><input /></td>
+                    <td><input /></td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <th>EXTERNAL TRIPS</th>
+                    <td>hrs</td>
+                    <td><input /></td>
+                    <td><input /></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>STAND BY</th>
+                    <td>hrs</td>
+                    <td><input /></td>
+                    <td><input /></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>RUNNING HOURS</th>
+                    <td>hrs</td>
+                    <td><input /></td>
+                    <td><input /></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <th>HOURS AVAILABLE</th>
+                    <td>hrs</td>
+                    <td><input /></td>
+                    <td><input /></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2"></td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table operadores-posicion">
+            <tbody>
+                <tr>
+                    <th rowspan="2">OPERATORS 00:00 - 08:00 Horas: </th>
+                </tr>
+
+                <tr class="contenido-nombres">
+                    <td>h cerron </td>
+                    <td>jpinedo </td>
+                </tr>
+                <tr>
+                    <th rowspan="2">OPERATORS 16:00 - 24:00 Horas: </th>
+                </tr>
+                <tr class="contenido-nombres">
+                    <td>jpinedo </td>
+                    <td>j urbina </td>
+                </tr>
+                <tr>
+                    <th rowspan="2">OPERATORS 08:00 - 16:00 Horas: </th>
+                </tr>
+                <tr class="contenido-nombres">
+                    <td>j urbina </td>
+                    <td>h cerron </td>
+                </tr>
+            <tbody class="detalle-totales">
+                <tr>
+                    <th colspan="2">TOTALS</th>
+                </tr>
+                <tr>
+                    <th>Total Plant Gen (MWh)</th>
+                    <td><input /></td>
+                </tr>
+                <tr>
+                    <th>Total Plant Export ION (MWh)</th>
+                    <td><input /></td>
+                </tr>
+                <tr>
+                    <th>Total gas Consumption (kg)</th>
+                    <td><input /></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>Efficiency</th>
+                    <td><input /></td>
+                </tr>
+                <tr>
+                    <th>Consumo de Servicios auxiliares(MWh)</th>
+                    <td><input /></td>
+                </tr>
+            </tbody>
+            </tbody>
+        </table>
+    </div>
+</div>

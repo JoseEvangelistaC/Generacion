@@ -22,6 +22,8 @@ using Generacion.Application.Usuario.Query;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
 
+
+
 namespace Generacion
 {
     public class Program
@@ -30,6 +32,8 @@ namespace Generacion
         {
             CreateHostBuilder(args).Build().Run();
         }
+
+
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
            Host.CreateDefaultBuilder(args)
@@ -54,14 +58,20 @@ namespace Generacion
                        options.IdleTimeout = TimeSpan.FromHours(8);
                    });
 
+
+
                    services.AddScoped<IConexionBD>(_ => new ConexionBD(cadenaConexion));
                    services.AddScoped<IMantenimiento, Mantenimiento>();
                    services.AddScoped<IUsuario, DatosUsuario>();
+
+
 
                    services.AddScoped<IDatosRegistroConsola, DatosRegistroConsola>();
                    services.AddScoped<IRegistroDatosGAS, RegistroDatosGAS>();
                    services.AddScoped<IDatosMGD, RegistroDatosMGD>();
                    services.AddScoped<ILecturaCampo, DatosRegistroCampo>();
+
+
 
                    services.AddScoped(typeof(FotoServidor));
                    services.AddScoped(typeof(ConsultarUsuario));
@@ -72,8 +82,9 @@ namespace Generacion
                    services.AddScoped(typeof(CacheDatos));
                    services.AddScoped(typeof(LecturaCampo));
 
+
+
                    services.AddScoped(typeof(CacheDatos));
                });
     }
 }
-

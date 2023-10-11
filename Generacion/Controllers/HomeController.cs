@@ -39,7 +39,7 @@ namespace Generacion.Controllers
             HttpContext.Session.SetString("datoscabecera", JsonConvert.SerializeObject(datoscabecera.Detalle));
 
             int horario = ObtenerTurnoHorario();
-            Respuesta<DetalleOperario> datos = await _usuario.ObtenerDatosOperario("jevangelista");
+            Respuesta<DetalleOperario> datos = await _usuario.ObtenerDatosOperario("externo");
             datos.Detalle.IdTurno = horario;
 
             GuardarDatosHorario($"{datos.Detalle.Nombre} {datos.Detalle.Apellidos}", horario);

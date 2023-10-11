@@ -461,11 +461,11 @@
     var objetoJson = localStorage.getItem("DetalleUsuario");
     var datosOperario;
 
-    if (objetoJson) {
+    if (objetoJson != "null") {
 
         var datosOperarioNuevo = @Html.Raw(JsonConvert.SerializeObject(datosOperario));
         datosOperario = obtenerDetalleOperario();
-
+        debugger;
         if (datosOperarioNuevo != null && (datosOperarioNuevo.IdOperario != datosOperario.IdOperario)) {
 
             var objetoJson = JSON.stringify(@Html.Raw(JsonConvert.SerializeObject(datosOperario)));

@@ -21,6 +21,7 @@
 
     // List<DatosFormatoCampo> GasCombustibles = ViewData["GasCombustible"] as List<DatosFormatoCampo>;
     List<TiposRegistroCampo> DetalleRegistrCampo = ViewData["TipoRegistros"] as List<TiposRegistroCampo>;
+    Dictionary<string, List<DatosFormatoCampo>> FormatoCampo = ViewData["CabeceraHorizontal"] as Dictionary<string, List<DatosFormatoCampo>>;
     // List<TiposDeRegistroConsola> detalleRegistro = ViewData["TipoRegistros"] as List<TiposDeRegistroConsola>;
     // Dictionary<string, CabecerasTablaCampo> detalleCabecerasCampo = ViewData["DatoscabeceraCampo"] as Dictionary<string, CabecerasTablaCampo>;
 
@@ -137,7 +138,7 @@
         font-size:14px;
         position: sticky;
         top: 0;
-        background-color: #fff; /* Fondo blanco para las etiquetas fijas */
+        background-color: #fff; 
         z-index: 2; 
     }
 
@@ -155,7 +156,7 @@
     }
 
     .new thead th[colspan="6"] {
-        width: 100%; /* Hacer que la celda ocupe el 100% del ancho de la tabla */
+        width: 100%; 
     }
     .letraInspeccion{
         font-size:12px;
@@ -168,17 +169,17 @@
     }
 
     .principal {
-        cursor: pointer; /* Cambia el cursor al pasar por encima */
+        cursor: pointer;
     }
     .principal2 {
-        cursor: pointer; /* Cambia el cursor al pasar por encima */
+        cursor: pointer; 
     }
     .principal3 {
-        cursor: pointer; /* Cambia el cursor al pasar por encima */
+        cursor: pointer; 
     }
 
     .principal4 {
-        cursor: pointer; /* Cambia el cursor al pasar por encima */
+        cursor: pointer; 
     }
 </style>
 
@@ -198,6 +199,10 @@
             </div>
             <div>
                 <p1>Fecha</p1>
+                @{
+                    var date = DateTime.Now;
+                                            <p>@date.ToString("dd/MM/yyyy")</p>
+                }
                
             </div>
             <div class="subTitulo-consola">
@@ -206,7 +211,7 @@
             </div>
             <div>
                 <p1>Turno 1</p1>
-                <p>E. Codarlupo / R. Ramos</p>
+                <p class="idOperario">E. Codarlupo / R. Ramos</p>
             </div>
             <div>
                 <p1>Turno 2</p1>
@@ -222,26 +227,22 @@
 <div style="text-align: right;">
     <button class="btn btn-primary " id="GuardarDatos">Guardar Datos</button>
 </div>
-<div>
-    <button class="btn btn-light btnMostrarGE btnMostrarGE1" id="EG1">EG01</button>
-    <button class="btn btn-light btnMostrarGE" id="EG2">EG02</button>
-</div>
 <div class="console-content">
     <div id="datos-EG1">
         <div style="padding :10px;" >
             <div style="overflow: auto; width: 100%; height: 85vh;">
                 <button id="mostrarOcultar">+</button>
                 <div class="title-table principal">
-                        <p id="idRegistro" claveRegistro='##'>
+                        <p id="idRegistro" claveRegistro='principal'>
                             PRINCIPAL
                         </p>
                     
                 </div>
 
-                <table class="table table-bordered EG ocultar boton1" id="tabla-EG1">
+                <table class="table table-bordered EG ocultar boton1" id="tabla-Principal">
                     <thead>
                         <tr>
-                            <th class="sticky-header space" scope="col" style="width: 232px;">#</th>
+                            <th id="principal" class="sticky-header space" scope="col" style="width: 232px;">Principal</th>
                             <th class="sticky-header space" scope="col">Und</th>
                             <th class="sticky-header space" scope="col">Rango</th>
                             <th class="sticky-header space" scope="col">2:00</th>
@@ -260,76 +261,76 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <th class="static" scope="row">POTENCIA ACTIVA</th>
-                            <td></td>
-                            <td></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
+                            <th id="potencia" class="static potencia_activa" scope="row">POTENCIA ACTIVA</th>
+                            <td id="unidad">kW</td>
+                            <td id="rango">0-93411</td>
+                            <td id="potencia2"><input ></td>
+                            <td id="4:00"><input type="text"></td>
+                            <td id="6:00"><input type="text"></td>
+                            <td id="8:00"><input type="text"></td>
+                            <td id="10:00"><input type="text"></td>
+                            <td id="12:00"><input type="text"></td>
+                            <td id="14:00"><input type="text"></td>
+                            <td id="16:00"><input type="text"></td>
+                            <td id="18:00"><input type="text"></td>
+                            <td id="20:00"><input type="text"></td>
+                            <td id="22:00"><input type="text"></td>
+                            <td id="00:00"><input type="text"></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion static" scope="row">HORAS DE OPERACION</th>
-                            <td></td>
-                            <td></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
+                            <th id="operacion" class="Title-Column letraInspeccion static HorasOperacion" scope="row">HORAS DE OPERACION</th>
+                            <td id="unidad">h</td>
+                            <td id="rango">WOIS</td>
+                            <td id="operacion2"><input ></td>
+                            <td id="4:00"><input type="text"></td>
+                            <td id="6:00"><input type="text"></td>
+                            <td id="8:00"><input type="text"></td>
+                            <td id="10:00"><input type="text"></td>
+                            <td id="12:00"><input type="text"></td>
+                            <td id="14:00"><input type="text"></td>
+                            <td id="16:00"><input type="text"></td>
+                            <td id="18:00"><input type="text"></td>
+                            <td id="20:00"><input type="text"></td>
+                            <td id="22:00"><input type="text"></td>
+                            <td id="00:00"><input type="text"></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion static" scope="row">TEMPERATURA AMBIENTE</th>
-                            <td></td>
-                            <td></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
+                            <th id="temperatura" class="Title-Column letraInspeccion static tempAmbiente" scope="row">TEMPERATURA AMBIENTE</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">10-35</td>
+                            <td id="temperatura2"><input ></td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion static" scope="row">HUMEDAD RELATIVA</th>
-                            <td></td>
-                            <td></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
+                            <th id="humedad" class="Title-Column letraInspeccion static humedadRelativa" scope="row">HUMEDAD RELATIVA</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">30-100</td>
+                            <td id="humedad2"><input ></td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
-                    </tbody>
 
-                   
+                      
+                    </tbody>
                 </table>
                 @* SISTEMA DE GAS COMBUSTIBLE *@
                 <div class="title-table principal2">
@@ -339,71 +340,67 @@
                     <tbody>
                         <tr>
                             <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">6.0-7.0</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
                             <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td id="unidad">mbar</td>
+                            <td id="rango">0-30</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
                             <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">0.034</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
                             <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td id="unidad">KG</td>
+                            <td id="rango"></td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                     </tbody>
                 </table>
@@ -415,71 +412,67 @@
                     <tbody>
                         <tr>
                             <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">TEMPERATURA DE ENTRADA PRINC. DE AGUA AL MOTOR(T001)</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td id="unidad">°C</td>
+                            <td id="rango">20-40</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
                             <th class="Title-Column letraInspeccion" scope="row">PRESION DE ENTRADA PRINC. DE AGUA AL MOTOR(P001)</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.0-1.8</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">TEMPERATURA DE SALIDA PRINCIPAL DE AGUA AL MOTOR(PE007)</th>
+                            <td id="unidad">C°</td>
+                            <td id="rango">70-82</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">PRESION DE SALIDA PRINCIPAL DE AGUA AL MOTOR(P006)</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">2.8-2.4</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                     </tbody>
                 </table>
@@ -491,73 +484,38 @@
                 <table class="table table-bordered EG boton4" id="tabla-EG4">
                     <tbody>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">TEMPERATURA DE ENTRADA DE AGUA SISTEMA LT(T003)</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">4.-42</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">PRESION DE ENTRADA SISTEMA LT(P002)</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.0-1.4</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
+
                     </tbody>
                 </table>
 
@@ -568,72 +526,68 @@
                 <table class="table table-bordered EG boton5" id="tabla-EG1">
                     <tbody>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">TEMPERATURA DE ENTRADA DE AGUA SISTEMA HT(T005)</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">50-85</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">PRESION DE ENTRADA SISTEMA HT(P004)</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.6-2.4</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">TEMPERATURA DE SALIDA DE AGUA SISTEMA HT(TE006)</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">50-85</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">PRESION DE SALIDA SISTEMA HT(P005)</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.6-2.4</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                     </tbody>
                 </table>
@@ -645,381 +599,299 @@
                 <table class="table table-bordered EG boton6" id="tabla-EG1">
                     <tbody>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">TEMPERATURA DE ENTRADA DE AGUA A LOS RADIADORES</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">75-82</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">PRESION DE ENTRADA DE AGUA A LOS RADIADORES</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.6-2.4</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">TEMPERATURA DE SALIDA DE AGUA A LOS RADIADORES</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">24-32</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">PRESION DE ENTRADA DE AGUA A LOS RADIADORES</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.0-1.6</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                     </tbody>
                 </table>
 
                 @* COMPRESOR DE INSTRUMENTACION*@
-                <div class="title-table" id="principal7">
+                <div class="title-table principal7">
                     <p id="idRegistro" claveRegistro='@CompresIntrument.IdRegistroConsola'>@CompresIntrument.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG boton7" id="tabla-EG1">
                     <tbody>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">HORAS DE OPERACION</th>
+                            <td id="unidad">H</td>
+                            <td id="rango"></td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">TEMPERATURA DE TRABAJO</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">75</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">PRESION</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">5.8-7.0</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">NIVEL DE ACEITE REFRIGERANTE</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">40%</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                     </tbody>
                 </table>
 
                 @* COMPRESOR DE AIRE DE ARRANQUE*@
-                <div class="title-table" id="principal8">
+                <div class="title-table principal8">
                     <p id="idRegistro" claveRegistro='@CompresArranque.IdRegistroConsola'>@CompresArranque.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG boton8" id="tabla-EG1">
                     <tbody>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">HORAS OPERACION</th>
+                            <td id="unidad">H</td>
+                            <td id="rango"></td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">NIVEL DE ACIETE LUBRICANTE</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">30%</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
+                       
                     </tbody>
                 </table>
 
                 @* GENERADOR*@
-                <div class="title-table" id="principal9">
+                <div class="title-table principal9">
                     <p id="idRegistro" claveRegistro='@Generador.IdRegistroConsola'>@Generador.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG boton9" id="tabla-EG1">
                     <tbody>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE BOMBA OIL BEARING D P7473H6401</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">0-30</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">PRESION DE BOMBA OIL BEARING D P7473H6402</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">0-30</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">GENERADOR BEARING D OIL LEVEL</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">>900</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">GENERADOR BEARING ND OIL LEVEL</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">>90</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                     </tbody>
                 </table>
 
                 @* COMPLEMENTARIOS*@
-                <div class="title-table" id="principal10">
+                <div class="title-table principal10">
                     <p id="idRegistro" claveRegistro='@Complementario.IdRegistroConsola'>@Complementario.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG boton10" id="tabla-EG1">
                     <tbody>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">WASTEGATE</th>
+                            <td id="unidad">GRADOS</td>
+                            <td id="rango">NO ALRM</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
                         <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                            <th class="Title-Column letraInspeccion" scope="row">NIVEL OIL CARTER</th>
+                            <td id="unidad">CM</td>
+                            <td id="rango">VISUAL</td>
+                            <td id="4:00"><input></td>
+                            <td id="6:00"><input></td>
+                            <td id="8:00"><input></td>
+                            <td id="10:00"><input></td>
+                            <td id="12:00"><input></td>
+                            <td id="14:00"><input></td>
+                            <td id="16:00"><input></td>
+                            <td id="18:00"><input></td>
+                            <td id="20:00"><input></td>
+                            <td id="22:00"><input></td>
+                            <td id="00:00"><input></td>
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
+                        
                     </tbody>
                 </table>
             
@@ -1032,6 +904,8 @@
                         <thead>
                             <tr>
                                 <th class="sticky-header" scope="col" style="width: 200px;">INSPECCIONES</th>
+                            <th class="sticky-header space" scope="col" style="width: 90px;"></th>
+                            <th class="sticky-header space" scope="col" style="width: 90px;"></th>
                                 <th class="sticky-header space" scope="col" style="width: 90px;">Turno 1</th>
                                 <th class="sticky-header space" scope="col" style="width: 90px;">Turno 2</th>
                                 <th class="sticky-header space" scope="col" style="width: 90px;">Turno 3</th>
@@ -1041,7 +915,9 @@
                         <tbody>
                             <tr>
                                 <th class="Title-Column letraInspeccion" scope="row">REVISION DE FUGAS</th>
-                                <td> </td>
+                                <td id="unidad">TESTO</td>
+                                <td id="rango">CHECK</td>
+                                <td></td>
                                 <td> </td>
                                 <td> </td>
                                 
@@ -1050,6 +926,8 @@
                             </tr>
                             <tr>
                                 <th class="Title-Column letraInspeccion" scope="row">REVISION DE FUGAS DE AIRE</th>
+                            <td id="unidad">VISUAL</td>
+                            <td id="rango">CHECK</td>
                                 <td> </td>
                                 <td> </td>
                                 <td> </td>
@@ -1059,6 +937,8 @@
                             </tr>
                             <tr>
                                 <th class="Title-Column letraInspeccion" scope="row">REVISION DE FUGAS DE AGUA</th>
+                                <td id="unidad">VISUAL</td>
+                                <td id="rango">CHECK</td>
                                 <td> </td>
                                 <td> </td>
                                 <td> </td>
@@ -1068,6 +948,8 @@
                             </tr>
                             <tr>
                                 <th class="Title-Column letraInspeccion" scope="row">REVISION DE FUGAS DE ACIETE</th>
+                                <td id="unidad">VISUAL</td>
+                                <td id="rango">CHECK</td>
                                 <td> </td>
                                 <td> </td>
                                 <td> </td>
@@ -1077,6 +959,8 @@
                             </tr>
                             <tr>
                                 <th class="Title-Column letraInspeccion" scope="row">NIVEL TANQUE DE EXPANCION</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">>30%</td>
                                 <td> </td>
                                 <td> </td>
                                 <td> </td>
@@ -1086,6 +970,8 @@
                             </tr>
                             <tr>
                                 <th class="Title-Column letraInspeccion" scope="row">LIMPIEZA EGOT Y SISTEMA AUXILIARES</th>
+                            <td id="unidad"></td>
+                            <td id="rango">CHECK</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -1096,12 +982,14 @@
                         </tbody>
                         <thead>
                             <tr>
-                                <th scope="col" style="color:black;  background: darkgray;" colspan="4">SISTEMA COMUNES</th>
+                                <th scope="col" style="color:black;  background: darkgray;" colspan="6">SISTEMA COMUNES</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <th class="Title-Column letraInspeccion" scope="row">NIVEL DEL TANQUE DE ACIETE</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">>10%</td>
                                 <td> </td>
                                 <td> </td>
                                 <td> </td>
@@ -1111,6 +999,8 @@
                             </tr>
                             <tr>
                                 <th class="Title-Column letraInspeccion" scope="row">NIVEL DEL TANQUE DEL SISTEMA</th>
+                            <td id="unidad">M</td>
+                            <td id="rango">>7M</td>
                                 <td> </td>
                                 <td> </td>
                                 <td> </td>
@@ -1120,6 +1010,8 @@
                             </tr>
                             <tr>
                                 <th class="Title-Column letraInspeccion" scope="row">LIMPIEZA DE SALA DE MAQUINAS</th>
+                            <td id="unidad"></td>
+                            <td id="rango">CHECK</td>
                                 <td> </td>
                                 <td> </td>
                                 <td> </td>
@@ -1141,8 +1033,68 @@
         </div>
 </div>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
+    $(document).ready(function () {
+        $("#GuardarDatos").click(function () {
+            var inputprincipal = "SIST_GAS";
+            var inputHora = "2:00 PM";
+            var registro = "BAA901-Station";
+            var inputrango = "sdd";
+            var inputunidad = "asdsd";
+            var fecha = obtenerFecha("fecha");
+            var inputpotencia = document.getElementById('potencia2').querySelector('input');
+            var inputoperacion = document.getElementById('operacion2').querySelector('input');
+            var inputtemperatura = document.getElementById('temperatura2').querySelector('input');
+            var inputhumedad = document.getElementById('humedad2').querySelector('input');
+            var operario = "op-47789733";
+            var formato = "ELD-CTL-OM002_2023-10-06";
+            var fila = 1;
+
+           
+           //  var fecha = new Date(obtenerFecha("fecha") + ' ' + inputHora); 
+
+         
+           // var fechaFormateada = fecha.toISOString().slice(0, 12).replace('T', ' ');
+
+            console.log('potencia ' , inputpotencia  );
+            var datos = {
+                IdDetalleInicioCampo: inputprincipal,
+                fecha: fecha,
+                Hora: inputHora, 
+                IdRegistroConsola: registro,
+                Und: inputunidad,
+                Rango: inputrango,
+                P_Activa: inputpotencia.value, 
+                H_Operacion: inputoperacion.value, 
+                Temp_Ambiente: inputtemperatura.value, 
+                Humed_Relativa: inputhumedad.value, 
+                IdOperario: operario,
+                IdformatoConsola: formato,
+                Fila: fila
+            };
+            console.log('potenciadatos ', datos);
+            fetch("/LecturasCampo/GuardarDatosCampo", {
+                method: "POST",
+                headers: {
+                    
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(datos)
+            })
+                .then(function (response) {
+                    //console.log(response);
+                })
+                .catch(function (error) {
+                    console.error("Error:", error);
+                });
+
+
+        });
+    });
+
+
     const mostrarOcultarButton = document.getElementById("mostrarOcultar");
     let columnasOcultas = true;
 
@@ -1180,137 +1132,112 @@
         columnasOcultas = !columnasOcultas;
     });
 
-    // const mostrarOcultarButton = document.getElementById("mostrarOcultar");
-    // const columnasCabeceras = document.querySelectorAll(".ocultar th:nth-child(n+10)");
-    // const columnasDatos = document.querySelectorAll(".ocultar td:nth-child(n+10)");
-
-    // mostrarOcultarButton.addEventListener("click", () => {
-    //     const columnasOcultas = Array.from(columnasCabeceras).some((columna) => columna.style.display === "none");
-
-    //     if (columnasOcultas) {
-    //         columnasCabeceras.forEach((columna) => {
-    //             columna.style.display = "table-cell";
-    //         });
-    //         columnasDatos.forEach((columna) => {
-    //             columna.style.display = "table-cell";
-    //         });
-    //         mostrarOcultarButton.textContent = "-";
-    //     } else {
-    //         columnasCabeceras.forEach((columna) => {
-    //             columna.style.display = "none";
-    //         });
-    //         columnasDatos.forEach((columna) => {
-    //             columna.style.display = "none";
-    //         });
-    //         mostrarOcultarButton.textContent = "+";
-    //     }
-    // });
-
+   
 
 
 
     // Obtén referencias a los elementos del DOM
     // const principalElement = document.getElementById("principal");
-    const principalElement = document.querySelector(".principal"); // Selecciona por clase
+    const principalElement = document.querySelector(".principal"); 
     const tablaEG1 = document.querySelector(".boton1");
 
-    // Agrega un controlador de eventos al elemento "Principal"
+
     principalElement.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
+     
         if (tablaEG1.style.display === "none" || tablaEG1.style.display === "") {
-            // Si está oculta, muéstrala
+     
             tablaEG1.style.display = "table";
         } else {
-            // Si está visible, ocúltala
+          
             tablaEG1.style.display = "none";
         }
     });
 
-    const principalElement2 = document.querySelector(".principal2"); // Selecciona por clase
+    const principalElement2 = document.querySelector(".principal2"); 
     const tablaEG2 = document.querySelector(".boton2");
 
-    // Agrega un controlador de eventos al elemento "Principal"
+
     principalElement2.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
+
         if (tablaEG2.style.display === "none" || tablaEG2.style.display === "") {
-            // Si está oculta, muéstrala
+
             tablaEG2.style.display = "table";
         } else {
-            // Si está visible, ocúltala
+ 
             tablaEG2.style.display = "none";
         }
     });
-    const principalElement3 = document.querySelector(".principal3"); // Selecciona por clase
+    const principalElement3 = document.querySelector(".principal3"); 
     const tablaEG3 = document.querySelector(".boton3");
 
-    // Agrega un controlador de eventos al elemento "Principal"
+
     principalElement3.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
+        
         if (tablaEG3.style.display === "none" || tablaEG3.style.display === "") {
-            // Si está oculta, muéstrala
+           
             tablaEG3.style.display = "table";
         } else {
-            // Si está visible, ocúltala
+        
             tablaEG3.style.display = "none";
         }
     });
 
-    const principalElement4 = document.querySelector(".principal4"); // Selecciona por clase
+    const principalElement4 = document.querySelector(".principal4"); 
     const tablaEG4 = document.querySelector(".boton4");
 
-    // Agrega un controlador de eventos al elemento "Principal"
+
     principalElement4.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
+ 
         if (tablaEG4.style.display === "none" || tablaEG4.style.display === "") {
-            // Si está oculta, muéstrala
+       
             tablaEG4.style.display = "table";
         } else {
-            // Si está visible, ocúltala
+           
             tablaEG4.style.display = "none";
         }
     });
 
-    const principalElement5 = document.querySelector(".principal5"); // Selecciona por clase
+    const principalElement5 = document.querySelector(".principal5"); 
     const tablaEG5 = document.querySelector(".boton5");
 
-    // Agrega un controlador de eventos al elemento "Principal"
+    
     principalElement5.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
+        
         if (tablaEG5.style.display === "none" || tablaEG5.style.display === "") {
-            // Si está oculta, muéstrala
+          
             tablaEG5.style.display = "table";
         } else {
-            // Si está visible, ocúltala
+            
             tablaEG5.style.display = "none";
         }
     });
 
-    const principalElement6 = document.querySelector(".principal6"); // Selecciona por clase
+    const principalElement6 = document.querySelector(".principal6"); 
     const tablaEG6 = document.querySelector(".boton6");
 
-    // Agrega un controlador de eventos al elemento "Principal"
+  
     principalElement6.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
+        
         if (tablaEG6.style.display === "none" || tablaEG6.style.display === "") {
-            // Si está oculta, muéstrala
+            
             tablaEG6.style.display = "table";
         } else {
-            // Si está visible, ocúltala
+            
             tablaEG6.style.display = "none";
         }
     });
 
-    const principalElement7 = document.querySelector(".principal7"); // Selecciona por clase
+    const principalElement7 = document.querySelector(".principal7"); 
     const tablaEG7 = document.querySelector(".boton7");
 
-    // Agrega un controlador de eventos al elemento "Principal"
+    
     principalElement7.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
+        
         if (tablaEG7.style.display === "none" || tablaEG7.style.display === "") {
-            // Si está oculta, muéstrala
+            
             tablaEG7.style.display = "table";
         } else {
-            // Si está visible, ocúltala
+            
             tablaEG7.style.display = "none";
         }
     });

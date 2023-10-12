@@ -60,6 +60,11 @@ namespace Generacion.Application.LecturaCampo.Query
                                 listaRegistroCampo.Add(registroCampo);
 
                             }
+
+                            var primeraPrincipal = listaRegistroCampo
+                                .Where(x => x.IdDetalleInicioCampo.StartsWith("PRINCIPAL"))
+                                .ToList();
+
                             // Obtener la primera línea para ID "SIST_GAS_COMBUSTIBLE"
                             var primeraLineaGasCombustible = listaRegistroCampo
                                 .Where(x => x.IdDetalleInicioCampo.StartsWith("SIST_GAS_COMBUSTIBLE"))
@@ -108,6 +113,10 @@ namespace Generacion.Application.LecturaCampo.Query
 
 
                             //respuesta.Detalle = new Dictionary<string, List<DatosFormatoConsola>>();
+                            primeraPrincipal = primeraPrincipal
+                                .OrderBy(h => h.Fila)
+                                .ToList();
+
                             primeraLineaGasCombustible = primeraLineaGasCombustible
                                 .OrderBy(h => h.Fila)
                                 .ToList();
@@ -145,7 +154,7 @@ namespace Generacion.Application.LecturaCampo.Query
 
                             //primeraLineaBAA = primeraLineaBAA.OrderBy(h => TimeSpan.Parse(h.Hora)).ToList();
                             //primeraLineaEG1 = primeraLineaEG1.OrderBy(h => TimeSpan.Parse(h.Hora)).ToList();
-
+                            datosFormatoConsola.Add("PRINCIPAL", primeraPrincipal);
                             datosFormatoConsola.Add("SIST_GAS_COMBUSTIBLE", primeraLineaGasCombustible);
                             datosFormatoConsola.Add("SIST_AGUA_REFRIG_MOTOR", primeraAguaRefrig);
                             datosFormatoConsola.Add("SIST_AGUA_REFRIG_LT", primeraAguaRefrigLt);

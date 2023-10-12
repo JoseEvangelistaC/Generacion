@@ -35,7 +35,8 @@ namespace Generacion.Controllers
 
         public async Task<IActionResult> Index()
         {
-
+            string usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
+            DetalleOperario user = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);
             if (user != null)
             {
                 Respuesta<Dictionary<string, CabecerasTabla>> datoscabecera = await _datosConsola.ObtenerCabecerasDeTabla();

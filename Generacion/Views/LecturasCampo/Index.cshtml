@@ -1,4 +1,5 @@
 ﻿@using Generacion.Models.LecturasCampo;
+@using Generacion.Models.DatosConsola;
 @{
     bool activar = true;
     List<int> horasGenerador = new List<int>
@@ -18,7 +19,7 @@
 
 
 
-
+    FormatoConsola datoFormato = ViewData["datoFormato"] as FormatoConsola;
     // List<DatosFormatoCampo> GasCombustibles = ViewData["GasCombustible"] as List<DatosFormatoCampo>;
     List<TiposRegistroCampo> DetalleRegistrCampo = ViewData["TipoRegistros"] as List<TiposRegistroCampo>;
     Dictionary<string, List<DatosFormatoCampo>> FormatoCampo = ViewData["CabeceraHorizontal"] as Dictionary<string, List<DatosFormatoCampo>>;
@@ -26,6 +27,7 @@
     // Dictionary<string, CabecerasTablaCampo> detalleCabecerasCampo = ViewData["DatoscabeceraCampo"] as Dictionary<string, CabecerasTablaCampo>;
 
     //TRAENDO DATA DE  QUERY LECTURACAMPO PARA CABEZALES PRINCIPALES
+    var Principal = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "PRINCIPAL").Select(x => x).FirstOrDefault();
     var SistemaGasCombustible = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "SIST_GAS_COMBUSTIBLE").Select(x => x).FirstOrDefault();
     var AguaRefrigMotor = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "SIST_AGUA_REFRIG_MOTOR").Select(x => x).FirstOrDefault();
     var AguaRefrigLt = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "SIST_AGUA_REFRIG_LT").Select(x => x).FirstOrDefault();
@@ -41,6 +43,7 @@
 
 
 }
+
 
 <style>
     .lectura input {
@@ -201,7 +204,7 @@
                 <p1>Fecha</p1>
                 @{
                     var date = DateTime.Now;
-                                            <p>@date.ToString("dd/MM/yyyy")</p>
+                                                <p>@date.ToString("dd/MM/yyyy")</p>
                 }
                
             </div>
@@ -209,9 +212,9 @@
                 <p1 style="text-align: inherit;">Operadores</p1>
 
             </div>
-            <div>
+             <div>
                 <p1>Turno 1</p1>
-                <p class="idOperario">E. Codarlupo / R. Ramos</p>
+                <p>E. Codarlupo / R. Ramos</p>
             </div>
             <div>
                 <p1>Turno 2</p1>
@@ -221,6 +224,7 @@
                 <p1>Turno 3</p1>
                 <p>H. Cerron / W. Arevalo</p>
             </div>
+          
         </div>
     </div>
 </div>
@@ -233,12 +237,9 @@
             <div style="overflow: auto; width: 100%; height: 85vh;">
                 <button id="mostrarOcultar">+</button>
                 <div class="title-table principal">
-                        <p id="idRegistro" claveRegistro='principal'>
-                            PRINCIPAL
-                        </p>
-                    
+                    <p id="idRegistro" class="titlePrincipal" claveRegistro="PRINCIPAL">PRINCIPAL</p>
                 </div>
-
+                @* PRINCIPAL *@
                 <table class="table table-bordered EG ocultar boton1" id="tabla-Principal">
                     <thead>
                         <tr>
@@ -264,69 +265,69 @@
                             <th id="potencia" class="static potencia_activa" scope="row">POTENCIA ACTIVA</th>
                             <td id="unidad">kW</td>
                             <td id="rango">0-93411</td>
-                            <td id="potencia2"><input ></td>
-                            <td id="4:00"><input type="text"></td>
-                            <td id="6:00"><input type="text"></td>
-                            <td id="8:00"><input type="text"></td>
-                            <td id="10:00"><input type="text"></td>
-                            <td id="12:00"><input type="text"></td>
-                            <td id="14:00"><input type="text"></td>
-                            <td id="16:00"><input type="text"></td>
-                            <td id="18:00"><input type="text"></td>
-                            <td id="20:00"><input type="text"></td>
-                            <td id="22:00"><input type="text"></td>
-                            <td id="00:00"><input type="text"></td>
+                            <td id="potencia_2:00"><input ></td>
+                            <td id="potencia_4:00"><input ></td>
+                            <td id="potencia_6:00"><input ></td>
+                            <td id="potencia_8:00"><input ></td>
+                            <td id="potencia_10:00"><input ></td>
+                            <td id="potencia_12:00"><input ></td>
+                            <td id="potencia_14:00"><input ></td>
+                            <td id="potencia_16:00"><input ></td>
+                            <td id="potencia_18:00"><input ></td>
+                            <td id="potencia_20:00"><input ></td>
+                            <td id="potencia_22:00"><input ></td>
+                            <td id="potencia_00:00"><input ></td>
                         </tr>
                         <tr>
                             <th id="operacion" class="Title-Column letraInspeccion static HorasOperacion" scope="row">HORAS DE OPERACION</th>
                             <td id="unidad">h</td>
                             <td id="rango">WOIS</td>
-                            <td id="operacion2"><input ></td>
-                            <td id="4:00"><input type="text"></td>
-                            <td id="6:00"><input type="text"></td>
-                            <td id="8:00"><input type="text"></td>
-                            <td id="10:00"><input type="text"></td>
-                            <td id="12:00"><input type="text"></td>
-                            <td id="14:00"><input type="text"></td>
-                            <td id="16:00"><input type="text"></td>
-                            <td id="18:00"><input type="text"></td>
-                            <td id="20:00"><input type="text"></td>
-                            <td id="22:00"><input type="text"></td>
-                            <td id="00:00"><input type="text"></td>
+                            <td id="operacion_2:00"><input></td>
+                            <td id="operacion_4:00"><input></td>
+                            <td id="operacion_6:00"><input></td>
+                            <td id="operacion_8:00"><input></td>
+                            <td id="operacion_10:00"><input></td>
+                            <td id="operacion_12:00"><input></td>
+                            <td id="operacion_14:00"><input></td>
+                            <td id="operacion_16:00"><input></td>
+                            <td id="operacion_18:00"><input></td>
+                            <td id="operacion_20:00"><input></td>
+                            <td id="operacion_22:00"><input></td>
+                            <td id="operacion_00:00"><input></td>
                         </tr>
                         <tr>
                             <th id="temperatura" class="Title-Column letraInspeccion static tempAmbiente" scope="row">TEMPERATURA AMBIENTE</th>
                             <td id="unidad">°C</td>
                             <td id="rango">10-35</td>
-                            <td id="temperatura2"><input ></td>
-                            <td id="4:00"><input></td>
-                            <td id="6:00"><input></td>
-                            <td id="8:00"><input></td>
-                            <td id="10:00"><input></td>
-                            <td id="12:00"><input></td>
-                            <td id="14:00"><input></td>
-                            <td id="16:00"><input></td>
-                            <td id="18:00"><input></td>
-                            <td id="20:00"><input></td>
-                            <td id="22:00"><input></td>
-                            <td id="00:00"><input></td>
+                            <td id="temperatura_2:00"><input></td>
+                            <td id="temperatura_4:00"><input></td>
+                            <td id="temperatura_6:00"><input></td>
+                            <td id="temperatura_8:00"><input></td>
+                            <td id="temperatura_10:00"><input></td>
+                            <td id="temperatura_12:00"><input></td>
+                            <td id="temperatura_14:00"><input></td>
+                            <td id="temperatura_16:00"><input></td>
+                            <td id="temperatura_18:00"><input></td>
+                            <td id="temperatura_20:00"><input></td>
+                            <td id="temperatura_22:00"><input></td>
+                            <td id="temperatura_00:00"><input></td>
                         </tr>
                         <tr>
                             <th id="humedad" class="Title-Column letraInspeccion static humedadRelativa" scope="row">HUMEDAD RELATIVA</th>
                             <td id="unidad">%</td>
                             <td id="rango">30-100</td>
-                            <td id="humedad2"><input ></td>
-                            <td id="4:00"><input></td>
-                            <td id="6:00"><input></td>
-                            <td id="8:00"><input></td>
-                            <td id="10:00"><input></td>
-                            <td id="12:00"><input></td>
-                            <td id="14:00"><input></td>
-                            <td id="16:00"><input></td>
-                            <td id="18:00"><input></td>
-                            <td id="20:00"><input></td>
-                            <td id="22:00"><input></td>
-                            <td id="00:00"><input></td>
+                            <td id="humedad_2:00"><input></td>
+                            <td id="humedad_4:00"><input></td>
+                            <td id="humedad_6:00"><input></td>
+                            <td id="humedad_8:00"><input></td>
+                            <td id="humedad_10:00"><input></td>
+                            <td id="humedad_12:00"><input></td>
+                            <td id="humedad_14:00"><input></td>
+                            <td id="humedad_16:00"><input></td>
+                            <td id="humedad_18:00"><input></td>
+                            <td id="humedad_20:00"><input></td>
+                            <td id="humedad_22:00"><input></td>
+                            <td id="humedad_00:00"><input></td>
                         </tr>
 
                       
@@ -334,7 +335,7 @@
                 </table>
                 @* SISTEMA DE GAS COMBUSTIBLE *@
                 <div class="title-table principal2">
-                    <p id="idRegistro" claveRegistro='@SistemaGasCombustible.IdRegistroConsola'>@SistemaGasCombustible.TipoRegistro</p>
+                    <p id="idRegistro2" claveRegistro='@SistemaGasCombustible.IdRegistroConsola'>@SistemaGasCombustible.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG ocultar boton2" id="tabla-EG2">
                     <tbody>
@@ -406,7 +407,7 @@
                 </table>
                 @* sISTEMA DE AGUA REFRIGERACION AL MOTOR *@
                 <div class="title-table principal3">
-                    <p id="idRegistro" claveRegistro='@AguaRefrigMotor.IdRegistroConsola'>@AguaRefrigMotor.TipoRegistro</p>
+                    <p id="idRegistro3" claveRegistro='@AguaRefrigMotor.IdRegistroConsola'>@AguaRefrigMotor.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG ocultar boton3" id="tabla-EG3">
                     <tbody>
@@ -479,7 +480,7 @@
 
                 @* sISTEMA DE AGUA REFRIGERACION POR LT *@
                 <div class="title-table principal4">
-                    <p id="idRegistro" claveRegistro='@AguaRefrigLt.IdRegistroConsola'>@AguaRefrigLt.TipoRegistro</p>
+                    <p id="idRegistro4" claveRegistro='@AguaRefrigLt.IdRegistroConsola'>@AguaRefrigLt.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG boton4" id="tabla-EG4">
                     <tbody>
@@ -521,7 +522,7 @@
 
                 @* sISTEMA DE AGUA REFRIGERACION POR HT *@
                 <div class="title-table principal5">
-                    <p id="idRegistro" claveRegistro='@AguaRefrigHt.IdRegistroConsola'>@AguaRefrigHt.TipoRegistro</p>
+                    <p id="idRegistro5" claveRegistro='@AguaRefrigHt.IdRegistroConsola'>@AguaRefrigHt.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG boton5" id="tabla-EG1">
                     <tbody>
@@ -594,7 +595,7 @@
 
                 @* ENTRADA Y SALIDA AGUA A LOS RADIADORES*@
                 <div class="title-table principal6">
-                    <p id="idRegistro" claveRegistro='@EntradaSalidaRad.IdRegistroConsola'>@EntradaSalidaRad.TipoRegistro</p>
+                    <p id="idRegistro6" claveRegistro='@EntradaSalidaRad.IdRegistroConsola'>@EntradaSalidaRad.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG boton6" id="tabla-EG1">
                     <tbody>
@@ -667,7 +668,7 @@
 
                 @* COMPRESOR DE INSTRUMENTACION*@
                 <div class="title-table principal7">
-                    <p id="idRegistro" claveRegistro='@CompresIntrument.IdRegistroConsola'>@CompresIntrument.TipoRegistro</p>
+                    <p id="idRegistro7" claveRegistro='@CompresIntrument.IdRegistroConsola'>@CompresIntrument.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG boton7" id="tabla-EG1">
                     <tbody>
@@ -740,7 +741,7 @@
 
                 @* COMPRESOR DE AIRE DE ARRANQUE*@
                 <div class="title-table principal8">
-                    <p id="idRegistro" claveRegistro='@CompresArranque.IdRegistroConsola'>@CompresArranque.TipoRegistro</p>
+                    <p id="idRegistro8" claveRegistro='@CompresArranque.IdRegistroConsola'>@CompresArranque.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG boton8" id="tabla-EG1">
                     <tbody>
@@ -782,7 +783,7 @@
 
                 @* GENERADOR*@
                 <div class="title-table principal9">
-                    <p id="idRegistro" claveRegistro='@Generador.IdRegistroConsola'>@Generador.TipoRegistro</p>
+                    <p id="idRegistro9" claveRegistro='@Generador.IdRegistroConsola'>@Generador.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG boton9" id="tabla-EG1">
                     <tbody>
@@ -855,7 +856,7 @@
 
                 @* COMPLEMENTARIOS*@
                 <div class="title-table principal10">
-                    <p id="idRegistro" claveRegistro='@Complementario.IdRegistroConsola'>@Complementario.TipoRegistro</p>
+                    <p id="idRegistro10" claveRegistro='@Complementario.IdRegistroConsola'>@Complementario.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG boton10" id="tabla-EG1">
                     <tbody>
@@ -1020,6 +1021,12 @@
                             
                             </tr>
                         </tbody>
+                      
+
+                    <div id="observacionesConsola" style="display: flex; padding: 10px 0 0 0;">
+                        <span style="padding: 0 10px 0 0;">Observaciones</span>
+                        <textarea style="height: 113px; width: 90%;"></textarea>
+                    </div>
 @*                     <tfoot>
                         <tr>
                             <th colspan="9"></th>
@@ -1036,61 +1043,110 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
+    //Primero se agrega el formato respecto a su fecha para posteriormente insertar en la tabla tbl_Det_Principal_Campo
+    function ObtenerDatosFormato() {
+        var inputObser = document.getElementById('observacionesConsola').querySelector('textarea');
+
+        var idFormatoConsola = "ELD-CTL-OM001_" + obtenerFecha("fecha");
+
+        var datos = {
+            idFormatoConsola: idFormatoConsola,
+            Observaciones: inputObser.value,
+            Observaciones1: "",
+            Observaciones2: "",
+            fecha: obtenerFecha("fecha")
+        };
+
+
+         return fetch("/DatosConsola/GuardarFormato", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify(datos)
+         })
+         .then(function (response) {
+             //console.log(response);
+                console.log('ejecutado correctamente');
+         })
+         .catch(function (error) {
+             console.error("Error:", error);
+         });
+    }
+
+
+    // Tabla Principal capturando la informacion de los inputs
+    function ObtenerDatosCampo() {
+
+        etiquetaIdRegistro = document.getElementById('idRegistro');
+        var claveRegistro = etiquetaIdRegistro.getAttribute('claveRegistro');
+        var registro = "BAA901-Station";
+        var inputrango = "sdd"; // se elimina
+        var inputunidad = "asdsd"; // se elimina
+        var fecha = obtenerFecha("fecha");
+        var inputpotencia = document.getElementById('potencia_2:00').querySelector('input');
+        var inputoperacion = document.getElementById('operacion_2:00').querySelector('input');
+        var inputtemperatura = document.getElementById('temperatura_2:00').querySelector('input');
+        var inputhumedad = document.getElementById('humedad_2:00').querySelector('input');
+        var operario = "op-47789733";
+        var formato = "ELD-CTL-OM001_" + obtenerFecha("fecha");
+        var fila = 1;
+        var inputHora = document.getElementById('potencia_2:00').id.split('_')[1];
+        var inputprincipal = claveRegistro + '-' + obtenerFecha("format");
+        //-----para obtener el titulo de las cabeceras
+        // var parrafo = document.querySelector('p.titlePrincipal');
+        // var inputprincipal = parrafo.textContent;
+
+        console.log('potencia ', inputpotencia);
+
+
+        var datos = {
+            IdDetalleInicioCampo: inputprincipal,
+            fecha: fecha,
+            Hora: inputHora,
+            IdRegistroConsola: registro,
+            Und: inputunidad,
+            Rango: inputrango,
+            P_Activa: inputpotencia.value,
+            H_Operacion: inputoperacion.value,
+            Temp_Ambiente: inputtemperatura.value,
+            Humed_Relativa: inputhumedad.value,
+            IdOperario: operario,
+            IdformatoConsola: formato,
+            Fila: fila
+        };
+        console.log('potenciadatos ', datos);
+        return fetch("/LecturasCampo/GuardarDatosCampo", {
+            method: "POST",
+            headers: {
+
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(datos)
+        })
+            .then(function (response) {
+
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
+
+    }
+
+
+
     $(document).ready(function () {
         $("#GuardarDatos").click(function () {
-            var inputprincipal = "SIST_GAS";
-            var inputHora = "2:00 PM";
-            var registro = "BAA901-Station";
-            var inputrango = "sdd";
-            var inputunidad = "asdsd";
-            var fecha = obtenerFecha("fecha");
-            var inputpotencia = document.getElementById('potencia2').querySelector('input');
-            var inputoperacion = document.getElementById('operacion2').querySelector('input');
-            var inputtemperatura = document.getElementById('temperatura2').querySelector('input');
-            var inputhumedad = document.getElementById('humedad2').querySelector('input');
-            var operario = "op-47789733";
-            var formato = "ELD-CTL-OM002_2023-10-06";
-            var fila = 1;
-
-           
-           //  var fecha = new Date(obtenerFecha("fecha") + ' ' + inputHora); 
-
-         
-           // var fechaFormateada = fecha.toISOString().slice(0, 12).replace('T', ' ');
-
-            console.log('potencia ' , inputpotencia  );
-            var datos = {
-                IdDetalleInicioCampo: inputprincipal,
-                fecha: fecha,
-                Hora: inputHora, 
-                IdRegistroConsola: registro,
-                Und: inputunidad,
-                Rango: inputrango,
-                P_Activa: inputpotencia.value, 
-                H_Operacion: inputoperacion.value, 
-                Temp_Ambiente: inputtemperatura.value, 
-                Humed_Relativa: inputhumedad.value, 
-                IdOperario: operario,
-                IdformatoConsola: formato,
-                Fila: fila
-            };
-            console.log('potenciadatos ', datos);
-            fetch("/LecturasCampo/GuardarDatosCampo", {
-                method: "POST",
-                headers: {
-                    
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(datos)
-            })
-                .then(function (response) {
-                    //console.log(response);
+                 ObtenerDatosFormato()
+                .then(function () {
+                    return ObtenerDatosCampo();
+                })
+                .then(function () {
+                    // Aquí puedes realizar acciones después de que ambas solicitudes se completen.
                 })
                 .catch(function (error) {
                     console.error("Error:", error);
                 });
-
-
         });
     });
 

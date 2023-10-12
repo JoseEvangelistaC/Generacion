@@ -457,51 +457,84 @@
 
 
 </script>
-<script>
-    var objetoJson = localStorage.getItem("DetalleUsuario");
-    var datosOperario;
-
-    if (objetoJson != "null") {
-
-        var datosOperarioNuevo = @Html.Raw(JsonConvert.SerializeObject(datosOperario));
-        datosOperario = obtenerDetalleOperario();
-        debugger;
-        if (datosOperarioNuevo != null && (datosOperarioNuevo.IdOperario != datosOperario.IdOperario)) {
-
-            var objetoJson = JSON.stringify(@Html.Raw(JsonConvert.SerializeObject(datosOperario)));
-            localStorage.setItem("DetalleUsuario", objetoJson);
+<<script>
+     var objetoJson = localStorage.getItem("DetalleUsuario");
+     var datosOperario;
 
 
-            datosOperario = @Html.Raw(JsonConvert.SerializeObject(datosOperario));
 
-            var valor = datosOperario.Nombre + ' ' + datosOperario.Apellidos;
-            var divNombre = document.getElementById("nombreCompleto");
-            divNombre.textContent = valor;
-        }else{
-            var valor = datosOperario.Nombre + ' ' + datosOperario.Apellidos;
-
-        var divNombre = document.getElementById("nombreCompleto");
-
-        divNombre.textContent = valor;
-        }
+     if (objetoJson != "null") {
 
 
-    } else {
-        var objetoJson = JSON.stringify(@Html.Raw(JsonConvert.SerializeObject(datosOperario)));
-        localStorage.setItem("DetalleUsuario", objetoJson);
+
+         var datosOperarioNuevo = @Html.Raw(JsonConvert.SerializeObject(datosOperario));
 
 
-        datosOperario = @Html.Raw(JsonConvert.SerializeObject(datosOperario));
 
-        var valor = datosOperario.Nombre + ' ' + datosOperario.Apellidos;
-        var divNombre = document.getElementById("nombreCompleto");
-        divNombre.textContent = valor;
-    }
+         datosOperario = obtenerDetalleOperario();
 
-    function obtenerDetalleOperario() {
-        var datosOperario = JSON.parse(objetoJson);
-        return datosOperario;
-    }
+
+
+         if (datosOperarioNuevo != null) {
+             var objetoJson = JSON.stringify(@Html.Raw(JsonConvert.SerializeObject(datosOperario)));
+             localStorage.setItem("DetalleUsuario", objetoJson);
+         }
+         if ((datosOperarioNuevo != null && datosOperario != null) && (datosOperarioNuevo.IdOperario != datosOperario.IdOperario)) {
+
+
+
+             datosOperario = @Html.Raw(JsonConvert.SerializeObject(datosOperario));
+
+
+
+             var valor = datosOperario.Nombre + ' ' + datosOperario.Apellidos;
+             var divNombre = document.getElementById("nombreCompleto");
+             divNombre.textContent = valor;
+         } else {
+             var valor = datosOperario.Nombre + ' ' + datosOperario.Apellidos;
+
+
+
+             var divNombre = document.getElementById("nombreCompleto");
+
+
+
+             divNombre.textContent = valor;
+
+
+
+         }
+
+
+
+
+
+     } else {
+         var objetoJson = JSON.stringify(@Html.Raw(JsonConvert.SerializeObject(datosOperario)));
+         localStorage.setItem("DetalleUsuario", objetoJson);
+
+
+
+
+
+         datosOperario = @Html.Raw(JsonConvert.SerializeObject(datosOperario));
+
+
+
+         var valor = datosOperario.Nombre + ' ' + datosOperario.Apellidos;
+         var divNombre = document.getElementById("nombreCompleto");
+         divNombre.textContent = valor;
+     }
+
+
+
+     function obtenerDetalleOperario() {
+         var datosOperario = JSON.parse(objetoJson);
+         return datosOperario;
+     }
+
+
+
 
 
 </script>

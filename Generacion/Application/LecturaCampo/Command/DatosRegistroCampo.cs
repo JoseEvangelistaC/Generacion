@@ -5,6 +5,7 @@ using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 using System.Data;
 using System.Globalization;
+using Generacion.Models.DatosConsola;
 
 namespace Generacion.Application.LecturaCampo.Command
 {
@@ -45,10 +46,56 @@ namespace Generacion.Application.LecturaCampo.Command
                         command.Parameters.Add("p_IdOperario", OracleDbType.Varchar2).Value = datosFormatoCampo.IdOperario;
                         command.Parameters.Add("p_IdFormatoConsola", OracleDbType.Varchar2).Value = datosFormatoCampo.IdformatoConsola;
                         command.Parameters.Add("p_Fila", OracleDbType.Int32).Value = datosFormatoCampo.Fila;
-
-
                         command.ExecuteNonQuery();
                         respuesta.IdRespuesta = 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                respuesta.IdRespuesta = 99;
+                respuesta.Mensaje = ex.Message.ToString();
+            }
+            return respuesta;
+        }
+
+
+        //guardar los datos de consola
+        public async Task<Respuesta<string>> GuardarDatoFormato(FormatoConsola datos)
+        {
+            Respuesta<string> respuesta = new Respuesta<string>();
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
+
+                    using (OracleCommand command = new OracleCommand("proc_InsFormatoConsola", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros de entrada
+                        command.Parameters.Add("p_IdFormatoConsola", OracleDbType.Varchar2).Value = datos.IdFormatoConsola;
+                        command.Parameters.Add("p_Observaciones", OracleDbType.Varchar2).Value = datos.Observaciones;
+                        command.Parameters.Add("p_Observaciones1", OracleDbType.Varchar2).Value = string.Empty;
+                        command.Parameters.Add("p_Observaciones2", OracleDbType.Varchar2).Value = string.Empty;
+                        command.Parameters.Add("p_Fecha", OracleDbType.Varchar2).Value = datos.Fecha;
+
+                        command.Parameters.Add("p_resultado", OracleDbType.Decimal).Direction = ParameterDirection.Output;
+
+                        command.ExecuteNonQuery();
+
+                        OracleDecimal oracleDecimalValue = (OracleDecimal)command.Parameters["p_resultado"].Value;
+
+                        respuesta.IdRespuesta = (int)oracleDecimalValue.Value;
+                        if (respuesta.IdRespuesta == 0 || respuesta.IdRespuesta == 1)
+                        {
+                            respuesta.Mensaje = "Ok";
+                        }
+                        else
+                        {
+                            respuesta.Mensaje = "No pudo consultar.";
+                        }
                     }
                 }
             }

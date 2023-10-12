@@ -7,6 +7,7 @@ using Generacion.Models.LecturasCampo;
 using Generacion.Models;
 using Newtonsoft.Json;
 using Generacion.Models.DatosConsola;
+using Generacion.Application.DatosConsola.Query;
 
 namespace Generacion.Controllers
 {
@@ -33,12 +34,14 @@ namespace Generacion.Controllers
             Respuesta<List<TiposRegistroCampo>> tipoRegistrosCampo = await _lecturaCampo.ObtenerTiposDeRegistro();
             Respuesta<Dictionary<string, List<DatosFormatoCampo>>> datosRegistro = await _lecturaCampo.ObtenerTiposDeRegistro(fechaActual.ToString("dd/MM/yyyy"), fechaMedianoche.ToString("dd/MM/yyyy"));
            
+
             string usuarioDetail = HttpContext.Session.GetString("datoscabecera");
             Dictionary<string, CabecerasTablaCampo> datoscabecera = JsonConvert.DeserializeObject<Dictionary<string, CabecerasTablaCampo>>(usuarioDetail);
 
 
             ViewData["TipoRegistros"] = tipoRegistrosCampo.Detalle;
             ViewData["Titulos"] = datosRegistro.Detalle;
+
             ViewData["GasCombustible"] = datosRegistro.Detalle["SIST_GAS_COMBUSTIBLE"];
             ViewData["AguaRefrigMotor"] = datosRegistro.Detalle["SIST_AGUA_REFRIG_MOTOR"];
             ViewData["AguaRefrigLt"] = datosRegistro.Detalle["SIST_AGUA_REFRIG_LT"];
@@ -65,3 +68,4 @@ namespace Generacion.Controllers
         }
     }
 }
+

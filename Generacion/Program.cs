@@ -96,10 +96,10 @@ namespace Generacion
                    
                    services.AddSingleton(principalContext);
 
-                  /*  services.AddMvc(options =>
+                    services.AddMvc(options =>
                      {
                          options.Filters.Add(typeof(ValidarSesion));
-                     });*/
+                     });
                });
     }
 }

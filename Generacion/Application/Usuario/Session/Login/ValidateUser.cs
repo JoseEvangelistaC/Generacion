@@ -28,7 +28,7 @@ namespace Generacion.Application.ValidationSession.Login
 
             try
             {
-                var respuestaClaveRed = true;//_activeDirectoryProvider.ValidateUserCredentials(usuario);
+                var respuestaClaveRed = _activeDirectoryProvider.ValidateUserCredentials(usuario);
                 if (respuestaClaveRed)
                 {
                     if (respuesta.IdRespuesta == 0)

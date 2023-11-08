@@ -17,11 +17,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <!-- Etiquetas meta para controlar la caché -->
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
 
     <title>SB Admin 2 - Dashboard</title>
 
     <!-- Custom fonts for this template-->
-    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
           rel="stylesheet">
 
@@ -29,9 +34,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.js"></script>
     <!-- Custom styles for this template-->
-    <link href="../css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
 
-    <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -39,7 +44,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>-->
-    <script src="../js/PDF/jspdf.min.js"></script>
+    <script src="~/js/PDF/jspdf.min.js"></script>
+
 </head>
 <style>
     .body table {
@@ -176,10 +182,10 @@
 
     .boton-eliminar {
         /*border: groove;
-                        color: black;
-                        font-weight: bold;
-                        border-radius: 5px;
-                        background: red;*/
+                                            color: black;
+                                            font-weight: bold;
+                                            border-radius: 5px;
+                                            background: red;*/
         position: absolute;
     }
 
@@ -235,6 +241,21 @@
         height: 230px;
     }
 
+
+    input:disabled {
+        border: none;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Desactiva los spinners en Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
     /*******ESTILOS GENERALES*******/
 </style>
 <body id="page-top">
@@ -290,7 +311,7 @@
                 <div id="collapseCapex" class="collapse" aria-labelledby="headingUtilities"
                      data-parent="#collapseCapex">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Cuentas Contables</h6>
+                        <h6 class="collapse-header">Reporte General</h6>
                         <a class="collapse-item" href="@Url.Action("Index", "DatosConsola")"> Lecturas de Consola</a>
                         <a class="collapse-item" href="@Url.Action("Index", "LecturasCampo")"> Lecturas de Campo</a>
                     </div>
@@ -307,8 +328,8 @@
                 <div id="collapseOpex" class="collapse" aria-labelledby="headingUtilities"
                      data-parent="#collapseOpex">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Otros</h6>
-                        <a class="collapse-item" href="@Url.Action("Index", "ReporteProduccion")" value='Reporte Produccion'></a>
+                        <h6 class="collapse-header">General</h6>
+                        <a class="collapse-item" href="@Url.Action("Index", "ReporteProduccion")" value='Reporte Produccion'>Reporte Produccion</a>
                     </div>
                 </div>
             </li>
@@ -316,24 +337,55 @@
             <hr class="sidebar-divider">
 
             <div class="sidebar-heading">
-                Otros
+                Almacen
+            </div>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages1"
+                   aria-expanded="true" aria-controls="collapsePages1">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Ingreso</span>
+                </a>
+                <div id="collapsePages1" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Registro</h6>
+                        <a class="collapse-item" href="@Url.Action("Index", "RegistroComponentes")">Componentes</a>
+                        <div class="collapse-divider"></div>
+
+                        <h6 class="collapse-header">Utilizados</h6>
+                        <a class="collapse-item" href="@Url.Action("Index", "Bujias")">Bujias</a>
+                        <div class="collapse-divider"></div>
+                    </div>
+                </div>
+            </li>
+
+
+            <hr class="sidebar-divider">
+
+            <div class="sidebar-heading">
+                Control Cambio y/o Mantenimiento
             </div>
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                    aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Tablas</span>
+                    <span> -- </span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Tablas Maestas</h6>
-                  
-                        <a class="collapse-item" href="">Forgot Password</a>
+                        <h6 class="collapse-header">Utilizados</h6>
+                        <a class="collapse-item" href="@Url.Action("Index", "Bujias")">Bujias</a>
+                        <a class="collapse-item" href="@Url.Action("ControlCambio", "Bujias")">Control Cambio</a>
+                        <a class="collapse-item" href="@Url.Action("RegistroControlCambio", "Bujias")">Registro Control</a>
                         <div class="collapse-divider"></div>
+                        </>
                     </div>
-                </div>
             </li>
+            <hr class="sidebar-divider d-none d-md-block">
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
         </ul>
 
         <div id="content-wrapper" class="d-flex flex-column">
@@ -341,13 +393,15 @@
             <div id="content">
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                     <button type="button" class="btn btn-outline-secondary" id="ocultarNav">Ocultar Nav</button>
+                    <!--FECHA-->
+
                     <ul class="navbar-nav ml-auto">
 
                         <div class="topbar-divider d-none d-sm-block"></div>
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="nombreCompleto"></span>
-                                <img class="img-profile rounded-circle" src="../img/Operador.jpg">
+                                <img class="img-profile rounded-circle" src="~/img/Operador.jpg">
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="#">
@@ -363,7 +417,7 @@
                                     Log de Actividad
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="@Url.Action("Index", "Login")" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -412,10 +466,10 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-body">Deseá cerrar sesión.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a onclick="CerrarSession()" class="btn btn-primary">Logout</a>
                 </div>
             </div>
         </div>
@@ -424,84 +478,67 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <!-- Bootstrap core JavaScript-->
-    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/jquery/jquery.min.js"></script>
     <!-- <script src="../js/PDF/jspdf.min.js"></script>-->
-    <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
     <!-- Custom scripts for all pages-->
-    <script src="../js/sb-admin-2.min.js"></script>
+    <script src="~/js/sb-admin-2.min.js"></script>
 
 
     <!-- Page level plugins -->
-    <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
-    <script src="../js/demo/datatables-demo.js"></script>
+    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/demo/datatables-demo.js"></script>
+
 
 </body>
 
 
 
 <div class="modal-loader" id="loader">
-    <img src="GIF/download.gif" alt="Cargando...">
+    <img src="~/GIF/download.gif" alt="Cargando...">
 </div>
 
 </html>
 
 <script>
+    var loader = document.getElementById('loader');
+    loader.style.display = 'none';
+
+
+
+
     var fecha = new Date();
     var horaActual = fecha.getHours();
-
-
-
-
 </script>
 <script>
+
+
+
     var objetoJson = localStorage.getItem("DetalleUsuario");
-    var datosOperario;
+    var datosOperario = objetoJson ? JSON.parse(objetoJson) : null;
 
-    if (objetoJson != "null") {
-
-        var datosOperarioNuevo = @Html.Raw(JsonConvert.SerializeObject(datosOperario));
-        datosOperario = obtenerDetalleOperario();
-
-        if (datosOperarioNuevo != null && (datosOperarioNuevo.IdOperario != datosOperario.IdOperario)) {
-
-            var objetoJson = JSON.stringify(@Html.Raw(JsonConvert.SerializeObject(datosOperario)));
-            localStorage.setItem("DetalleUsuario", objetoJson);
-
-
-            datosOperario = @Html.Raw(JsonConvert.SerializeObject(datosOperario));
-
-            var valor = datosOperario.Nombre + ' ' + datosOperario.Apellidos;
-            var divNombre = document.getElementById("nombreCompleto");
-            divNombre.textContent = valor;
-        }else{
-            var valor = datosOperario.Nombre + ' ' + datosOperario.Apellidos;
-
+    if (datosOperario) {
+        var valor = datosOperario.Nombre + ' ' + datosOperario.Apellidos;
         var divNombre = document.getElementById("nombreCompleto");
-
         divNombre.textContent = valor;
-        }
-
-
     } else {
-        var objetoJson = JSON.stringify(@Html.Raw(JsonConvert.SerializeObject(datosOperario)));
-        localStorage.setItem("DetalleUsuario", objetoJson);
-
-
         datosOperario = @Html.Raw(JsonConvert.SerializeObject(datosOperario));
+        localStorage.setItem("DetalleUsuario", JSON.stringify(datosOperario));
 
         var valor = datosOperario.Nombre + ' ' + datosOperario.Apellidos;
         var divNombre = document.getElementById("nombreCompleto");
         divNombre.textContent = valor;
     }
 
+    /*
     function obtenerDetalleOperario() {
         var datosOperario = JSON.parse(objetoJson);
         return datosOperario;
-    }
+    }*/
 
 
 </script>
@@ -513,7 +550,8 @@
     botonOcultarNav.addEventListener('click', function () {
         var botonOcultarNav = document.getElementById('ocultarNav');
         var nav = document.getElementById('accordionSidebar');
-        var botones = document.querySelectorAll('body button'); // Seleccionar todos los botones dentro del body
+        var botones = document.querySelectorAll('body button');
+        var inputs = document.querySelectorAll('body input');
 
         if (!ocultarNavegador) {
             nav.style.display = "none";
@@ -522,6 +560,11 @@
             botones.forEach(function (boton) {
                 if (boton !== botonOcultarNav) {
                     boton.style.display = "none";
+                }
+            });
+            inputs.forEach(function (input) {
+                if (input !== botonOcultarNav) {
+                    input.disabled = true;
                 }
             });
 
@@ -536,7 +579,11 @@
                     boton.style.display = "initial";
                 }
             });
-
+            inputs.forEach(function (input) {
+                if (input !== botonOcultarNav) {
+                    input.disabled = false;
+                }
+            });
             ocultarNavegador = false;
             botonOcultarNav.innerText = "Ocultar Nav"
         }
@@ -566,7 +613,12 @@
 
     function obtenerFecha(value) {
         const fechaActual = new Date();
+        const hora = fechaActual.getHours();
+        if (hora < 2) {
+            fechaActual.setDate(fechaActual.getDate() - 1);
+        }
         const dia = fechaActual.getDate().toString().padStart(2, '0');
+
         const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
         const año = fechaActual.getFullYear();
 
@@ -580,8 +632,47 @@
         if (value == "fechaVista") {
             fechaFormateada = `${dia}/${mes}/${año}`;
         }
+        if (value == "fechaID") {
+            fechaFormateada = `${dia}${mes}${año}`;
+        }
         return fechaFormateada;
     }
+
+
+
+    async function realizarPeticion(confirmarMensaje) {
+        return new Promise((resolve, reject) => {
+            const confirmacion = confirm(confirmarMensaje);
+
+            if (confirmacion) {
+                resolve("Petición realizada");
+            } else {
+                reject("Petición cancelada");
+            }
+        });
+    }
+
+    function CerrarSession() {
+
+        $.ajax({
+            url: '@Url.Action("CerrarSession", "Login")',
+            type: 'POST',
+            success: function (result) {
+                console.log(result)
+                console.log("success : ", result.success)
+                if (result.success) {
+                    sessionBlock = false;
+                    localStorage.removeItem("DetalleUsuario");
+                    document.cookie = '.AspNetCore.Session=; expires = Thu, 01 Jan 1970 00: 00: 00 UTC; path = /;';
+                    window.location.href = result.redirectUrl;
+
+                }
+            },
+            error: function (error) {
+            }
+        });
+    }
+
 
 </script>
 

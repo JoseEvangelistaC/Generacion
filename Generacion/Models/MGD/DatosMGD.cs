@@ -8,6 +8,6 @@ namespace Generacion.Models.MGD
         public string Idsitio { get; set; }
         public string IdOperario { get; set; }
         public string Fecha { get; set; }
-        public List<Revenue> Revenue { get; set; }
+        public List<DatosFormatoMGD> Revenue { get; set; }
     }
 }

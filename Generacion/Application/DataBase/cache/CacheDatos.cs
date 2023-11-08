@@ -22,5 +22,10 @@ namespace Generacion.Application.DataBase.cache
         {
             cache.Remove(id);
         }
+
+        public void GuardarDatosCacheOracle()
+        {
+
+        }
     }
 }

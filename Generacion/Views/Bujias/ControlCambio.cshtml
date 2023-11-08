@@ -1,0 +1,698 @@
+﻿@using Generacion.Models.Almacen.Bujias;
+@using Generacion.Models.DatosConsola;
+@using Microsoft.AspNetCore.Html;
+@using Microsoft.AspNetCore.Razor.TagHelpers;
+@using Newtonsoft.Json;
+@model Dictionary<int, Dictionary<string, List<Dictionary<int, Dictionary<string, List<RegistroBujias>>>>>>;
+@{
+
+    Dictionary<string, CabecerasTabla> detalleCabeceras = ViewData["Datoscabecera"] as Dictionary<string, CabecerasTabla>;
+
+    int totalBujias = 0;
+    int totalBujias2 = 0;
+    List<int> horasOperacion = new List<int>();
+    List<int> horasOperacion2 = new List<int>();
+
+
+    int horasOp = horasOperacion.Count > 0 ? horasOperacion[horasOperacion.Count - 1] : 0;
+    int ultimaHoraOp = horasOperacion.Count > 0 ? horasOperacion[horasOperacion.Count - 2] : 0;
+
+    int horasOp2 = horasOperacion2.Count > 0 ? horasOperacion[horasOperacion2.Count - 1] : 0;
+    int ultimaHoraOp2 = horasOperacion2.Count > 0 ? horasOperacion[horasOperacion2.Count - 2] : 0;
+
+
+
+    List<string> cabeceras = new List<string>
+    {
+          "FechaCambio",
+          "HorasCambio",
+          "TiempoDuracion",
+          "HorasEnCurso"
+    };
+
+
+    Func<Dictionary<string, List<RegistroBujias>>, int, string, Dictionary<string, CabecerasTabla>, IHtmlContent> RenderTableFecha = (datos, item, fecha, detalleCabeceras) =>
+         {
+             var content = new HtmlContentBuilder();
+
+             content.AppendHtml($"<tr >");
+             content.AppendHtml($"<th rowspan='4'>{item}</th>");
+             content.AppendHtml($"<th>{detalleCabeceras["FechaCambio"].Detalle}</th>");
+
+             var filasFecha = datos[cabeceras[1]].Select(x => x.Fila).ToList();
+            // horasOperacion.Add(datos[cabeceras[1]].Select(x => x.Detalle).FirstOrDefault());
+
+             var llavesOrdenadas = datos.Keys.OrderBy(k => cabeceras.IndexOf(k));
+
+             Dictionary<string, List<RegistroBujias>> datoOrdenado = llavesOrdenadas.ToDictionary(key => key, key => datos[key]);
+             List<string> fechaObtenidas = datos["HorasCambio"]
+      .Select(x => x.Fecha)
+      .ToList();
+
+             int fechaTotal = 0;
+             for (int j = 0; j < 10; j++)
+             {
+                 if (filasFecha.Contains(j + 1))
+                 {
+                     content.AppendHtml($"<td>{fechaObtenidas[fechaTotal].Split(' ')[0]}</td>");
+                     fechaTotal++;
+                 }
+                 else
+                 {
+                     content.AppendHtml($"<td> - </td>");
+                 }
+             }
+             content.AppendHtml("</tr>");
+
+             int filaActual = 0;
+             foreach (var detalle in datoOrdenado)
+             {
+                 string stylos = filaActual == 1 ? "class='texto' " : filaActual == 2 ? "class='texto2' " : "";
+
+                 content.AppendHtml($"<tr {stylos}>");
+
+                 content.AppendHtml($"<th> {detalleCabeceras[detalle.Key].Detalle}</th>");
+
+                 var listaFilas = detalle.Value.Select(x => x.Fila).ToList();
+
+                 if (cabeceras[2].Equals(detalleCabeceras[detalle.Key].IdTipoEngine))
+                 {
+
+                 }
+                 if (cabeceras[3].Equals(detalleCabeceras[detalle.Key].IdTipoEngine))
+                 {
+
+                 }
+
+                 for (int j = 0; j < 10; j++)
+                 {
+                     if (listaFilas.Contains(j + 1))
+                     {
+                        // totalBujias++;
+
+                         content.AppendHtml($"<td> {detalle.Value[listaFilas.IndexOf(j + 1)].Detalle} </td>");
+                     }
+                     else
+                     {
+                         content.AppendHtml($"<td> - </td>");
+                     }
+                 }
+                 content.AppendHtml("</tr>");
+                 filaActual++;
+             }
+             return content;
+         };
+
+}
+<style>
+    .detalle-bujia {
+        white-space: nowrap;
+        text-align-last: center;
+    }
+
+        .detalle-bujia input {
+            background-color: transparent;
+            width: 100px;
+        }
+
+        .detalle-bujia th, td {
+            border: 1px solid black;
+        }
+
+    .elemento {
+        width: 60%;
+        white-space: nowrap;
+    }
+
+    thead {
+        background-color: #B7BDFF;
+    }
+
+    .texto {
+        background-color: #ffb588;
+    }
+
+    .texto2 {
+        background-color: #ffd966;
+    }
+
+    .contenido-detalle {
+        display: flex;
+    }
+
+        .contenido-detalle div {
+            width: 20%;
+            text-align: center;
+            border: solid 1px;
+            margin: 0 0 -1px -1px;
+            font-weight: bold;
+        }
+
+    .titulo-detalle-bujias div {
+        padding: 0 10% 0px 50px;
+    }
+
+    .ocultar-tabla th {
+        display: none;
+    }
+</style>
+
+<div>
+    <div style="padding:0 0 2% 0;">
+        <div style="display: flex;" class="titulo-detalle-bujias">
+            <div>CENTRAL DE GENERACIÓN DISTRIBUIDA LUREN</div>
+            <div>CONTROL DE CAMBIO Y TIEMPO DE OPERACIÓN DE BUJÍAS</div>
+        </div>
+        <div>
+            <div class="contenido-detalle">
+                <div>Unidad</div>
+                <div>
+                    <select id="EGSelect">
+                        <option value="1">EG-01</option>
+                        <option value="2">EG-02</option>
+                    </select>
+                </div>
+            </div>
+            <div class="contenido-detalle">
+                <div>Horas de Op:</div>
+                <div id="horas-operacion"></div>
+            </div>
+            <div class="contenido-detalle">
+                <div>Bujías gastadas (a partir de 29147 horas de operación):</div>
+                <div style="display: flex;align-items: center;justify-content: center;" id="bujiasTotal"></div>
+            </div>
+        </div>
+    </div>
+    <div id="EG1" style="display: flex;overflow-x: scroll;">
+        <div id="datos-A">
+            <table class="detalle-bujia" id="A">
+                <thead>
+                    <tr>
+                        <th style="border: none; background-color: white" colspan="2"> </th>
+                        <th colspan="10"> lado A </th>
+                    </tr>
+                    <tr>
+                        <th> item </th>
+                        <th> bujías </th>
+                        <th> A01 </th>
+                        <th> A02 </th>
+                        <th> A03 </th>
+                        <th> A04 </th>
+                        <th> A05 </th>
+                        <th> A06 </th>
+                        <th> A07 </th>
+                        <th> A08 </th>
+                        <th> A09 </th>
+                        <th> A10 </th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpoTabla">
+                    @{
+
+                        for (int i = 0; i < Model[1]["A"].Count; i++)
+                        {
+                            @foreach (KeyValuePair<int, Dictionary<string, List<RegistroBujias>>> item in Model[1]["A"][i])
+                            {
+                                @RenderTableFecha(item.Value,item.Value["HorasCambio"][0].Item,item.Value["HorasCambio"][0].Fecha, detalleCabeceras)
+
+                            }
+                        }
+                    }
+
+
+
+                    <!--    utilizar para cargas masivas
+                        <tr id="@detalleCabeceras["FechaCambio"].IdTipoEngine">
+                        <th id="item" rowspan="4"> 1 </th>
+                        <th> @detalleCabeceras["FechaCambio"].Detalle </th>
+                        <td id="A1"> <input type="text"> </td>
+                        <td id="A2"> <input type="text"> </td>
+                        <td id="A3"> <input type="text"> </td>
+                        <td id="A4"> <input type="text"> </td>
+                        <td id="A5"> <input type="text"> </td>
+                        <td id="A6"> <input type="text"> </td>
+                        <td id="A7"> <input type="text"> </td>
+                        <td id="A8">  <input type="text"> </td>
+                        <td id="A9"> <input type="text"> </td>
+                        <td id="A10"> <input type="text"> </td>
+                    </tr>
+                    <tr>
+                        <th id="@detalleCabeceras["HorasCambio"].IdTipoEngine">@detalleCabeceras["HorasCambio"].Detalle</th>
+                        <td id="A1"> <input type="number"> </td>
+                        <td id="A2"> <input type="number"> </td>
+                        <td id="A3"> <input type="number"> </td>
+                        <td id="A4"> <input type="number"> </td>
+                        <td id="A5"> <input type="number"> </td>
+                        <td id="A6"> <input type="number"> </td>
+                        <td id="A7"> <input type="number"> </td>
+                        <td id="A8">  <input type="number"> </td>
+                        <td id="A9"> <input type="number"> </td>
+                        <td id="A10"> <input type="number"> </td>
+                    </tr>
+                    <tr class="texto">
+                        <th id="@detalleCabeceras["TiempoDuracion"].IdTipoEngine">@detalleCabeceras["TiempoDuracion"].Detalle</th>
+                        <td id="A1"> <input type="number"> </td>
+                        <td id="A2"> <input type="number"> </td>
+                        <td id="A3"> <input type="number"> </td>
+                        <td id="A4"> <input type="number"> </td>
+                        <td id="A5"> <input type="number"> </td>
+                        <td id="A6"> <input type="number"> </td>
+                        <td id="A7"> <input type="number"> </td>
+                        <td id="A8">  <input type="number"> </td>
+                        <td id="A9"> <input type="number"> </td>
+                        <td id="A10"> <input type="number"> </td>
+                    </tr>
+                    <tr class="texto2">
+                        <th id="@detalleCabeceras["HorasEnCurso"].IdTipoEngine">@detalleCabeceras["HorasEnCurso"].Detalle </th>
+                        <td id="A1"> <input type="number"> </td>
+                        <td id="A2"> <input type="number"> </td>
+                        <td id="A3"> <input type="number"> </td>
+                        <td id="A4"> <input type="number"> </td>
+                        <td id="A5"> <input type="number"> </td>
+                        <td id="A6"> <input type="number"> </td>
+                        <td id="A7"> <input type="number"> </td>
+                        <td id="A8">  <input type="number"> </td>
+                        <td id="A9"> <input type="number"> </td>
+                        <td id="A10"> <input type="number"> </td>
+                    </tr>
+                    -->
+                </tbody>
+            </table>
+        </div>
+        <div id="datos-B">
+            <table class="detalle-bujia" id="B">
+                <thead>
+                    <tr>
+                        <th colspan="10"> lado B </th>
+                    </tr>
+                    <tr>
+                        <th style="display: none;"> item </th>
+                        <th style="display: none;"> bujías </th>
+                        <th> B01 </th>
+                        <th> B02 </th>
+                        <th> B03 </th>
+                        <th> B04 </th>
+                        <th> B05 </th>
+                        <th> B06 </th>
+                        <th> B07 </th>
+                        <th> B08 </th>
+                        <th> B09 </th>
+                        <th> B10 </th>
+                    </tr>
+                </thead>
+                <tbody class="ocultar-tabla" id="cuerpoTablaB">
+                    @{
+                        for (int i = 0; i < Model[1]["B"].Count; i++)
+                        {
+                            @foreach (KeyValuePair<int, Dictionary<string, List<RegistroBujias>>> item in Model[1]["B"][i])
+                            {
+                                @RenderTableFecha(item.Value,item.Value["HorasCambio"][0].Item,item.Value["HorasCambio"][0].Fecha, detalleCabeceras)
+                            }
+                        }
+                    }
+                    <!--  utilizar para cargas masivas
+                        utilizar para cargas masivas
+                        <tr id="@detalleCabeceras["FechaCambio"].IdTipoEngine">
+                        <th id="item" rowspan="4"> 1 </th>
+                        <th> @detalleCabeceras["FechaCambio"].Detalle </th>
+                        <td id="B1"> <input type="text"> </td>
+                        <td id="B2"> <input type="text"> </td>
+                        <td id="B3"> <input type="text"> </td>
+                        <td id="B4"> <input type="text"> </td>
+                        <td id="B5"> <input type="text"> </td>
+                        <td id="B6"> <input type="text"> </td>
+                        <td id="B7"> <input type="text"> </td>
+                        <td id="B8">  <input type="text"> </td>
+                        <td id="B9"> <input type="text"> </td>
+                        <td id="B10"> <input type="text"> </td>
+                    </tr>
+                    <tr>
+                        <th id="@detalleCabeceras["HorasCambio"].IdTipoEngine">@detalleCabeceras["HorasCambio"].Detalle</th>
+                        <td id="B1"> <input type="number"> </td>
+                        <td id="B2"> <input type="number"> </td>
+                        <td id="B3"> <input type="number"> </td>
+                        <td id="B4"> <input type="number"> </td>
+                        <td id="B5"> <input type="number"> </td>
+                        <td id="B6"> <input type="number"> </td>
+                        <td id="B7"> <input type="number"> </td>
+                        <td id="B8">  <input type="number"> </td>
+                        <td id="B9"> <input type="number"> </td>
+                        <td id="B10"> <input type="number"> </td>
+                    </tr>
+                    <tr class="texto">
+                        <th id="@detalleCabeceras["TiempoDuracion"].IdTipoEngine">@detalleCabeceras["TiempoDuracion"].Detalle</th>
+                        <td id="B1"> <input type="number"> </td>
+                        <td id="B2"> <input type="number"> </td>
+                        <td id="B3"> <input type="number"> </td>
+                        <td id="B4"> <input type="number"> </td>
+                        <td id="B5"> <input type="number"> </td>
+                        <td id="B6"> <input type="number"> </td>
+                        <td id="B7"> <input type="number"> </td>
+                        <td id="B8">  <input type="number"> </td>
+                        <td id="B9"> <input type="number"> </td>
+                        <td id="B10"> <input type="number"> </td>
+                    </tr>
+                    <tr class="texto2">
+                        <th id="@detalleCabeceras["HorasEnCurso"].IdTipoEngine">@detalleCabeceras["HorasEnCurso"].Detalle </th>
+                        <td id="B1"> <input type="number"> </td>
+                        <td id="B2"> <input type="number"> </td>
+                        <td id="B3"> <input type="number"> </td>
+                        <td id="B4"> <input type="number"> </td>
+                        <td id="B5"> <input type="number"> </td>
+                        <td id="B6"> <input type="number"> </td>
+                        <td id="B7"> <input type="number"> </td>
+                        <td id="B8">  <input type="number"> </td>
+                        <td id="B9"> <input type="number"> </td>
+                        <td id="B10"> <input type="number"> </td>
+                         </tr>
+                       -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="EG2" style="display:none; overflow-x: scroll;">
+        <div id="datos-A">
+            <table class="detalle-bujia" id="A">
+                <thead>
+                    <tr>
+                        <th style="border: none; background-color: white" colspan="2"> </th>
+                        <th colspan="10"> lado A </th>
+                    </tr>
+                    <tr>
+                        <th> item </th>
+                        <th> bujías </th>
+                        <th> A01 </th>
+                        <th> A02 </th>
+                        <th> A03 </th>
+                        <th> A04 </th>
+                        <th> A05 </th>
+                        <th> A06 </th>
+                        <th> A07 </th>
+                        <th> A08 </th>
+                        <th> A09 </th>
+                        <th> A10 </th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpoTabla">
+                    @{
+
+                        for (int i = 0; i < Model[2]["A"].Count; i++)
+                        {
+                            @foreach (KeyValuePair<int, Dictionary<string, List<RegistroBujias>>> item in Model[2]["A"][i])
+                            {
+                                @RenderTableFecha(item.Value,item.Value["HorasCambio"][0].Item,item.Value["HorasCambio"][0].Fecha, detalleCabeceras)
+                            }
+                        }
+                    }
+
+
+
+                    <!--    utilizar para cargas masivas
+                        <tr id="@detalleCabeceras["FechaCambio"].IdTipoEngine">
+                        <th id="item" rowspan="4"> 1 </th>
+                        <th> @detalleCabeceras["FechaCambio"].Detalle </th>
+                        <td id="A1"> <input type="text"> </td>
+                        <td id="A2"> <input type="text"> </td>
+                        <td id="A3"> <input type="text"> </td>
+                        <td id="A4"> <input type="text"> </td>
+                        <td id="A5"> <input type="text"> </td>
+                        <td id="A6"> <input type="text"> </td>
+                        <td id="A7"> <input type="text"> </td>
+                        <td id="A8">  <input type="text"> </td>
+                        <td id="A9"> <input type="text"> </td>
+                        <td id="A10"> <input type="text"> </td>
+                    </tr>
+                    <tr>
+                        <th id="@detalleCabeceras["HorasCambio"].IdTipoEngine">@detalleCabeceras["HorasCambio"].Detalle</th>
+                        <td id="A1"> <input type="number"> </td>
+                        <td id="A2"> <input type="number"> </td>
+                        <td id="A3"> <input type="number"> </td>
+                        <td id="A4"> <input type="number"> </td>
+                        <td id="A5"> <input type="number"> </td>
+                        <td id="A6"> <input type="number"> </td>
+                        <td id="A7"> <input type="number"> </td>
+                        <td id="A8">  <input type="number"> </td>
+                        <td id="A9"> <input type="number"> </td>
+                        <td id="A10"> <input type="number"> </td>
+                    </tr>
+                    <tr class="texto">
+                        <th id="@detalleCabeceras["TiempoDuracion"].IdTipoEngine">@detalleCabeceras["TiempoDuracion"].Detalle</th>
+                        <td id="A1"> <input type="number"> </td>
+                        <td id="A2"> <input type="number"> </td>
+                        <td id="A3"> <input type="number"> </td>
+                        <td id="A4"> <input type="number"> </td>
+                        <td id="A5"> <input type="number"> </td>
+                        <td id="A6"> <input type="number"> </td>
+                        <td id="A7"> <input type="number"> </td>
+                        <td id="A8">  <input type="number"> </td>
+                        <td id="A9"> <input type="number"> </td>
+                        <td id="A10"> <input type="number"> </td>
+                    </tr>
+                    <tr class="texto2">
+                        <th id="@detalleCabeceras["HorasEnCurso"].IdTipoEngine">@detalleCabeceras["HorasEnCurso"].Detalle </th>
+                        <td id="A1"> <input type="number"> </td>
+                        <td id="A2"> <input type="number"> </td>
+                        <td id="A3"> <input type="number"> </td>
+                        <td id="A4"> <input type="number"> </td>
+                        <td id="A5"> <input type="number"> </td>
+                        <td id="A6"> <input type="number"> </td>
+                        <td id="A7"> <input type="number"> </td>
+                        <td id="A8">  <input type="number"> </td>
+                        <td id="A9"> <input type="number"> </td>
+                        <td id="A10"> <input type="number"> </td>
+                    </tr>
+                    -->
+                </tbody>
+            </table>
+        </div>
+        <div id="datos-B">
+            <table class="detalle-bujia" id="B">
+                <thead>
+                    <tr>
+                        <th colspan="10"> lado B </th>
+                    </tr>
+                    <tr>
+                        <th style="display: none;"> item </th>
+                        <th style="display: none;"> bujías </th>
+                        <th> B01 </th>
+                        <th> B02 </th>
+                        <th> B03 </th>
+                        <th> B04 </th>
+                        <th> B05 </th>
+                        <th> B06 </th>
+                        <th> B07 </th>
+                        <th> B08 </th>
+                        <th> B09 </th>
+                        <th> B10 </th>
+                    </tr>
+                </thead>
+                <tbody class="ocultar-tabla" id="cuerpoTablaB">
+                    @{
+                        for (int i = 0; i < Model[2]["B"].Count; i++)
+                        {
+                            @foreach (KeyValuePair<int, Dictionary<string, List<RegistroBujias>>> item in Model[2]["B"][i])
+                            {
+                                @RenderTableFecha(item.Value,item.Value["HorasCambio"][0].Item,item.Value["HorasCambio"][0].Fecha, detalleCabeceras)
+                            }
+                        }
+                    }
+                    <!--  utilizar para cargas masivas
+                        utilizar para cargas masivas
+                        <tr id="@detalleCabeceras["FechaCambio"].IdTipoEngine">
+                        <th id="item" rowspan="4"> 1 </th>
+                        <th> @detalleCabeceras["FechaCambio"].Detalle </th>
+                        <td id="B1"> <input type="text"> </td>
+                        <td id="B2"> <input type="text"> </td>
+                        <td id="B3"> <input type="text"> </td>
+                        <td id="B4"> <input type="text"> </td>
+                        <td id="B5"> <input type="text"> </td>
+                        <td id="B6"> <input type="text"> </td>
+                        <td id="B7"> <input type="text"> </td>
+                        <td id="B8">  <input type="text"> </td>
+                        <td id="B9"> <input type="text"> </td>
+                        <td id="B10"> <input type="text"> </td>
+                    </tr>
+                    <tr>
+                        <th id="@detalleCabeceras["HorasCambio"].IdTipoEngine">@detalleCabeceras["HorasCambio"].Detalle</th>
+                        <td id="B1"> <input type="number"> </td>
+                        <td id="B2"> <input type="number"> </td>
+                        <td id="B3"> <input type="number"> </td>
+                        <td id="B4"> <input type="number"> </td>
+                        <td id="B5"> <input type="number"> </td>
+                        <td id="B6"> <input type="number"> </td>
+                        <td id="B7"> <input type="number"> </td>
+                        <td id="B8">  <input type="number"> </td>
+                        <td id="B9"> <input type="number"> </td>
+                        <td id="B10"> <input type="number"> </td>
+                    </tr>
+                    <tr class="texto">
+                        <th id="@detalleCabeceras["TiempoDuracion"].IdTipoEngine">@detalleCabeceras["TiempoDuracion"].Detalle</th>
+                        <td id="B1"> <input type="number"> </td>
+                        <td id="B2"> <input type="number"> </td>
+                        <td id="B3"> <input type="number"> </td>
+                        <td id="B4"> <input type="number"> </td>
+                        <td id="B5"> <input type="number"> </td>
+                        <td id="B6"> <input type="number"> </td>
+                        <td id="B7"> <input type="number"> </td>
+                        <td id="B8">  <input type="number"> </td>
+                        <td id="B9"> <input type="number"> </td>
+                        <td id="B10"> <input type="number"> </td>
+                    </tr>
+                    <tr class="texto2">
+                        <th id="@detalleCabeceras["HorasEnCurso"].IdTipoEngine">@detalleCabeceras["HorasEnCurso"].Detalle </th>
+                        <td id="B1"> <input type="number"> </td>
+                        <td id="B2"> <input type="number"> </td>
+                        <td id="B3"> <input type="number"> </td>
+                        <td id="B4"> <input type="number"> </td>
+                        <td id="B5"> <input type="number"> </td>
+                        <td id="B6"> <input type="number"> </td>
+                        <td id="B7"> <input type="number"> </td>
+                        <td id="B8">  <input type="number"> </td>
+                        <td id="B9"> <input type="number"> </td>
+                        <td id="B10"> <input type="number"> </td>
+                         </tr>
+                       -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!--
+    utilizar para cargas masivas
+<button style="display:none;" onclick="obtenerDatosTabla()">Guardar Datos</button>
+                       -->
+
+
+<script>
+
+    async function obtenerDatosTabla() {
+
+        try {
+            const resultado = await realizarPeticion("¿Estás seguro de que deseas realizar esta acción?");
+
+            console.log("resultado : ", resultado);
+
+            const cuerpoTabla = document.getElementById('cuerpoTabla');
+
+            var idControlCambio = 'CtrlCambioBujias' + '_' + obtenerFecha("format");
+
+            const datos = [];
+            const tabla = cuerpoTabla.closest('table');
+
+            for (let i = 1; i < cuerpoTabla.rows.length; i++) {
+                const fila = cuerpoTabla.rows[i];
+                console.log("length : ", cuerpoTabla.rows.length);
+                console.log("cuerpoTabla : ", cuerpoTabla.rows[cuerpoTabla.rows.length - 4]);
+                console.log("cuerpoTabla item : ", cuerpoTabla.rows[cuerpoTabla.rows.length - 4].querySelector('th[id="item"]'));
+
+                const valorItem = cuerpoTabla.rows[cuerpoTabla.rows.length - 4].querySelector('th[id="item"]').textContent.trim();
+                console.log("valorItem : ", valorItem);
+                console.log("fila : ", fila);
+
+                for (let j = 0; j < fila.cells.length; j++) {
+                    const celda = fila.cells[j];
+
+                    const idFila = fila.cells[0].id;
+                    const input = celda.querySelector('input');
+
+                    if (input && input.value !== "") {
+                        const datosFila = {
+                            idDetalleControlCambio: tabla.id + '-' + valorItem + '-' + j + '-' + idFila + '_' + obtenerFecha("format"),
+                            detalle: parseInt(input.value),
+                            fecha: obtenerFecha("fechaVista"),
+                            lado: tabla.id,
+                            idSubtituloCampo: idFila,
+                            fila: parseInt(j),
+                            item: parseInt(valorItem),
+                            IdControlCambio: idControlCambio
+                        };
+
+                        datos.push(datosFila);
+                    }
+                }
+            }
+            console.log("datos : ", datos);
+
+            fetch("/Bujias/GuardarDatosBujias", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(datos)
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (data) {
+                    if (data.respuesta.idRespuesta === 0 || data.respuesta.idRespuesta === 1) {
+                        Swal.fire({
+                            title: "Success!!",
+                            text: "Se guardaro los datos.",
+                            icon: "success",
+                            button: "Aww yiss!",
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: data.respuesta.mensaje,
+                            icon: "error",
+                            button: "OK"
+                        });
+                    }
+                })
+                .catch(function (error) {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error en la solicitud.",
+                        icon: "error",
+                        button: "OK",
+                    });
+                    console.error("Error:", error);
+                });
+
+        } catch (error) {
+            console.log(error);
+            return;
+        }
+
+
+    }
+
+</script>
+
+<script>
+    var totalBujiasEg1 = @Html.Raw(JsonConvert.SerializeObject(totalBujias/3));
+    var horasOpEg1 = @Html.Raw(JsonConvert.SerializeObject(horasOp));
+
+    var totalBujiasEg2 = @Html.Raw(JsonConvert.SerializeObject(totalBujias2/3));
+    var horasOpEg2 = @Html.Raw(JsonConvert.SerializeObject(horasOp2));
+
+
+    var elemento = document.getElementById("bujiasTotal");
+    elemento.innerHTML = @Html.Raw(JsonConvert.SerializeObject(totalBujias/3));
+
+    var elemento = document.getElementById("horas-operacion");
+    elemento.innerHTML = @Html.Raw(JsonConvert.SerializeObject(horasOp));
+
+    var ultimoHoraOperacion = @Html.Raw(JsonConvert.SerializeObject(ultimaHoraOp));
+
+</script>
+
+<script>
+    document.getElementById('EGSelect').addEventListener('click', function () {
+        console.log(" valor :  ", this.value);
+        var eg1Element = document.getElementById('EG1');
+        var eg2Element = document.getElementById('EG2');
+
+        if (this.value === "1") {
+            eg1Element.style.display = "flex";
+            eg2Element.style.display = "none";
+
+        } else {
+            eg1Element.style.display = "none";
+            eg2Element.style.display = "flex";
+        }
+
+
+    });
+</script>

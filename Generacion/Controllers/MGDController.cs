@@ -18,7 +18,7 @@ namespace Generacion.Controllers
         public async Task<IActionResult> Index()
         {
             DateTime dateTime = DateTime.Now;
-            var datosMGD = await _consultarDatosMGD.ObtenerDatosMGD(dateTime.ToString("yyyy/MM/dd"));
+            var datosMGD = await _consultarDatosMGD.ObtenerDatosMGD(dateTime.ToString("dd/MM/yyyy"));
 
             string usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
             DetalleOperario detalleOperario = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);

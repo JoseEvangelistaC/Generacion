@@ -1,7 +1,7 @@
 ﻿namespace Generacion.Models.ION
 {
 
-    public class Revenue : DatosION
+    public class Revenue 
     {
         public string Date_Time { get; set; }
         public decimal kWhDelInt { get; set; }
@@ -13,8 +13,9 @@
 
     }
 
-    public class DatosION
+    public class DatosFormatoMGD : Revenue
     {
+        public string Hora { get; set; }
         public decimal KWDelInt { get; set; }
         public decimal KVARDelInt { get; set; }
         public decimal KWRecInt { get; set; }

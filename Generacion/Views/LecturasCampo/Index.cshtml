@@ -1,30 +1,45 @@
 ﻿@using Generacion.Models.LecturasCampo;
+@using Generacion.Models.DatosConsola;
+@using Microsoft.AspNetCore.Html;
+@using Microsoft.AspNetCore.Razor.TagHelpers;
+@using Newtonsoft.Json;
+@using System.Text;
 @{
-    bool activar = true;
-    List<int> horasGenerador = new List<int>
+    Dictionary<int, List<string>> datoHorario = ViewData["horarioOperarios"] as Dictionary<int, List<string>>;
+
+    List<string> mañana = datoHorario.ContainsKey(1) ? datoHorario[1] : new List<string>();
+    List<string> tarde = datoHorario.ContainsKey(2) ? datoHorario[2] : new List<string>();
+    List<string> noche = datoHorario.ContainsKey(3) ? datoHorario[3] : new List<string>();
+
+    //Respuesta<>
+
+    Dictionary<int, Dictionary<string, List<DatosFormatoCampo>>> detalleCampo = ViewData["DatosCampo"] as Dictionary<int, Dictionary<string, List<DatosFormatoCampo>>>;
+    Dictionary<string, List<DatosFormatoCampo>> detalleCampoGE1 = new Dictionary<string, List<DatosFormatoCampo>>();
+    Dictionary<string, List<DatosFormatoCampo>> detalleCampoGE2 = new Dictionary<string, List<DatosFormatoCampo>>();
+    if (detalleCampo != null)
     {
-        4,8,12,16,20,0
-    };
+        detalleCampoGE1 = detalleCampo[1];
+        detalleCampoGE2 = detalleCampo[2];
+    }
 
-    List<int> horasEG = new List<int>
-    {
-        2,4,6,8,10,12,14,16,18,20,22,0
-    };
 
-    List<int> baa901 = new List<int>
-    {
-        6,12,18,0
-    };
+    Dictionary<string, CabecerasTabla> detalleCabeceras = ViewData["DatoscabeceraCampo"] as Dictionary<string, CabecerasTabla>;
 
+    List<string> idReferencias = detalleCabeceras
+    .Where(kv => kv.Value.TablaReference == "campo")
+    .Select(kv => kv.Value.IdTipoEngine)
+    .ToList();
 
 
 
-    // List<DatosFormatoCampo> GasCombustibles = ViewData["GasCombustible"] as List<DatosFormatoCampo>;
+
+
+    FormatoConsola datoFormato = ViewData["datoFormato"] as FormatoConsola;
     List<TiposRegistroCampo> DetalleRegistrCampo = ViewData["TipoRegistros"] as List<TiposRegistroCampo>;
-    // List<TiposDeRegistroConsola> detalleRegistro = ViewData["TipoRegistros"] as List<TiposDeRegistroConsola>;
-    // Dictionary<string, CabecerasTablaCampo> detalleCabecerasCampo = ViewData["DatoscabeceraCampo"] as Dictionary<string, CabecerasTablaCampo>;
+    Dictionary<string, List<DatosFormatoCampo>> FormatoCampo = ViewData["CabeceraHorizontal"] as Dictionary<string, List<DatosFormatoCampo>>;
 
     //TRAENDO DATA DE  QUERY LECTURACAMPO PARA CABEZALES PRINCIPALES
+    var Principal = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "PRINCIPAL").Select(x => x).FirstOrDefault();
     var SistemaGasCombustible = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "SIST_GAS_COMBUSTIBLE").Select(x => x).FirstOrDefault();
     var AguaRefrigMotor = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "SIST_AGUA_REFRIG_MOTOR").Select(x => x).FirstOrDefault();
     var AguaRefrigLt = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "SIST_AGUA_REFRIG_LT").Select(x => x).FirstOrDefault();
@@ -38,8 +53,80 @@
     var Inspecciones = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "INSPECCIONES").Select(x => x).FirstOrDefault();
     var SistComunes = DetalleRegistrCampo.Where(x => x.IdRegistroConsola == "SIST_COMUNES").Select(x => x).FirstOrDefault();
 
+    int conteoHoras = 2;
 
+    var date = DateTime.Now;
+
+    Func<string, string, List<DatosFormatoCampo>, int, int, IHtmlContent> GenerateDataCells = (idTipoEngine, stylePosicion, datos, hour, filas) =>
+    {
+        var content = new DefaultTagHelperContent();
+
+        for (int i = 1; i <= filas; i++)
+        {
+            int horaFormateada = i == 12 ? 0 : i;
+            stylePosicion = "";
+            if (filas > 3)
+            {
+                stylePosicion = int.Parse(date.Hour.ToString()) == horaFormateada + horaFormateada || int.Parse(date.Hour.ToString()) == horaFormateada + horaFormateada + 1
+                    ? "#C5C5C5;" : "";
+            }
+            else
+            {
+                if (datoHorario.Count == 1 && i == 1)
+                {
+                    stylePosicion = "#C5C5C5;";
+                }
+                if (datoHorario.Count == 2 && i == 2)
+                {
+                    stylePosicion = "#C5C5C5;";
+                }
+                if (datoHorario.Count == 3 && i == 3)
+                {
+                    stylePosicion = "#C5C5C5;";
+                }
+            }
+
+
+
+            var inputContent = datos != null && datos.Count > 0
+                        ? $"<input type='number' value='{datos[i - 1].Detalle}'>"
+                        : "<input type='number'>";
+
+            content.AppendHtml($"<td style='background: {stylePosicion}' id='{idTipoEngine}_{i + i}'>{inputContent}</td>");
+        }
+
+        return content;
+    };
+
+    Func<List<string>, int, IHtmlContent> MostrarTurno = (operarios, maxOperarios) =>
+                  {
+                      StringBuilder sb = new StringBuilder();
+                      int cantidadDeDatos = 0;
+
+                      foreach (string operario in operarios)
+                      {
+                          cantidadDeDatos++;
+                          if (cantidadDeDatos == maxOperarios)
+                          {
+                              sb.Append($"   /   {operario} ");
+                          }
+                          else
+                          {
+                              sb.Append($"{operario}");
+                          }
+                      }
+
+                      if (cantidadDeDatos == 0)
+                      {
+                          return new HtmlString("<p>             /             </p>");
+                      }
+                      else
+                      {
+                          return new HtmlString($"<p>{sb.ToString()}</p>");
+                      }
+                  };
 }
+
 
 <style>
     .lectura input {
@@ -75,13 +162,19 @@
     }
 
     .EG input {
-        width: 65px !important;
+        /*width: 55px !important;*/
+        width: 100% !important;
     }
 
     .EG th {
-        text-align-last: center;
         font-weight: bold;
         text-align: center;
+        vertical-align: middle;
+    }
+
+    .EG tbody th {
+        font-weight: bold;
+        text-align: justify !important;
         vertical-align: middle;
     }
 
@@ -114,14 +207,16 @@
         border-block-end-color: red;
     }
 
-    .btnMostrarGE1 {
-        display: none;
-    }
-
+    /*     .btnMostrarGE1 {
+                                                        display: none;
+                                                        }
+                                                        */
 
 
     table {
         table-layout: fixed;
+        white-space: nowrap;
+        font-size: 11px;
     }
 
     .sticky-header {
@@ -129,63 +224,74 @@
         top: 0;
         background-color: white;
         z-index: 2;
-       
-        font-size:13px;
+        font-size: 13px;
     }
 
     th.static {
-        font-size:14px;
+        font-size: 14px;
         position: sticky;
         top: 0;
-        background-color: #fff; /* Fondo blanco para las etiquetas fijas */
-        z-index: 2; 
+        background-color: #fff;
+        z-index: 2;
     }
 
-    .Title-Column{
-        font-size:14px;
+    .Title-Column {
+        font-size: 14px;
+        width: 31% !important;
     }
 
-    .space{
-        width:60px;
+    .space {
+        width: 60px;
     }
-    .colortitle{
+
+    .table td, .table th {
+        padding: .35rem !important;
+    }
+
+    .colortitle {
         width: 130px;
         background: darkgray;
-        color:black;
+        color: black;
     }
 
-    .new thead th[colspan="6"] {
-        width: 100%; /* Hacer que la celda ocupe el 100% del ancho de la tabla */
-    }
-    .letraInspeccion{
-        font-size:12px;
+    .new thead th {
+        width: 100%;
     }
 
-
-    th:nth-child(n+10),
-    td:nth-child(n+10) {
-        display: none;
+    .new thead td {
+        width: 100%;
     }
 
-    .principal {
-        cursor: pointer; /* Cambia el cursor al pasar por encima */
+    .new {
+        width: 70%;
     }
+
+    .letraInspeccion {
+        font-size: 12px;
+    }
+
+    .principal1 {
+        cursor: pointer;
+    }
+
     .principal2 {
-        cursor: pointer; /* Cambia el cursor al pasar por encima */
+        cursor: pointer;
     }
+
     .principal3 {
-        cursor: pointer; /* Cambia el cursor al pasar por encima */
+        cursor: pointer;
     }
 
     .principal4 {
-        cursor: pointer; /* Cambia el cursor al pasar por encima */
+        cursor: pointer;
     }
 </style>
 
 
 <div class="header-detail-report">
     <div class="title-report col-md-12">
-        <h2>Central Termica Luren EG - 01</h2>
+        <h2 id="titulo-EG1">Central Termica Luren EG - 01</h2>
+        <h2 style="display:none;" id="titulo-EG2">Central Termica Luren EG - 02</h2>
         <h3 style="font-size: inherit;">LECTURAS DE CAMPO</h3>
     </div>
     <div class="row">
@@ -198,24 +304,27 @@
             </div>
             <div>
                 <p1>Fecha</p1>
-               
+                @{
+                    <p>@date.ToString("dd/MM/yyyy")</p>
+                }
+
             </div>
             <div class="subTitulo-consola">
                 <p1 style="text-align: inherit;">Operadores</p1>
-
             </div>
             <div>
                 <p1>Turno 1</p1>
-                <p>E. Codarlupo / R. Ramos</p>
+                @MostrarTurno(mañana,2)
             </div>
             <div>
                 <p1>Turno 2</p1>
-                <p>R. Ramos / R.More</p>
+                @MostrarTurno(tarde,2)
             </div>
             <div>
                 <p1>Turno 3</p1>
-                <p>H. Cerron / W. Arevalo</p>
+                @MostrarTurno(noche,2)
             </div>
+
         </div>
     </div>
 </div>
@@ -224,24 +333,19 @@
 </div>
 <div>
     <button class="btn btn-light btnMostrarGE btnMostrarGE1" id="EG1">EG01</button>
-    <button class="btn btn-light btnMostrarGE" id="EG2">EG02</button>
 </div>
 <div class="console-content">
     <div id="datos-EG1">
-        <div style="padding :10px;" >
-            <div style="overflow: auto; width: 100%; height: 85vh;">
-                <button id="mostrarOcultar">+</button>
-                <div class="title-table principal">
-                        <p id="idRegistro" claveRegistro='##'>
-                            PRINCIPAL
-                        </p>
-                    
-                </div>
+        <div style="padding :10px;">
+            <div>
 
-                <table class="table table-bordered EG ocultar boton1" id="tabla-EG1">
+                <div class="title-table principal1">
+                    <p id="idRegistro" class="titlePrincipal" claveRegistro='PRINCIPAL'></p>
+                </div>
+                <table class="table table-bordered EG ocultar boton1 Tabla-Principal" id="tabla-Principal">
                     <thead>
-                        <tr>
-                            <th class="sticky-header space" scope="col" style="width: 232px;">#</th>
+                        <tr data-id="Principal-G1">
+                            <th id="principal" class="Title-Column letraInspeccion" scope="col" style="width: 186px;">Principal</th>
                             <th class="sticky-header space" scope="col">Und</th>
                             <th class="sticky-header space" scope="col">Rango</th>
                             <th class="sticky-header space" scope="col">2:00</th>
@@ -259,1107 +363,1527 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th class="static" scope="row">POTENCIA ACTIVA</th>
-                            <td></td>
-                            <td></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                        </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion static" scope="row">HORAS DE OPERACION</th>
-                            <td></td>
-                            <td></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                        </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion static" scope="row">TEMPERATURA AMBIENTE</th>
-                            <td></td>
-                            <td></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                        </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion static" scope="row">HUMEDAD RELATIVA</th>
-                            <td></td>
-                            <td></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                            <td><input type="text" value="0"></td>
-                        </tr>
-                    </tbody>
+                        @{
+                            string stylePosicion = "";
 
-                   
+                            <tr data-id="@(detalleCabeceras["potencia"].IdTipoEngine)-G1">
+                                <th id=@(detalleCabeceras["potencia"].IdTipoEngine) class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["potencia"].Descripcion'>@detalleCabeceras["potencia"].Detalle</th>
+                                <td id="unidad">kW</td>
+                                <td id="rango">0-93411</td>
+                                @if (detalleCampoGE1.ContainsKey(detalleCabeceras["potencia"].IdTipoEngine))
+                                {
+                                    @GenerateDataCells(detalleCabeceras["potencia"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["potencia"].IdTipoEngine], date.Hour, 12)
+                                }
+                                else
+                                {
+                                    @GenerateDataCells(detalleCabeceras["potencia"].IdTipoEngine, "", null, date.Hour, 12)
+                                }
+
+                            </tr>
+
+                            <tr data-id="@(detalleCabeceras["operacion"].IdTipoEngine)-G1">
+                                <th id="@(detalleCabeceras["operacion"].IdTipoEngine)" class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["operacion"].Descripcion'>@detalleCabeceras["operacion"].Detalle</th>
+                                <td id="unidad">h</td>
+                                <td id="rango">WOIS</td>
+                                @if (detalleCampoGE1.ContainsKey(detalleCabeceras["operacion"].IdTipoEngine))
+                                {
+                                    @GenerateDataCells(detalleCabeceras["operacion"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["operacion"].IdTipoEngine], date.Hour, 12)
+                                }
+                                else
+                                {
+                                    @GenerateDataCells(detalleCabeceras["operacion"].IdTipoEngine, "", null, date.Hour, 12)
+                                }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["temperatura"].IdTipoEngine)-G1">
+                                <th id="@(detalleCabeceras["temperatura"].IdTipoEngine)" class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["temperatura"].Descripcion'>@detalleCabeceras["temperatura"].Detalle</th>
+                                <td id="unidad">°C</td>
+                                <td id="rango">10-35</td>
+                                @if (detalleCampoGE1.ContainsKey(detalleCabeceras["temperatura"].IdTipoEngine))
+                                {
+                                    @GenerateDataCells(detalleCabeceras["temperatura"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["temperatura"].IdTipoEngine], date.Hour,12)
+                                }
+                                else
+                                {
+                                    @GenerateDataCells(detalleCabeceras["temperatura"].IdTipoEngine, "", null, date.Hour, 12)
+                                }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["humedad"].IdTipoEngine)-G1">
+                                <th id="@(detalleCabeceras["humedad"].IdTipoEngine)" class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["humedad"].Descripcion'>@detalleCabeceras["humedad"].Detalle</th>
+                                <td id="unidad">%</td>
+                                <td id="rango">30-100</td>
+                                @if (detalleCampoGE1.ContainsKey(detalleCabeceras["humedad"].IdTipoEngine))
+                                {
+                                    @GenerateDataCells(detalleCabeceras["humedad"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["humedad"].IdTipoEngine], date.Hour,12)
+                                }
+                                else
+                                {
+                                    @GenerateDataCells(detalleCabeceras["humedad"].IdTipoEngine, "", null, date.Hour, 12)
+                                }
+                            </tr>
+                        }
+                    </tbody>
                 </table>
                 @* SISTEMA DE GAS COMBUSTIBLE *@
                 <div class="title-table principal2">
-                    <p id="idRegistro" claveRegistro='@SistemaGasCombustible.IdRegistroConsola'>@SistemaGasCombustible.TipoRegistro</p>
+                    <p id="idRegistro2" claveRegistro='@SistemaGasCombustible.IdRegistroConsola'>@SistemaGasCombustible.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG ocultar boton2" id="tabla-EG2">
                     <tbody>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["Gas"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["Gas"].Descripcion'>@detalleCabeceras["Gas"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">6.0-7.0</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Gas"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Gas"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["Gas"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Gas"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["GasPrinc"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["GasPrinc"].Descripcion'>@detalleCabeceras["GasPrinc"].Detalle</th>
+                            <td id="unidad">mbar</td>
+                            <td id="rango">0-30</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["GasPrinc"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["GasPrinc"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["GasPrinc"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["GasPrinc"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["GasMotor"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["GasMotor"].Descripcion'>@detalleCabeceras["GasMotor"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">0.034</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["GasMotor"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["GasMotor"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["GasMotor"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["GasMotor"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["Contador"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["Contador"].Descripcion'>@detalleCabeceras["Contador"].Detalle</th>
+                            <td id="unidad">KG</td>
+                            <td id="rango"></td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Contador"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Contador"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["Contador"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Contador"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
                     </tbody>
                 </table>
                 @* sISTEMA DE AGUA REFRIGERACION AL MOTOR *@
                 <div class="title-table principal3">
-                    <p id="idRegistro" claveRegistro='@AguaRefrigMotor.IdRegistroConsola'>@AguaRefrigMotor.TipoRegistro</p>
+                    <p id="idRegistro3" claveRegistro='@AguaRefrigMotor.IdRegistroConsola'>@AguaRefrigMotor.TipoRegistro</p>
                 </div>
                 <table class="table table-bordered EG ocultar boton3" id="tabla-EG3">
                     <tbody>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">TEMPERATURA DE ENTRADA PRINC. DE AGUA AL MOTOR(T001)</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["MotorT001"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["MotorT001"].Descripcion'>@detalleCabeceras["MotorT001"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">20-40</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["MotorT001"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorT001"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["MotorT001"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorT001"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">PRESION DE ENTRADA PRINC. DE AGUA AL MOTOR(P001)</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["MotorP001"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["MotorP001"].Descripcion'>@detalleCabeceras["MotorP001"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.0-1.8</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["MotorP001"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorP001"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["MotorP001"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorP001"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["MotorP007"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["MotorP007"].Descripcion'>@detalleCabeceras["MotorP007"].Detalle</th>
+                            <td id="unidad">C°</td>
+                            <td id="rango">70-82</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["MotorP007"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorP007"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["MotorP007"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorP007"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["MotorP006"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["MotorP006"].Descripcion'>@detalleCabeceras["MotorP006"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">2.8-2.4</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["MotorP006"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorP006"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["MotorP006"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorP006"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
                     </tbody>
                 </table>
 
                 @* sISTEMA DE AGUA REFRIGERACION POR LT *@
                 <div class="title-table principal4">
-                    <p id="idRegistro" claveRegistro='@AguaRefrigLt.IdRegistroConsola'>@AguaRefrigLt.TipoRegistro</p>
+                    <p id="idRegistro4" claveRegistro='@AguaRefrigLt.IdRegistroConsola'>@AguaRefrigLt.TipoRegistro</p>
                 </div>
-                <table class="table table-bordered EG boton4" id="tabla-EG4">
+                <table class="table table-bordered EG ocultar boton4" id="tabla-EG4">
                     <tbody>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["LtT003"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["LtT003"].Descripcion'>@detalleCabeceras["LtT003"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">4.-42</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["LtT003"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["LtT003"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["LtT003"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["LtT003"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["LtP002"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["LtP002"].Descripcion'>@detalleCabeceras["LtP002"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.0-1.4</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["LtP002"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["LtP002"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["LtP002"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["LtP002"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
+
                     </tbody>
                 </table>
 
                 @* sISTEMA DE AGUA REFRIGERACION POR HT *@
                 <div class="title-table principal5">
-                    <p id="idRegistro" claveRegistro='@AguaRefrigHt.IdRegistroConsola'>@AguaRefrigHt.TipoRegistro</p>
+                    <p id="idRegistro5" claveRegistro='@AguaRefrigHt.IdRegistroConsola'>@AguaRefrigHt.TipoRegistro</p>
                 </div>
-                <table class="table table-bordered EG boton5" id="tabla-EG1">
+                <table class="table table-bordered EG ocultar boton5" id="tabla-EG1">
                     <tbody>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["HtT005"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["HtT005"].Descripcion'>@detalleCabeceras["HtT005"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">50-85</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["HtT005"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtT005"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["HtT005"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtT005"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["HtP004"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["HtP004"].Descripcion'>@detalleCabeceras["HtP004"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.6-2.4</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["HtP004"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtP004"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["HtP004"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtP004"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["HtTE006"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["HtTE006"].Descripcion'>@detalleCabeceras["HtTE006"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">50-85</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["HtTE006"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtTE006"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["HtTE006"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtTE006"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["HtP005"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["HtP005"].Descripcion'>@detalleCabeceras["HtP005"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.6-2.4</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["HtP005"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtP005"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["HtP005"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtP005"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
                     </tbody>
                 </table>
 
-                @* ENTRADA Y SALIDA AGUA A LOS RADIADORES*@
+                @* ENTRADA Y SALIDA AGUA A LOS RADIADORES --- falta validar hora*@
                 <div class="title-table principal6">
-                    <p id="idRegistro" claveRegistro='@EntradaSalidaRad.IdRegistroConsola'>@EntradaSalidaRad.TipoRegistro</p>
+                    <p id="idRegistro6" claveRegistro='@EntradaSalidaRad.IdRegistroConsola'>@EntradaSalidaRad.TipoRegistro</p>
                 </div>
-                <table class="table table-bordered EG boton6" id="tabla-EG1">
+                <table class="table table-bordered EG ocultar boton6" id="tabla-EG1">
                     <tbody>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["TempRadiadores"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["TempRadiadores"].Descripcion'>@detalleCabeceras["TempRadiadores"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">75-82</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["TempRadiadores"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["TempRadiadores"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["TempRadiadores"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["TempRadiadores"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["PresRadiadores"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["PresRadiadores"].Descripcion'>@detalleCabeceras["PresRadiadores"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.6-2.4</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["PresRadiadores"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["PresRadiadores"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["PresRadiadores"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["PresRadiadores"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["TempSalidaRadiad"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["TempSalidaRadiad"].Descripcion'>@detalleCabeceras["TempSalidaRadiad"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">24-32</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["TempSalidaRadiad"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["TempSalidaRadiad"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["TempSalidaRadiad"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["TempSalidaRadiad"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["PresEntradaRadiad"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["PresEntradaRadiad"].Descripcion'>@detalleCabeceras["PresEntradaRadiad"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.0-1.6</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["PresEntradaRadiad"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["PresEntradaRadiad"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["PresEntradaRadiad"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["PresEntradaRadiad"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
                     </tbody>
                 </table>
 
                 @* COMPRESOR DE INSTRUMENTACION*@
-                <div class="title-table" id="principal7">
-                    <p id="idRegistro" claveRegistro='@CompresIntrument.IdRegistroConsola'>@CompresIntrument.TipoRegistro</p>
+                <div class="title-table principal7">
+                    <p id="idRegistro7" claveRegistro='@CompresIntrument.IdRegistroConsola'>@CompresIntrument.TipoRegistro</p>
                 </div>
-                <table class="table table-bordered EG boton7" id="tabla-EG1">
+                <table class="table table-bordered EG ocultar boton7" id="tabla-EG1">
                     <tbody>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["Operacion_ci"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["Operacion_ci"].Descripcion'>@detalleCabeceras["Operacion_ci"].Detalle</th>
+                            <td id="unidad">H</td>
+                            <td id="rango"></td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Operacion_ci"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Operacion_ci"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["Operacion_ci"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Operacion_ci"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="TempTrabajo-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["TempTrabajo"].Descripcion'>@detalleCabeceras["TempTrabajo"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">75</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["TempTrabajo"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["TempTrabajo"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["TempTrabajo"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["TempTrabajo"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["Presion"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["Presion"].Descripcion'>@detalleCabeceras["Presion"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">5.8-7.0</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Presion"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Presion"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["Presion"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Presion"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["Aceite"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["Aceite"].Descripcion'>@detalleCabeceras["Aceite"].Detalle</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">40%</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Aceite"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Aceite"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["Aceite"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Aceite"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
                     </tbody>
                 </table>
 
                 @* COMPRESOR DE AIRE DE ARRANQUE*@
-                <div class="title-table" id="principal8">
-                    <p id="idRegistro" claveRegistro='@CompresArranque.IdRegistroConsola'>@CompresArranque.TipoRegistro</p>
+                <div class="title-table principal8">
+                    <p id="idRegistro8" claveRegistro='@CompresArranque.IdRegistroConsola'>@CompresArranque.TipoRegistro</p>
                 </div>
-                <table class="table table-bordered EG boton8" id="tabla-EG1">
+                <table class="table table-bordered EG ocultar boton8" id="tabla-EG1">
                     <tbody>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["HrsOperacion"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["HrsOperacion"].Descripcion'>@detalleCabeceras["HrsOperacion"].Detalle</th>
+                            <td id="unidad">H</td>
+                            <td id="rango"></td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["HrsOperacion"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["HrsOperacion"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["HrsOperacion"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["HrsOperacion"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["AceiteLubr"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["AceiteLubr"].Descripcion'>@detalleCabeceras["AceiteLubr"].Detalle</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">30%</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["AceiteLubr"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["AceiteLubr"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["AceiteLubr"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["AceiteLubr"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
                     </tbody>
                 </table>
 
                 @* GENERADOR*@
-                <div class="title-table" id="principal9">
-                    <p id="idRegistro" claveRegistro='@Generador.IdRegistroConsola'>@Generador.TipoRegistro</p>
+                <div class="title-table principal9">
+                    <p id="idRegistro9" claveRegistro='@Generador.IdRegistroConsola'>@Generador.TipoRegistro</p>
                 </div>
-                <table class="table table-bordered EG boton9" id="tabla-EG1">
+                <table class="table table-bordered EG ocultar boton9" id="tabla-EG1">
                     <tbody>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["PresBomba"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["PresBomba"].Descripcion'>@detalleCabeceras["PresBomba"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">0-30</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["PresBomba"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["PresBomba"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["PresBomba"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["PresBomba"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["Bomba02"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["Bomba02"].Descripcion'>@detalleCabeceras["Bomba02"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">0-30</td>
+
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["Generador"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["Generador"].Descripcion'>@detalleCabeceras["Generador"].Detalle</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">>900</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Generador"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Generador"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["Generador"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Generador"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["GeneraNd"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["GeneraNd"].Descripcion'>@detalleCabeceras["GeneraNd"].Detalle</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">>90</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["GeneraNd"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["GeneraNd"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["GeneraNd"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["GeneraNd"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
                     </tbody>
                 </table>
 
                 @* COMPLEMENTARIOS*@
-                <div class="title-table" id="principal10">
-                    <p id="idRegistro" claveRegistro='@Complementario.IdRegistroConsola'>@Complementario.TipoRegistro</p>
+                <div class="title-table principal10">
+                    <p id="idRegistro10" claveRegistro='@Complementario.IdRegistroConsola'>@Complementario.TipoRegistro</p>
                 </div>
-                <table class="table table-bordered EG boton10" id="tabla-EG1">
+                <table class="table table-bordered EG ocultar boton10" id="tabla-EG1">
                     <tbody>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;">PRESION DE ENTRADA DE GAS</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["Mastegate"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["Mastegate"].Descripcion'>@detalleCabeceras["Mastegate"].Detalle</th>
+                            <td id="unidad">GRADOS</td>
+                            <td id="rango">NO ALRM</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Mastegate"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Mastegate"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["Mastegate"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Mastegate"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION ENTRADA DE GAS PRINCIPAL</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                        <tr data-id="@(detalleCabeceras["NivelCarter"].IdTipoEngine)-G1">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["NivelCarter"].Descripcion'>@detalleCabeceras["NivelCarter"].Detalle</th>
+                            <td id="unidad">CM</td>
+                            <td id="rango">VISUAL</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["NivelCarter"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["NivelCarter"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["NivelCarter"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["NivelCarter"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">DIFERENCIAL DE PRESION DE ENTRADA DE GAS AL MOTOR</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+
+                    </tbody>
+                </table>
+                @* INSPECCIONES*@
+                <div>
+                    <table class="table table-bordered EG new" id="tabla-EG1">
+                        <thead>
+                            <tr">
+                                <th class="sticky-header" scope="col" style="width: 288px;    background: gainsboro;">INSPECCIONES</th>
+                                <th class="sticky-header space" scope="col" style="width: 45px;    background: gainsboro;"></th>
+                                <th class="sticky-header space" scope="col" style="width: 45px;    background: gainsboro;"></th>
+                                <th class="sticky-header space" scope="col" style="width: 90px;    background: gainsboro;">Turno 1</th>
+                                <th class="sticky-header space" scope="col" style="width: 90px;    background: gainsboro;">Turno 2</th>
+                                <th class="sticky-header space" scope="col" style="width: 90px;    background: gainsboro;">Turno 3</th>
+                                </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-id="@(detalleCabeceras["FugaGas"].IdTipoEngine)-G1">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["FugaGas"].Descripcion' id=@detalleCabeceras["FugaGas"].IdTipoEngine>@detalleCabeceras["FugaGas"].Detalle</th>
+                                <td id="unidad">TESTO</td>
+                                <td id="rango">CHECK</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["FugaGas"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["FugaGas"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["FugaGas"].IdTipoEngine], date.Hour,3)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["FugaGas"].IdTipoEngine, "", null, date.Hour, 3)
+                            }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["FugaAireInstr"].IdTipoEngine)-G1">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["FugaAireInstr"].Descripcion' id=@detalleCabeceras["FugaAireInstr"].IdTipoEngine>@detalleCabeceras["FugaAireInstr"].Detalle</th>
+                                <td id="unidad">VISUAL</td>
+                                <td id="rango">CHECK</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["FugaAireInstr"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["FugaAireInstr"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["FugaAireInstr"].IdTipoEngine], date.Hour,3)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["FugaAireInstr"].IdTipoEngine, "", null, date.Hour, 3)
+                            }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["FugaAguaSist"].IdTipoEngine)-G1">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["FugaAguaSist"].Descripcion' id=@detalleCabeceras["FugaAguaSist"].IdTipoEngine>@detalleCabeceras["FugaAguaSist"].Detalle</th>
+                                <td id="unidad">VISUAL</td>
+                                <td id="rango">CHECK</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["FugaAguaSist"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["FugaAguaSist"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["FugaAguaSist"].IdTipoEngine], date.Hour,3)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["FugaAguaSist"].IdTipoEngine, "", null, date.Hour, 3)
+                            }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["FugaAceite"].IdTipoEngine)-G1">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["FugaAceite"].Descripcion' id=@detalleCabeceras["FugaAceite"].IdTipoEngine>@detalleCabeceras["FugaAceite"].Detalle</th>
+                                <td id="unidad">VISUAL</td>
+                                <td id="rango">CHECK</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["FugaAceite"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["FugaAceite"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["FugaAceite"].IdTipoEngine], date.Hour,3)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["FugaAceite"].IdTipoEngine, "", null, date.Hour, 3)
+                            }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["NivelTanqueBessel"].IdTipoEngine)-G1">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["NivelTanqueBessel"].Descripcion' id=@detalleCabeceras["NivelTanqueBessel"].IdTipoEngine>@detalleCabeceras["NivelTanqueBessel"].Detalle</th>
+                                <td id="unidad">%</td>
+                                <td id="rango">>30%</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["NivelTanqueBessel"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["NivelTanqueBessel"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["NivelTanqueBessel"].IdTipoEngine], date.Hour,3)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["NivelTanqueBessel"].IdTipoEngine, "", null, date.Hour, 3)
+                            }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["LimpiezaEG00"].IdTipoEngine)-G1">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["LimpiezaEG00"].Descripcion' id=@detalleCabeceras["LimpiezaEG00"].IdTipoEngine>@detalleCabeceras["LimpiezaEG00"].Detalle</th>
+                                <td id="unidad"></td>
+                                <td id="rango">CHECK</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["LimpiezaEG00"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["LimpiezaEG00"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["LimpiezaEG00"].IdTipoEngine], date.Hour,3)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["LimpiezaEG00"].IdTipoEngine, "", null, date.Hour, 3)
+                            }
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered EG new" id="tabla-EG1">
+                        <thead>
+                            <tr>
+                                <th class="sticky-header" scope="col" style="width: 288px;    background: gainsboro;">SISTEMA COMUNES</th>
+                                <th class="sticky-header" scope="col" style="width: 45px;    background: gainsboro;"></th>
+                                <th class="sticky-header" scope="col" style="width: 45px;    background: gainsboro;"></th>
+                                <th class="sticky-header" scope="col" style="width: 90px;    background: gainsboro;"></th>
+                                <th class="sticky-header" scope="col" style="width: 90px;    background: gainsboro;"></th>
+                                <th class="sticky-header" scope="col" style="width: 90px;    background: gainsboro;"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr data-id="@(detalleCabeceras["AlarmasSala"].IdTipoEngine)-G1">
+                                <th class="sticky-header" scope="col" style="width: 288px;" data-info='@detalleCabeceras["AlarmasSala"].Descripcion' id=@detalleCabeceras["AlarmasSala"].IdTipoEngine>@detalleCabeceras["AlarmasSala"].Detalle</th>
+                                <td id="unidad">VISUAL</td>
+                                <td id="rango">Check</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["AlarmasSala"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["AlarmasSala"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["AlarmasSala"].IdTipoEngine], date.Hour,3)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["AlarmasSala"].IdTipoEngine, "", null, date.Hour, 3)
+                            }
+
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["NivelTanqueAgua"].IdTipoEngine)-G1">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["NivelTanqueAgua"].Descripcion' id=@detalleCabeceras["NivelTanqueAgua"].IdTipoEngine>@detalleCabeceras["NivelTanqueAgua"].Detalle</th>
+                                <td id="unidad">%</td>
+                                <td id="rango"> >30% </td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["NivelTanqueAgua"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["NivelTanqueAgua"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["NivelTanqueAgua"].IdTipoEngine], date.Hour,3)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["NivelTanqueAgua"].IdTipoEngine, "", null, date.Hour, 3)
+                            }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["LimpiezaExteriores"].IdTipoEngine)-G1">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["LimpiezaExteriores"].Descripcion' id=@detalleCabeceras["LimpiezaExteriores"].IdTipoEngine>@detalleCabeceras["LimpiezaExteriores"].Detalle</th>
+                                <td id="unidad">VISUAL</td>
+                                <td id="rango">Check</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["LimpiezaExteriores"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["LimpiezaExteriores"].IdTipoEngine, "", detalleCampoGE1[detalleCabeceras["LimpiezaExteriores"].IdTipoEngine], date.Hour,3)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["LimpiezaExteriores"].IdTipoEngine, "", null, date.Hour, 3)
+                            }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div id="datos-EG2" style="display:none;">
+        <div style="padding :10px;">
+            <div>
+
+                <div class="title-table principal1">
+                    <p id="idRegistro" class="titlePrincipal" claveRegistro='PRINCIPAL'></p>
+                </div>
+                <table class="table table-bordered EG ocultar boton1 Tabla-Principal" id="tabla-Principal">
+                    <thead>
+                        <tr data-id="Principal-G2">
+                            <th id="principal" class="Title-Column letraInspeccion" scope="col" style="width: 186px;">Principal</th>
+                            <th class="sticky-header space" scope="col">Und</th>
+                            <th class="sticky-header space" scope="col">Rango</th>
+                            <th class="sticky-header space" scope="col">2:00</th>
+                            <th class="sticky-header space" scope="col">4:00</th>
+                            <th class="sticky-header space" scope="col">6:00</th>
+                            <th class="sticky-header space" scope="col">8:00</th>
+                            <th class="sticky-header space" scope="col">10:00</th>
+                            <th class="sticky-header space" scope="col">12:00</th>
+                            <th class="sticky-header space" scope="col">14:00</th>
+                            <th class="sticky-header space" scope="col">16:00</th>
+                            <th class="sticky-header space" scope="col">18:00</th>
+                            <th class="sticky-header space" scope="col">20:00</th>
+                            <th class="sticky-header space" scope="col">22:00</th>
+                            <th class="sticky-header space" scope="col">00:00</th>
                         </tr>
-                        <tr>
-                            <th class="Title-Column letraInspeccion" scope="row">CONTADOR DE FLUJO</th>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td><input type="text" value="0"></td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
+                    </thead>
+                    <tbody>
+                            @{
+                            <tr data-id="@(detalleCabeceras["potencia"].IdTipoEngine)-G2">
+                                <th id=@(detalleCabeceras["potencia"].IdTipoEngine) class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["potencia"].Descripcion'>@detalleCabeceras["potencia"].Detalle</th>
+                                <td id="unidad">kW</td>
+                                <td id="rango">0-93411</td>
+                                    @if (detalleCampoGE1.ContainsKey(detalleCabeceras["potencia"].IdTipoEngine))
+                                    {
+                                        @GenerateDataCells(detalleCabeceras["potencia"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["potencia"].IdTipoEngine], date.Hour, 12)
+                                    }
+                                    else
+                                    {
+                                        @GenerateDataCells(detalleCabeceras["potencia"].IdTipoEngine, "", null, date.Hour, 12)
+                                    }
+
+                            </tr>
+
+                            <tr data-id="@(detalleCabeceras["operacion"].IdTipoEngine)-G2">
+                                <th id="@(detalleCabeceras["operacion"].IdTipoEngine)" class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["operacion"].Descripcion'>@detalleCabeceras["operacion"].Detalle</th>
+                                <td id="unidad">h</td>
+                                <td id="rango">WOIS</td>
+                                    @if (detalleCampoGE1.ContainsKey(detalleCabeceras["operacion"].IdTipoEngine))
+                                    {
+                                        @GenerateDataCells(detalleCabeceras["operacion"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["operacion"].IdTipoEngine], date.Hour, 12)
+                                    }
+                                    else
+                                    {
+                                        @GenerateDataCells(detalleCabeceras["operacion"].IdTipoEngine, "", null, date.Hour, 12)
+                                    }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["temperatura"].IdTipoEngine)-G2">
+                                <th id="@(detalleCabeceras["temperatura"].IdTipoEngine)" class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["temperatura"].Descripcion'>@detalleCabeceras["temperatura"].Detalle</th>
+                                <td id="unidad">°C</td>
+                                <td id="rango">10-35</td>
+                                    @if (detalleCampoGE1.ContainsKey(detalleCabeceras["temperatura"].IdTipoEngine))
+                                    {
+                                        @GenerateDataCells(detalleCabeceras["temperatura"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["temperatura"].IdTipoEngine], date.Hour,12)
+                                    }
+                                    else
+                                    {
+                                        @GenerateDataCells(detalleCabeceras["temperatura"].IdTipoEngine, "", null, date.Hour, 12)
+                                    }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["humedad"].IdTipoEngine)-G2">
+                                <th id="@(detalleCabeceras["humedad"].IdTipoEngine)" class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["humedad"].Descripcion'>@detalleCabeceras["humedad"].Detalle</th>
+                                <td id="unidad">%</td>
+                                <td id="rango">30-100</td>
+                                    @if (detalleCampoGE1.ContainsKey(detalleCabeceras["humedad"].IdTipoEngine))
+                                    {
+                                        @GenerateDataCells(detalleCabeceras["humedad"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["humedad"].IdTipoEngine], date.Hour,12)
+                                    }
+                                    else
+                                    {
+                                        @GenerateDataCells(detalleCabeceras["humedad"].IdTipoEngine, "", null, date.Hour, 12)
+                                    }
+                            </tr>
+                            }
+                    </tbody>
+                </table>
+                            @* SISTEMA DE GAS COMBUSTIBLE *@
+                <div class="title-table principal2">
+                    <p id="idRegistro2" claveRegistro='@SistemaGasCombustible.IdRegistroConsola'>@SistemaGasCombustible.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG ocultar boton2" id="tabla-EG2">
+                    <tbody>
+                        <tr data-id="@(detalleCabeceras["Gas"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["Gas"].Descripcion'>@detalleCabeceras["Gas"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">6.0-7.0</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Gas"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Gas"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["Gas"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Gas"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["GasPrinc"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["GasPrinc"].Descripcion'>@detalleCabeceras["GasPrinc"].Detalle</th>
+                            <td id="unidad">mbar</td>
+                            <td id="rango">0-30</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["GasPrinc"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["GasPrinc"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["GasPrinc"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["GasPrinc"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["GasMotor"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["GasMotor"].Descripcion'>@detalleCabeceras["GasMotor"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">0.034</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["GasMotor"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["GasMotor"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["GasMotor"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["GasMotor"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["Contador"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["Contador"].Descripcion'>@detalleCabeceras["Contador"].Detalle</th>
+                            <td id="unidad">KG</td>
+                            <td id="rango"></td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Contador"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Contador"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["Contador"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Contador"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
                     </tbody>
                 </table>
-            
-            </div>
-
-            <br /><br />
-            <div>
-                <table class="table table-bordered EG new" id="tabla-EG1">
-
-                        <thead>
-                            <tr>
-                                <th class="sticky-header" scope="col" style="width: 200px;">INSPECCIONES</th>
-                                <th class="sticky-header space" scope="col" style="width: 90px;">Turno 1</th>
-                                <th class="sticky-header space" scope="col" style="width: 90px;">Turno 2</th>
-                                <th class="sticky-header space" scope="col" style="width: 90px;">Turno 3</th>
-                                <th scope="col" style="color:black;  background: darkgray;" colspan="9">Observaciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th class="Title-Column letraInspeccion" scope="row">REVISION DE FUGAS</th>
-                                <td> </td>
-                                <td> </td>
-                                <td> </td>
-                                
-                                
-                            
-                            </tr>
-                            <tr>
-                                <th class="Title-Column letraInspeccion" scope="row">REVISION DE FUGAS DE AIRE</th>
-                                <td> </td>
-                                <td> </td>
-                                <td> </td>
-                                
-                                
-                          
-                            </tr>
-                            <tr>
-                                <th class="Title-Column letraInspeccion" scope="row">REVISION DE FUGAS DE AGUA</th>
-                                <td> </td>
-                                <td> </td>
-                                <td> </td>
-                                
-                                
-                            
-                            </tr>
-                            <tr>
-                                <th class="Title-Column letraInspeccion" scope="row">REVISION DE FUGAS DE ACIETE</th>
-                                <td> </td>
-                                <td> </td>
-                                <td> </td>
-                                
-                                
-                            
-                            </tr>
-                            <tr>
-                                <th class="Title-Column letraInspeccion" scope="row">NIVEL TANQUE DE EXPANCION</th>
-                                <td> </td>
-                                <td> </td>
-                                <td> </td>
-                                
-                                
-                            
-                            </tr>
-                            <tr>
-                                <th class="Title-Column letraInspeccion" scope="row">LIMPIEZA EGOT Y SISTEMA AUXILIARES</th>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                               
-                               
-                            
-                            </tr>
-                        </tbody>
-                        <thead>
-                            <tr>
-                                <th scope="col" style="color:black;  background: darkgray;" colspan="4">SISTEMA COMUNES</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th class="Title-Column letraInspeccion" scope="row">NIVEL DEL TANQUE DE ACIETE</th>
-                                <td> </td>
-                                <td> </td>
-                                <td> </td>
-                                
-                                
-                            
-                            </tr>
-                            <tr>
-                                <th class="Title-Column letraInspeccion" scope="row">NIVEL DEL TANQUE DEL SISTEMA</th>
-                                <td> </td>
-                                <td> </td>
-                                <td> </td>
-                                
-                                
-                            
-                            </tr>
-                            <tr>
-                                <th class="Title-Column letraInspeccion" scope="row">LIMPIEZA DE SALA DE MAQUINAS</th>
-                                <td> </td>
-                                <td> </td>
-                                <td> </td>
-                                
-                                
-                            
-                            </tr>
-                        </tbody>
-@*                     <tfoot>
-                        <tr>
-                            <th colspan="9"></th>
-                            <!-- Agrega un campo de entrada de texto debajo de la columna "Observaciones" -->
-                            <td><textarea style="width: 100%;"></textarea></td>
+                            @* sISTEMA DE AGUA REFRIGERACION AL MOTOR *@
+                <div class="title-table principal3">
+                    <p id="idRegistro3" claveRegistro='@AguaRefrigMotor.IdRegistroConsola'>@AguaRefrigMotor.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG ocultar boton3" id="tabla-EG3">
+                    <tbody>
+                        <tr data-id="@(detalleCabeceras["MotorT001"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["MotorT001"].Descripcion'>@detalleCabeceras["MotorT001"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">20-40</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["MotorT001"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorT001"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["MotorT001"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorT001"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
                         </tr>
-                    </tfoot> *@
+                        <tr data-id="@(detalleCabeceras["MotorP001"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["MotorP001"].Descripcion'>@detalleCabeceras["MotorP001"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.0-1.8</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["MotorP001"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorP001"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["MotorP001"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorP001"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["MotorP007"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["MotorP007"].Descripcion'>@detalleCabeceras["MotorP007"].Detalle</th>
+                            <td id="unidad">C°</td>
+                            <td id="rango">70-82</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["MotorP007"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorP007"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["MotorP007"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorP007"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["MotorP006"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["MotorP006"].Descripcion'>@detalleCabeceras["MotorP006"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">2.8-2.4</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["MotorP006"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorP006"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["MotorP006"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["MotorP006"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                    </tbody>
                 </table>
-                
+
+                            @* sISTEMA DE AGUA REFRIGERACION POR LT *@
+                <div class="title-table principal4">
+                    <p id="idRegistro4" claveRegistro='@AguaRefrigLt.IdRegistroConsola'>@AguaRefrigLt.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG ocultar boton4" id="tabla-EG4">
+                    <tbody>
+                        <tr data-id="@(detalleCabeceras["LtT003"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["LtT003"].Descripcion'>@detalleCabeceras["LtT003"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">4.-42</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["LtT003"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["LtT003"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["LtT003"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["LtT003"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["LtP002"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["LtP002"].Descripcion'>@detalleCabeceras["LtP002"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.0-1.4</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["LtP002"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["LtP002"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["LtP002"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["LtP002"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                            @* sISTEMA DE AGUA REFRIGERACION POR HT *@
+                <div class="title-table principal5">
+                    <p id="idRegistro5" claveRegistro='@AguaRefrigHt.IdRegistroConsola'>@AguaRefrigHt.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG ocultar boton5" id="tabla-EG1">
+                    <tbody>
+                        <tr data-id="@(detalleCabeceras["HtT005"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["HtT005"].Descripcion'>@detalleCabeceras["HtT005"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">50-85</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["HtT005"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtT005"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["HtT005"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtT005"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["HtP004"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["HtP004"].Descripcion'>@detalleCabeceras["HtP004"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.6-2.4</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["HtP004"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtP004"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["HtP004"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtP004"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["HtTE006"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["HtTE006"].Descripcion'>@detalleCabeceras["HtTE006"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">50-85</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["HtTE006"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtTE006"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["HtTE006"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtTE006"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["HtP005"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["HtP005"].Descripcion'>@detalleCabeceras["HtP005"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.6-2.4</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["HtP005"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtP005"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["HtP005"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["HtP005"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+
+                            @* ENTRADA Y SALIDA AGUA A LOS RADIADORES --- falta validar hora*@
+                <div class="title-table principal6">
+                    <p id="idRegistro6" claveRegistro='@EntradaSalidaRad.IdRegistroConsola'>@EntradaSalidaRad.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG ocultar boton6" id="tabla-EG1">
+                    <tbody>
+                        <tr data-id="@(detalleCabeceras["TempRadiadores"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["TempRadiadores"].Descripcion'>@detalleCabeceras["TempRadiadores"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">75-82</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["TempRadiadores"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["TempRadiadores"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["TempRadiadores"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["TempRadiadores"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["PresRadiadores"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["PresRadiadores"].Descripcion'>@detalleCabeceras["PresRadiadores"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.6-2.4</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["PresRadiadores"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["PresRadiadores"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["PresRadiadores"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["PresRadiadores"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["TempSalidaRadiad"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["TempSalidaRadiad"].Descripcion'>@detalleCabeceras["TempSalidaRadiad"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">24-32</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["TempSalidaRadiad"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["TempSalidaRadiad"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["TempSalidaRadiad"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["TempSalidaRadiad"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["PresEntradaRadiad"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["PresEntradaRadiad"].Descripcion'>@detalleCabeceras["PresEntradaRadiad"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">1.0-1.6</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["PresEntradaRadiad"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["PresEntradaRadiad"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["PresEntradaRadiad"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["PresEntradaRadiad"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+
+                            @* COMPRESOR DE INSTRUMENTACION*@
+                <div class="title-table principal7">
+                    <p id="idRegistro7" claveRegistro='@CompresIntrument.IdRegistroConsola'>@CompresIntrument.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG ocultar boton7" id="tabla-EG1">
+                    <tbody>
+                        <tr data-id="@(detalleCabeceras["Operacion_ci"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["Operacion_ci"].Descripcion'>@detalleCabeceras["Operacion_ci"].Detalle</th>
+                            <td id="unidad">H</td>
+                            <td id="rango"></td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Operacion_ci"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Operacion_ci"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["Operacion_ci"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Operacion_ci"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="TempTrabajo-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["TempTrabajo"].Descripcion'>@detalleCabeceras["TempTrabajo"].Detalle</th>
+                            <td id="unidad">°C</td>
+                            <td id="rango">75</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["TempTrabajo"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["TempTrabajo"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["TempTrabajo"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["TempTrabajo"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["Presion"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["Presion"].Descripcion'>@detalleCabeceras["Presion"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">5.8-7.0</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Presion"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Presion"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["Presion"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Presion"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["Aceite"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["Aceite"].Descripcion'>@detalleCabeceras["Aceite"].Detalle</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">40%</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Aceite"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Aceite"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["Aceite"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Aceite"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+
+                            @* COMPRESOR DE AIRE DE ARRANQUE*@
+                <div class="title-table principal8">
+                    <p id="idRegistro8" claveRegistro='@CompresArranque.IdRegistroConsola'>@CompresArranque.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG ocultar boton8" id="tabla-EG1">
+                    <tbody>
+                        <tr data-id="@(detalleCabeceras["HrsOperacion"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["HrsOperacion"].Descripcion'>@detalleCabeceras["HrsOperacion"].Detalle</th>
+                            <td id="unidad">H</td>
+                            <td id="rango"></td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["HrsOperacion"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["HrsOperacion"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["HrsOperacion"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["HrsOperacion"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["AceiteLubr"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["AceiteLubr"].Descripcion'>@detalleCabeceras["AceiteLubr"].Detalle</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">30%</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["AceiteLubr"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["AceiteLubr"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["AceiteLubr"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["AceiteLubr"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+
+                            @* GENERADOR*@
+                <div class="title-table principal9">
+                    <p id="idRegistro9" claveRegistro='@Generador.IdRegistroConsola'>@Generador.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG ocultar boton9" id="tabla-EG1">
+                    <tbody>
+                        <tr data-id="@(detalleCabeceras["PresBomba"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["PresBomba"].Descripcion'>@detalleCabeceras["PresBomba"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">0-30</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["PresBomba"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["PresBomba"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["PresBomba"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["PresBomba"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["Bomba02"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["Bomba02"].Descripcion'>@detalleCabeceras["Bomba02"].Detalle</th>
+                            <td id="unidad">BAR</td>
+                            <td id="rango">0-30</td>
+
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["Generador"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["Generador"].Descripcion'>@detalleCabeceras["Generador"].Detalle</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">>900</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Generador"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Generador"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["Generador"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Generador"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["GeneraNd"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["GeneraNd"].Descripcion'>@detalleCabeceras["GeneraNd"].Detalle</th>
+                            <td id="unidad">%</td>
+                            <td id="rango">>90</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["GeneraNd"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["GeneraNd"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["GeneraNd"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["GeneraNd"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+
+                            @* COMPLEMENTARIOS*@
+                <div class="title-table principal10">
+                    <p id="idRegistro10" claveRegistro='@Complementario.IdRegistroConsola'>@Complementario.TipoRegistro</p>
+                </div>
+                <table class="table table-bordered EG ocultar boton10" id="tabla-EG1">
+                    <tbody>
+                        <tr data-id="@(detalleCabeceras["Mastegate"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["Mastegate"].Descripcion'>@detalleCabeceras["Mastegate"].Detalle</th>
+                            <td id="unidad">GRADOS</td>
+                            <td id="rango">NO ALRM</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["Mastegate"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["Mastegate"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["Mastegate"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["Mastegate"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+                        <tr data-id="@(detalleCabeceras["NivelCarter"].IdTipoEngine)-G2">
+                            <th class="Title-Column letraInspeccion" scope="row" style="width: 250px;" data-info='@detalleCabeceras["NivelCarter"].Descripcion'>@detalleCabeceras["NivelCarter"].Detalle</th>
+                            <td id="unidad">CM</td>
+                            <td id="rango">VISUAL</td>
+                            @if (detalleCampoGE1.ContainsKey(detalleCabeceras["NivelCarter"].IdTipoEngine))
+                            {
+                                @GenerateDataCells(detalleCabeceras["NivelCarter"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["NivelCarter"].IdTipoEngine], date.Hour,12)
+                            }
+                            else
+                            {
+                                @GenerateDataCells(detalleCabeceras["NivelCarter"].IdTipoEngine, "", null, date.Hour, 12)
+                            }
+                        </tr>
+
+                    </tbody>
+                </table>
+                            @* INSPECCIONES*@
+                <div>
+                    <table class="table table-bordered EG new" id="tabla-EG1">
+                        <thead>
+                            <tr">
+                                <th class="sticky-header" scope="col" style="width: 288px;    background: gainsboro;">INSPECCIONES</th>
+                                <th class="sticky-header space" scope="col" style="width: 45px;    background: gainsboro;"></th>
+                                <th class="sticky-header space" scope="col" style="width: 45px;    background: gainsboro;"></th>
+                                <th class="sticky-header space" scope="col" style="width: 90px;    background: gainsboro;">Turno 1</th>
+                                <th class="sticky-header space" scope="col" style="width: 90px;    background: gainsboro;">Turno 2</th>
+                                <th class="sticky-header space" scope="col" style="width: 90px;    background: gainsboro;">Turno 3</th>
+                                </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-id="@(detalleCabeceras["FugaGas"].IdTipoEngine)-G2">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["FugaGas"].Descripcion' id=@detalleCabeceras["FugaGas"].IdTipoEngine>@detalleCabeceras["FugaGas"].Detalle</th>
+                                <td id="unidad">TESTO</td>
+                                <td id="rango">CHECK</td>
+                                @if (detalleCampoGE1.ContainsKey(detalleCabeceras["FugaGas"].IdTipoEngine))
+                                {
+                                    @GenerateDataCells(detalleCabeceras["FugaGas"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["FugaGas"].IdTipoEngine], date.Hour,3)
+                                }
+                                else
+                                {
+                                    @GenerateDataCells(detalleCabeceras["FugaGas"].IdTipoEngine, "", null, date.Hour, 3)
+                                }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["FugaAireInstr"].IdTipoEngine)-G2">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["FugaAireInstr"].Descripcion' id=@detalleCabeceras["FugaAireInstr"].IdTipoEngine>@detalleCabeceras["FugaAireInstr"].Detalle</th>
+                                <td id="unidad">VISUAL</td>
+                                <td id="rango">CHECK</td>
+                                @if (detalleCampoGE1.ContainsKey(detalleCabeceras["FugaAireInstr"].IdTipoEngine))
+                                {
+                                    @GenerateDataCells(detalleCabeceras["FugaAireInstr"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["FugaAireInstr"].IdTipoEngine], date.Hour,3)
+                                }
+                                else
+                                {
+                                    @GenerateDataCells(detalleCabeceras["FugaAireInstr"].IdTipoEngine, "", null, date.Hour, 3)
+                                }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["FugaAguaSist"].IdTipoEngine)-G2">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["FugaAguaSist"].Descripcion' id=@detalleCabeceras["FugaAguaSist"].IdTipoEngine>@detalleCabeceras["FugaAguaSist"].Detalle</th>
+                                <td id="unidad">VISUAL</td>
+                                <td id="rango">CHECK</td>
+                                @if (detalleCampoGE1.ContainsKey(detalleCabeceras["FugaAguaSist"].IdTipoEngine))
+                                {
+                                    @GenerateDataCells(detalleCabeceras["FugaAguaSist"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["FugaAguaSist"].IdTipoEngine], date.Hour,3)
+                                }
+                                else
+                                {
+                                    @GenerateDataCells(detalleCabeceras["FugaAguaSist"].IdTipoEngine, "", null, date.Hour, 3)
+                                }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["FugaAceite"].IdTipoEngine)-G2">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["FugaAceite"].Descripcion' id=@detalleCabeceras["FugaAceite"].IdTipoEngine>@detalleCabeceras["FugaAceite"].Detalle</th>
+                                <td id="unidad">VISUAL</td>
+                                <td id="rango">CHECK</td>
+                                @if (detalleCampoGE1.ContainsKey(detalleCabeceras["FugaAceite"].IdTipoEngine))
+                                {
+                                    @GenerateDataCells(detalleCabeceras["FugaAceite"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["FugaAceite"].IdTipoEngine], date.Hour,3)
+                                }
+                                else
+                                {
+                                    @GenerateDataCells(detalleCabeceras["FugaAceite"].IdTipoEngine, "", null, date.Hour, 3)
+                                }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["NivelTanqueBessel"].IdTipoEngine)-G2">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["NivelTanqueBessel"].Descripcion' id=@detalleCabeceras["NivelTanqueBessel"].IdTipoEngine>@detalleCabeceras["NivelTanqueBessel"].Detalle</th>
+                                <td id="unidad">%</td>
+                                <td id="rango">>30%</td>
+                                @if (detalleCampoGE1.ContainsKey(detalleCabeceras["NivelTanqueBessel"].IdTipoEngine))
+                                {
+                                    @GenerateDataCells(detalleCabeceras["NivelTanqueBessel"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["NivelTanqueBessel"].IdTipoEngine], date.Hour,3)
+                                }
+                                else
+                                {
+                                    @GenerateDataCells(detalleCabeceras["NivelTanqueBessel"].IdTipoEngine, "", null, date.Hour, 3)
+                                }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["LimpiezaEG00"].IdTipoEngine)-G2">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["LimpiezaEG00"].Descripcion' id=@detalleCabeceras["LimpiezaEG00"].IdTipoEngine>@detalleCabeceras["LimpiezaEG00"].Detalle</th>
+                                <td id="unidad"></td>
+                                <td id="rango">CHECK</td>
+                                @if (detalleCampoGE1.ContainsKey(detalleCabeceras["LimpiezaEG00"].IdTipoEngine))
+                                {
+                                    @GenerateDataCells(detalleCabeceras["LimpiezaEG00"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["LimpiezaEG00"].IdTipoEngine], date.Hour,3)
+                                }
+                                else
+                                {
+                                    @GenerateDataCells(detalleCabeceras["LimpiezaEG00"].IdTipoEngine, "", null, date.Hour, 3)
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered EG new" id="tabla-EG1">
+                        <thead>
+                            <tr>
+                                <th class="sticky-header" scope="col" style="width: 288px;    background: gainsboro;">SISTEMA COMUNES</th>
+                                <th class="sticky-header" scope="col" style="width: 45px;    background: gainsboro;"></th>
+                                <th class="sticky-header" scope="col" style="width: 45px;    background: gainsboro;"></th>
+                                <th class="sticky-header" scope="col" style="width: 90px;    background: gainsboro;"></th>
+                                <th class="sticky-header" scope="col" style="width: 90px;    background: gainsboro;"></th>
+                                <th class="sticky-header" scope="col" style="width: 90px;    background: gainsboro;"></th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr data-id="@(detalleCabeceras["AlarmasSala"].IdTipoEngine)-G2">
+                                <th class="sticky-header" scope="col" style="width: 288px;" data-info='@detalleCabeceras["AlarmasSala"].Descripcion' id=@detalleCabeceras["AlarmasSala"].IdTipoEngine>@detalleCabeceras["AlarmasSala"].Detalle</th>
+                                <td id="unidad">VISUAL</td>
+                                <td id="rango">Check</td>
+                                @if (detalleCampoGE1.ContainsKey(detalleCabeceras["AlarmasSala"].IdTipoEngine))
+                                {
+                                    @GenerateDataCells(detalleCabeceras["AlarmasSala"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["AlarmasSala"].IdTipoEngine], date.Hour,3)
+                                }
+                                else
+                                {
+                                    @GenerateDataCells(detalleCabeceras["AlarmasSala"].IdTipoEngine, "", null, date.Hour, 3)
+                                }
+
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["NivelTanqueAgua"].IdTipoEngine)-G2">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["NivelTanqueAgua"].Descripcion' id=@detalleCabeceras["NivelTanqueAgua"].IdTipoEngine>@detalleCabeceras["NivelTanqueAgua"].Detalle</th>
+                                <td id="unidad">%</td>
+                                <td id="rango"> >30% </td>
+                                @if (detalleCampoGE1.ContainsKey(detalleCabeceras["NivelTanqueAgua"].IdTipoEngine))
+                                {
+                                    @GenerateDataCells(detalleCabeceras["NivelTanqueAgua"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["NivelTanqueAgua"].IdTipoEngine], date.Hour,3)
+                                }
+                                else
+                                {
+                                    @GenerateDataCells(detalleCabeceras["NivelTanqueAgua"].IdTipoEngine, "", null, date.Hour, 3)
+                                }
+                            </tr>
+                            <tr data-id="@(detalleCabeceras["LimpiezaExteriores"].IdTipoEngine)-G2">
+                                <th class="Title-Column letraInspeccion" scope="row" data-info='@detalleCabeceras["LimpiezaExteriores"].Descripcion' id=@detalleCabeceras["LimpiezaExteriores"].IdTipoEngine>@detalleCabeceras["LimpiezaExteriores"].Detalle</th>
+                                <td id="unidad">VISUAL</td>
+                                <td id="rango">Check</td>
+                                @if (detalleCampoGE1.ContainsKey(detalleCabeceras["LimpiezaExteriores"].IdTipoEngine))
+                                {
+                                    @GenerateDataCells(detalleCabeceras["LimpiezaExteriores"].IdTipoEngine, "", detalleCampoGE2[detalleCabeceras["LimpiezaExteriores"].IdTipoEngine], date.Hour,3)
+                                }
+                                else
+                                {
+                                    @GenerateDataCells(detalleCabeceras["LimpiezaExteriores"].IdTipoEngine, "", null, date.Hour, 3)
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
+
         </div>
-</div>
+    </div>
 </div>
 
+<div id="observacionesConsola" style="display: flex; padding: 10px 0 0 0;">
+    <span style="padding: 0 10px 0 0;">Observaciones</span>
+    <textarea style="height: 113px; width: 90%;">@*@datoFormato.Observaciones*@</textarea>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    const mostrarOcultarButton = document.getElementById("mostrarOcultar");
-    let columnasOcultas = true;
 
-    mostrarOcultarButton.addEventListener("click", () => {
-        const columnasCabeceras = document.querySelectorAll(".ocultar th:nth-child(n+10)");
-        const columnasDatos = document.querySelectorAll(".ocultar td:nth-child(n+10)");
+    $(document).ready(function () {
 
-        const columnasCabeceras1 = document.querySelectorAll("#OculatarPrimerasHoras");
-        const columnasDatos1 = document.querySelectorAll("#OculatarPrimerasHoras");
+        let estadoActual = 1;
 
-        if (columnasOcultas) {
-            columnasCabeceras.forEach((columna) => {
-                columna.style.display = "table-cell";
+        $("#EG1").click(function () {
+            if (estadoActual === 1) {
+                $("#datos-EG1").hide();
+                $("#titulo-EG1").hide();
+                $("#datos-EG2").show();
+                $("#titulo-EG2").show();
+                $("#EG1").text("EG02");
+                estadoActual = 2;
+            } else if (estadoActual === 2) {
+                $("#datos-EG2").hide();
+                $("#titulo-EG2").hide();
+                $("#datos-EG1").show();
+                $("#titulo-EG1").show();
+                $("#EG1").text("EG01");
+                estadoActual = 1;
+            }
+        });
+
+    });
+
+
+    function ObtenerDatosFormato() {
+        var idReporte = datosOperario.IdSitio + "-ELD.CTL-OM-001-" + obtenerFecha("fecha");
+        var filasIds = @Html.Raw(JsonConvert.SerializeObject(idReferencias));
+
+        const datos = [];
+
+        for (let j = 1; j <= 2; j++) {
+            filasIds.forEach(filaId => {
+                const filaPrincipal = document.querySelector(`[data-id^="${filaId}-G${j}"]`);
+
+                const cantidadElementos = (filaPrincipal.children.length - 3) * 2;
+                console.log("cantidadElementos : ", cantidadElementos);
+
+                for (let i = 2; i <= cantidadElementos; i = i + 2) {
+                    var idDetalle = datosOperario.IdSitio + "-Det-" + filaId + "-" + j.toString() + "-" + i.toString() + "-" + obtenerFecha("fecha");
+
+                    const celda = filaPrincipal.querySelector(`td[id="${filaId}_${i}"]`);
+                    console.log("celda : ", celda);
+
+                    const dato = {
+                        idDetalleCampo: idDetalle,
+                        detalle: parseFloat(celda.querySelector('input').value || 0),
+                        fila: i,
+                        numeroGenerador: j,
+                        hora: i + ':00',
+                        sitio: datosOperario.IdSitio,
+                        idSubtituloCampo: filaId,
+                        fecha: obtenerFecha('fechaVista'),
+                        idReporteCampo: idReporte
+                    };
+
+                    datos.push(Object.assign({}, dato));
+                }
             });
-            columnasDatos.forEach((columna) => {
-                columna.style.display = "table-cell";
+        }
+
+
+        loader.style.display = 'block';
+
+        return fetch("/LecturasCampo/GuardarDatosConsola", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(datos)
+        })
+            .then(function (response) {
+                console.log('ejecutado correctamente: ', response);
+                return response.json();
+            })
+            .then(function (data) {
+                loader.style.display = 'none';
+
+                if (data.respuesta.idRespuesta === 0 || data.respuesta.idRespuesta === 1) {
+                    Swal.fire({
+                        title: "Success!!",
+                        text: "Se guardaron los datos.",
+                        icon: "success",
+                        button: "Aww yiss!",
+                        willClose: () => {
+                            location.reload();
+                        }
+                    });
+
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: data.respuesta.mensaje,
+                        icon: "error",
+                        button: "OK",
+                    });
+                }
+            })
+            .catch(function (error) {
+                loader.style.display = 'none';
+                console.error("Error:", error);
             });
-            mostrarOcultarButton.textContent = "-";
-        } else {
-            columnasCabeceras.forEach((columna) => {
-                columna.style.display = "none";
-            });
-            columnasDatos.forEach((columna) => {
-                columna.style.display = "none";
-            });
-            columnasCabeceras1.forEach((columna) => {
-                columna.style.display = "none";
-            });
-            columnasDatos1.forEach((columna) => {
-                columna.style.display = "none";
-            });
-            mostrarOcultarButton.textContent = "+";
-        }
-
-        columnasOcultas = !columnasOcultas;
-    });
-
-    // const mostrarOcultarButton = document.getElementById("mostrarOcultar");
-    // const columnasCabeceras = document.querySelectorAll(".ocultar th:nth-child(n+10)");
-    // const columnasDatos = document.querySelectorAll(".ocultar td:nth-child(n+10)");
-
-    // mostrarOcultarButton.addEventListener("click", () => {
-    //     const columnasOcultas = Array.from(columnasCabeceras).some((columna) => columna.style.display === "none");
-
-    //     if (columnasOcultas) {
-    //         columnasCabeceras.forEach((columna) => {
-    //             columna.style.display = "table-cell";
-    //         });
-    //         columnasDatos.forEach((columna) => {
-    //             columna.style.display = "table-cell";
-    //         });
-    //         mostrarOcultarButton.textContent = "-";
-    //     } else {
-    //         columnasCabeceras.forEach((columna) => {
-    //             columna.style.display = "none";
-    //         });
-    //         columnasDatos.forEach((columna) => {
-    //             columna.style.display = "none";
-    //         });
-    //         mostrarOcultarButton.textContent = "+";
-    //     }
-    // });
+    }
 
 
-
-
-    // Obtén referencias a los elementos del DOM
-    // const principalElement = document.getElementById("principal");
-    const principalElement = document.querySelector(".principal"); // Selecciona por clase
-    const tablaEG1 = document.querySelector(".boton1");
-
-    // Agrega un controlador de eventos al elemento "Principal"
-    principalElement.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
-        if (tablaEG1.style.display === "none" || tablaEG1.style.display === "") {
-            // Si está oculta, muéstrala
-            tablaEG1.style.display = "table";
-        } else {
-            // Si está visible, ocúltala
-            tablaEG1.style.display = "none";
-        }
-    });
-
-    const principalElement2 = document.querySelector(".principal2"); // Selecciona por clase
-    const tablaEG2 = document.querySelector(".boton2");
-
-    // Agrega un controlador de eventos al elemento "Principal"
-    principalElement2.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
-        if (tablaEG2.style.display === "none" || tablaEG2.style.display === "") {
-            // Si está oculta, muéstrala
-            tablaEG2.style.display = "table";
-        } else {
-            // Si está visible, ocúltala
-            tablaEG2.style.display = "none";
-        }
-    });
-    const principalElement3 = document.querySelector(".principal3"); // Selecciona por clase
-    const tablaEG3 = document.querySelector(".boton3");
-
-    // Agrega un controlador de eventos al elemento "Principal"
-    principalElement3.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
-        if (tablaEG3.style.display === "none" || tablaEG3.style.display === "") {
-            // Si está oculta, muéstrala
-            tablaEG3.style.display = "table";
-        } else {
-            // Si está visible, ocúltala
-            tablaEG3.style.display = "none";
-        }
-    });
-
-    const principalElement4 = document.querySelector(".principal4"); // Selecciona por clase
-    const tablaEG4 = document.querySelector(".boton4");
-
-    // Agrega un controlador de eventos al elemento "Principal"
-    principalElement4.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
-        if (tablaEG4.style.display === "none" || tablaEG4.style.display === "") {
-            // Si está oculta, muéstrala
-            tablaEG4.style.display = "table";
-        } else {
-            // Si está visible, ocúltala
-            tablaEG4.style.display = "none";
-        }
-    });
-
-    const principalElement5 = document.querySelector(".principal5"); // Selecciona por clase
-    const tablaEG5 = document.querySelector(".boton5");
-
-    // Agrega un controlador de eventos al elemento "Principal"
-    principalElement5.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
-        if (tablaEG5.style.display === "none" || tablaEG5.style.display === "") {
-            // Si está oculta, muéstrala
-            tablaEG5.style.display = "table";
-        } else {
-            // Si está visible, ocúltala
-            tablaEG5.style.display = "none";
-        }
-    });
-
-    const principalElement6 = document.querySelector(".principal6"); // Selecciona por clase
-    const tablaEG6 = document.querySelector(".boton6");
-
-    // Agrega un controlador de eventos al elemento "Principal"
-    principalElement6.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
-        if (tablaEG6.style.display === "none" || tablaEG6.style.display === "") {
-            // Si está oculta, muéstrala
-            tablaEG6.style.display = "table";
-        } else {
-            // Si está visible, ocúltala
-            tablaEG6.style.display = "none";
-        }
-    });
-
-    const principalElement7 = document.querySelector(".principal7"); // Selecciona por clase
-    const tablaEG7 = document.querySelector(".boton7");
-
-    // Agrega un controlador de eventos al elemento "Principal"
-    principalElement7.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
-        if (tablaEG7.style.display === "none" || tablaEG7.style.display === "") {
-            // Si está oculta, muéstrala
-            tablaEG7.style.display = "table";
-        } else {
-            // Si está visible, ocúltala
-            tablaEG7.style.display = "none";
-        }
-    });
-
-    const principalElement8 = document.querySelector(".principal8"); // Selecciona por clase
-    const tablaEG8 = document.querySelector(".boton8");
-
-    // Agrega un controlador de eventos al elemento "Principal"
-    principalElement8.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
-        if (tablaEG8.style.display === "none" || tablaEG8.style.display === "") {
-            // Si está oculta, muéstrala
-            tablaEG8.style.display = "table";
-        } else {
-            // Si está visible, ocúltala
-            tablaEG8.style.display = "none";
-        }
-    });
-
-    const principalElement9 = document.querySelector(".principal9"); // Selecciona por clase
-    const tablaEG9 = document.querySelector(".boton9");
-
-    // Agrega un controlador de eventos al elemento "Principal"
-    principalElement9.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
-        if (tablaEG9.style.display === "none" || tablaEG9.style.display === "") {
-            // Si está oculta, muéstrala
-            tablaEG9.style.display = "table";
-        } else {
-            // Si está visible, ocúltala
-            tablaEG9.style.display = "none";
-        }
-    });
-
-    const principalElement10 = document.querySelector(".principal10"); // Selecciona por clase
-    const tablaEG10 = document.querySelector(".boton10");
-
-    // Agrega un controlador de eventos al elemento "Principal"
-    principalElement10.addEventListener("click", () => {
-        // Verifica si la tabla está actualmente visible
-        if (tablaEG10.style.display === "none" || tablaEG10.style.display === "") {
-            // Si está oculta, muéstrala
-            tablaEG10.style.display = "table";
-        } else {
-            // Si está visible, ocúltala
-            tablaEG10.style.display = "none";
-        }
+    $(document).ready(function () {
+        $("#GuardarDatos").click(function () {
+            ObtenerDatosFormato()
+        });
     });
 
 
+    for (let i = 1; i <= 10; i++) {
+        const principalElement = document.querySelector(`.principal${i}`);
+        const tablaEG = document.querySelector(`.boton${i}`);
+
+        principalElement.addEventListener("click", () => {
+            if (tablaEG.style.display === "none" || tablaEG.style.display === "") {
+                tablaEG.style.display = "table";
+            } else {
+                tablaEG.style.display = "none";
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $("#accordionSidebar").addClass("toggled");
+    });
 
 </script>

@@ -14,7 +14,7 @@ namespace Generacion.Application.Usuario.Query
         {
             _conexion = conexion;
         }
-        public async Task<Respuesta<Dictionary<string, List<HistorialUsuario>>>> ObtenerDatosHistorial(string Idusuario, string fecha)
+        public async Task<Respuesta<Dictionary<string, List<HistorialUsuario>>>> ObtenerDatosHistorial(DetalleOperario usuario, string fecha)
         {
             Respuesta<Dictionary<string, List<HistorialUsuario>>> respuesta = new Respuesta<Dictionary<string, List<HistorialUsuario>>>();
             try
@@ -28,7 +28,7 @@ namespace Generacion.Application.Usuario.Query
                         command.CommandType = System.Data.CommandType.StoredProcedure;
 
                         // Parámetro de entrada
-                        command.Parameters.Add(new OracleParameter("p_Idusuario", OracleDbType.Varchar2, Idusuario, System.Data.ParameterDirection.Input));
+                        command.Parameters.Add(new OracleParameter("p_Idusuario", OracleDbType.Varchar2, usuario.IdOperario, System.Data.ParameterDirection.Input));
                         command.Parameters.Add(new OracleParameter("p_fecha", OracleDbType.Varchar2, fecha, System.Data.ParameterDirection.Input));
 
                         // Parámetro de salida (cursor)
@@ -60,7 +60,7 @@ namespace Generacion.Application.Usuario.Query
                                 respuesta.IdRespuesta = (int)oracleDecimalValue.Value;
                             }
                             respuesta.Detalle = new Dictionary<string, List<HistorialUsuario>>();
-                            respuesta.Detalle.Add(Idusuario, historialUsuarios);
+                            respuesta.Detalle.Add(usuario.IdOperario, historialUsuarios);
 
                         }
                     }

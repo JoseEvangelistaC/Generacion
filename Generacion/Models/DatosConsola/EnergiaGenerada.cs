@@ -48,6 +48,8 @@
         /// Codigo : U31
         /// </summary>
         public int Voltaje31 { get; set; }
+        public int Fila { get; set; }
+
     }
 
     public class DatosFormatoConsola : EnergiaGenerada
@@ -58,6 +60,5 @@
         public string IdRegistroConsola { get; set; }
         public string IdOperario { get; set; }
         public string IdformatoConsola { get; set; }
-        public int Fila { get; set; }
     }
 }

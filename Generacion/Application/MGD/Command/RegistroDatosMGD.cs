@@ -54,14 +54,15 @@ namespace Generacion.Application.MGD.Command
                             outputParameter
                         });
                         int i = 0;
-                        foreach (Revenue item in datos.Revenue)
+                        foreach (DatosFormatoMGD item in datos.Revenue)
                         {
                             if (string.IsNullOrEmpty(datos.IdReporteMGD))
                                 continue;
                             i++;
+
                             idReporte.Value = datos.IdReporteMGD+i.ToString();
                             idsitio.Value = datos.Idsitio;
-                            fecha.Value = datos.Fecha;
+                            fecha.Value = item.Date_Time;
                             PotenciaActivaMW.Value = item.KWDelInt / 1000;
                             PotenciaReactivaMVAR.Value = item.KVARDelInt / 1000;
                             ptensionKV.Value = item.VllAvg / 1000;

@@ -1,0 +1,239 @@
+﻿@using Generacion.Models.Almacen.Bujias;
+@using Generacion.Models.Almacen;
+@model Respuesta<List<ComponenteBujias>>;
+
+
+@{
+    List<PrestamoComponente> componentesPrestados = ViewData["DetalleBujiasPrestadas"] as List<PrestamoComponente>;
+
+}
+
+<style>
+    .contendor-componentes {
+        display: flex;
+    }
+
+    .contendor-detalles {
+        display: flex;
+        padding: 0 0 3% 0;
+    }
+
+    .contenido-detalle {
+        width: 40%;
+        text-align-last: center;
+        border: 1px solid #e3e6f0 !important;
+    }
+
+    .contenido-tiempo {
+        width: 40%;
+        text-align-last: center;
+        border: 1px solid #e3e6f0;
+    }
+</style>
+
+
+<div class="contendor-componentes">
+    <div>
+        <a onclick="enviarDatos()" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Guardar Datos</a>
+    </div>
+    <div style="padding: 0 0 0 2%;width: 730px;">
+        <div>
+            <div class="contendor-detalles">
+                <div class="contenido-detalle">Stock General</div>
+                @{
+                    int stock = 0;
+                    foreach (var item in Model.Detalle)
+                    {
+                        stock = stock + int.Parse(item.Cantidad);
+                    }
+                    <div class="contenido-detalle">@stock</div>
+                }
+            </div>
+            <hr class="sidebar-divider">
+            <div>
+                <div class="contendor-detalles">
+                    <div class="contenido-detalle">Uso en unidad EG-01</div>
+                    <input class="contenido-detalle" type="number">
+                </div>
+                <div class="contendor-detalles">
+                    <div class="contenido-detalle">Uso en unidad EG-01</div>
+                    <input class="contenido-detalle" type="number">
+                </div>
+            </div>
+            <hr class="sidebar-divider">
+            <div>
+                <div id="contenedorPrestamo">
+                    @foreach (var item in componentesPrestados)
+                    {
+                        <div data-info="Fecha de Prestamo : @item.FechaPrestamos.ToString("dd/MM/yyyy")" class="contendor-detalles" dataid="@item.FechaPrestamos.ToString("dd/MM/yyyy")">
+                            <div class="contenido-detalle" >Préstamo a @item.PrestamoHacia</div>
+                            <input class="contenido-detalle" type="number" value="@item.CantidadPrestamo" disabled>
+                        </div>
+                    }
+                </div>
+                <div>
+                    <button id="generararInputPrestamo">Generar Entrada de Préstamo</button>
+                    <select id="SitioPrestamoID" class="form-select form-select-lg mb-3 form-control inputsDetalles" aria-label="Default select example">
+                        <option selected>-- Seleccione --</option>
+                         <option value="PEDREGAL">PEDREGAL</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <hr class="sidebar-divider">
+        <div>
+            <div class="contendor-detalles">
+                <div class="contenido-detalle">Tiempo max de uso</div>
+                <div style="padding: 0 0 0 5%;">1700,00 hrs</div>
+            </div>
+            <div class="contendor-detalles">
+                <div class="contenido-detalle">Tiempo min de uso</div>
+                <div style="padding: 0 0 0 5%;">1200,00 hrs</div>
+            </div>
+            <div class="contendor-detalles">
+                <div class="contenido-detalle">Horas promedio operación x día</div>
+                <div style="padding: 0 0 0 5%;">18,00 hrs</div>
+            </div>
+            <div class="contendor-detalles">
+                <div class="contenido-detalle">Tiempo promedio hasta la fecha</div>
+                <div style="padding: 0 0 0 5%;">16222,83 hrs</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding: 0 0 0 5%;">
+        <table id="historialComponentes" class="table table-bordered">
+            <tr>
+                <td>item</td>
+                <td>fecha de llegada de bujías</td>
+                <td>cantidad</td>
+                <td>descripcion, tipo, marca, etc</td>
+            </tr>
+            @{
+                int index = 0;
+                foreach (var item in Model.Detalle)
+                {
+                    index++;
+                    <tr conponenteId=@item.ComponenteID>
+                        <td>@index</td>
+                        <td>stock en planta  @item.Fecha.ToString("dd-MM-yyyy")</td>
+                        <td>@item.Cantidad</td>
+                        <td>@item.NombreComponente</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+</div>
+
+
+<script>
+
+    const divElements = document.querySelectorAll('.contendor-detalles');
+
+    divElements.forEach(div => {
+        div.addEventListener('mouseover', function () {
+            const info = this.getAttribute('data-info');
+            if (info != "" && info != null) {
+                this.title = info;
+            }
+        });
+    });
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#generararInputPrestamo").click(function () {
+            agregarEntradaPrestamo();
+        });
+
+        function agregarEntradaPrestamo() {
+            var selectElement = document.getElementById("SitioPrestamoID");
+            var valorSeleccionado = selectElement.value;
+
+            if (valorSeleccionado !== "-- Seleccione --") {
+                var fechaActual = obtenerFecha("fechaVista");
+                var entradaExistente = false;
+
+                // Verificar si ya existe una entrada con la misma fecha
+                $(".contendor-detalles").each(function () {
+                    var fechaExistente = $(this).attr("dataID");
+                    if (fechaExistente === fechaActual && fechaExistente !== undefined) {
+                        entradaExistente = true;
+                        return false;  // Salir del bucle si se encuentra una entrada con la misma fecha
+                    }
+                });
+
+                if (!entradaExistente) {
+                    var nuevaEntrada = $('<div class="contendor-detalles" dataID="' + fechaActual + '" > ' +
+                        '<div class="contenido-detalle" sitioPrestamo="' + valorSeleccionado + '">Préstamo a ' + valorSeleccionado + '</div>' +
+                        '<input class="contenido-detalle" type="number">' +
+                        '</div>');
+
+                    $("#contenedorPrestamo").append(nuevaEntrada);
+                } else {
+                    alert("Ya existe una entrada para esta fecha");
+                }
+            } else {
+                alert("Seleccione un lugar");
+            }
+        }
+    });
+
+
+    function enviarDatos(){
+
+        // Obtener todos los elementos con la clase "contendor-detalles"
+        var contenedores = document.querySelectorAll(".contendor-detalles");
+        var selectElement = document.getElementById("SitioPrestamoID");
+        var valorSeleccionado = selectElement.value;
+
+        var miTabla = document.getElementById("historialComponentes");
+        var filas = miTabla.querySelectorAll("tbody tr");
+        var ultimoFila = filas[filas.length - 1];
+        var ultimoComponenteId = ultimoFila.getAttribute("conponenteid");
+        console.log("componenteid del último tr:", ultimoComponenteId);
+
+        var dato = {};
+        // Iterar a través de los contenedores
+        contenedores.forEach(function (contenedor) {
+            // Obtener el valor del atributo "dataid" de cada contenedor
+            var dataId = contenedor.getAttribute("dataid");
+           
+
+            // Verificar si el "dataid" coincide con la fecha de hoy
+            if (dataId === obtenerFecha("fechaVista")) {
+                var input = contenedor.querySelector("input");
+
+                dato ={
+                    componentePrestadoID: datosOperario.IdSitio + 'Bujias' + obtenerFecha("fechaID"),
+                    componenteID: ultimoComponenteId,
+                    prestamoDesde: datosOperario.IdSitio ,
+                    prestamoHacia: valorSeleccionado,
+                    cantidadPrestamo: parseInt(input.value)
+                }
+                console.log("dato", dato);
+            }
+        });
+
+
+        return fetch("/Bujias/GuardarDatosPrestamo", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dato)
+        })
+            .then(function (response) {
+                console.log('ejecutado correctamente');
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+            });
+    };
+
+</script>
+
+

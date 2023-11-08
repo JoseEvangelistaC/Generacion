@@ -7,7 +7,7 @@
     string contenedorActive = Model.Detalle.Count() == 1 ? "inherit" : "none";
 }
 
-    <style>
+<style>
     .content-report-motors input {
         border: none;
         padding: 5px 0 0 0;
@@ -40,7 +40,6 @@
         resize: none;
     }
 
-
 </style>
 <div style="text-align: right;">
     <button class="btn btn-primary" id="GuardarHistorial">Guardar Datos</button>
@@ -55,7 +54,6 @@
                 margin-right: 5px;
                 width: 130px;
                 border-radius: 0 0 0 25px;
-                
             }
 
                 .tab.active {
@@ -72,7 +70,10 @@
                     <!-- Pestañas -->
                     @foreach (var key in Model.Detalle.Keys)
                     {
-                        <div style="width: 130px;" class="tab @(estiloActive)" onclick="showTab('@key', this)">@key</div>
+                        if (!key.Contains("-"))
+                        {
+                            <div style="width: 130px;" class="tab @(estiloActive)" onclick="showTab('@key', this)">@key</div>
+                        }
                     }
                 </div>
                 <!-- Contenido de las pestañas -->
@@ -124,39 +125,57 @@
 </div>
 
 
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-    console.log("datosOperario : ", datosOperario);
+        console.log("datosOperario : ", datosOperario);
         document.getElementById("agregarDiv").addEventListener('click', agregarDiv.bind(null, datosOperario.IdOperario + "-content"));
-    function eliminarDiv(div) {
-        const contenedor = div.parentNode;
+        function eliminarDiv(div) {
+            const contenedor = div.parentNode;
 
-        contenedor.removeChild(div);
-    }
-    function eliminarDivById(id) {
-        const divAEliminar = document.getElementById(id);
-
-        if (divAEliminar) {
-            divAEliminar.parentNode.removeChild(divAEliminar);
+            contenedor.removeChild(div);
         }
-    }
-    function eliminarDatos(id) {
-        console.log("listaHistorial : ", listaHistorial);
-        fetch("/Historial/GuardarHistorial", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(id)
-        })
-            .then(function (response) {
-                console.log(response.respuesta);
-                localStorage.setItem('Historial', listaHistorial);
+        function eliminarDivById(id) {
+            const divAEliminar = document.getElementById(id);
+
+            if (divAEliminar) {
+                divAEliminar.parentNode.removeChild(divAEliminar);
+            }
+        }
+        function eliminarDatos(id) {
+            console.log("listaHistorial : ", listaHistorial);
+            fetch("/Historial/GuardarHistorial", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(id)
             })
-            .catch(function (error) {
-                console.error("Error:", error);
-            });
-    }
+                .then(function (response) {
+                    console.log(response.respuesta);
+                    localStorage.setItem('Historial', listaHistorial);
+                })
+                .then(function (data) {
+                    if (data.respuesta.idRespuesta === 0 || data.respuesta.idRespuesta === 1) {
+                        Swal.fire({
+                            title: "Success!!",
+                            text: "Se guardaron los datos.",
+                            icon: "success",
+                            button: "Aww yiss!",
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: data.respuesta.mensaje,
+                            icon: "error",
+                            button: "OK",
+                        });
+                    }
+                })
+                .catch(function (error) {
+                    console.error("Error:", error);
+                });
+        }
 
     });
 
@@ -179,14 +198,8 @@
         const nuevoBotonEliminar = document.createElement('button');
 
         nuevoInputHours.className = "imput-hours form-control";
-      //  nuevoDivList.className = "div-viñeta";
 
-      /*  if (parseFloat(IdCasilla[1]) >= 17) {
-            nuevoDivList.textContent = ">";
-
-        } else {*/
-            nuevoInputHours.placeholder = "00:00";
-      /*  }*/
+        nuevoInputHours.placeholder = "00:00";
         nuevoInput.placeholder = "Ingrese una Descripcion";
 
         nuevoDiv.style.border = 'none';
@@ -195,12 +208,8 @@
 
         nuevoDiv.style.border = 'none';
 
-        /*if (parseFloat(IdCasilla[1]) >= 17) {
-            nuevoDiv.appendChild(nuevoDivList);
-        } else {*/
-            nuevoDiv.appendChild(nuevoInputHours);
+        nuevoDiv.appendChild(nuevoInputHours);
 
-       // }
         nuevoDiv.appendChild(nuevoInput);
 
         // Agregar el botón de eliminación
@@ -213,8 +222,6 @@
 
         nuevoDiv.appendChild(nuevoBotonEliminar);
 
-        console.log("contenedor : ", contenedor);
-        console.log("nuevoDiv : ", nuevoDiv);
         contenedor.appendChild(nuevoDiv);
 
         $(document).ready(function () {

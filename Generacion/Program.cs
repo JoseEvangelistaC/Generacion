@@ -19,14 +19,24 @@ using Generacion.Application.ReporteGAS.Command;
 using Generacion.Application.Usuario;
 using Generacion.Application.Usuario.Command;
 using Generacion.Application.Usuario.Query;
-using System.Reflection;
 using WebApi.Application.Common.Interfaces;
 using WebApi.Application.ValidatePassword.Queries;
 using System.DirectoryServices.AccountManagement;
 using Generacion.Application.Usuario.Session;
-using Generacion.Application.Usuario.Session.SessionStatus;
 using Generacion.Application.ValidationSession.Login;
-using static Generacion.Controllers.LoginController;
+using Generacion.Application.ION;
+using Generacion.Application.ION.Command;
+using Generacion.Application.Mantenimiento.Query;
+using Generacion.Application.ReporteProduccion;
+using Generacion.Application.ReporteProduccion.Command;
+using Generacion.Application.ReporteProduccion.Query;
+using Generacion.Application.Almacen.Query;
+using Generacion.Application.Almacen;
+using Generacion.Application.Almacen.Command;
+using Generacion.Application.Bujias;
+using Generacion.Application.Bujias.Command;
+using Generacion.Application.Bujias.Query;
+using Generacion.Application.Usuario.Session.SessionStatus;
 
 namespace Generacion
 {
@@ -54,14 +64,15 @@ namespace Generacion
                {
                    IConfiguration configuration = context.Configuration;
                    string cadenaConexion = configuration.GetConnectionString("DefaultConnection");
+                   string cadenaConexionSQL = configuration.GetConnectionString("SQLConnection");
                    //services.AddSession();
                    services.AddSession(options =>
                    {
                        options.IdleTimeout = TimeSpan.FromHours(8);
                    });
                
-                  // services.AddScoped<ValidarSesion>();
-                   services.AddScoped<IConexionBD>(_ => new ConexionBD(cadenaConexion));
+                   services.AddScoped<ValidarSesion>();
+                   services.AddScoped<IConexionBD>(_ => new ConexionBD(cadenaConexion, cadenaConexionSQL));
                    services.AddScoped<IMantenimiento, Mantenimiento>();
                    services.AddScoped<IUsuario, DatosUsuario>();
 
@@ -70,8 +81,13 @@ namespace Generacion
                    services.AddScoped<IRegistroDatosGAS, RegistroDatosGAS>();
                    services.AddScoped<IDatosMGD, RegistroDatosMGD>();
                    services.AddScoped<ILecturaCampo, DatosRegistroCampo>();
+                   services.AddScoped<IDatosION, RegistroDatosION>();
+                   services.AddScoped<IReporteProduccion, RegistrarProduccion>();
+                   services.AddScoped<IAlmacen, RegistrosAlmacen>();
+                   services.AddScoped<IBujias, RegistoBujias>();
 
-                   services.AddScoped(typeof(FotoServidor));
+
+				   services.AddScoped(typeof(FotoServidor));
                    services.AddScoped(typeof(ConsultarUsuario));
                    services.AddScoped(typeof(DatosConsola));
                    services.AddScoped(typeof(ObtenerDatosReporteGAS));
@@ -79,19 +95,23 @@ namespace Generacion
                    services.AddScoped(typeof(ConsultarDatosMGD));
                    services.AddScoped(typeof(CacheDatos));
                    services.AddScoped(typeof(LecturaCampo));
-
+                   services.AddScoped(typeof(DatosMantenimiento));
+                   services.AddScoped(typeof(ConsultarProduccion));
                    services.AddScoped(typeof(CacheDatos));
+                   services.AddScoped(typeof(ConsultasAlmacen));
+                   services.AddScoped(typeof(ConsultaBujias));
+                   
+
 
                    services.AddSingleton<IActiveDirectoryProvider, ActiveDirectoryProvider>();
-
                    var principalContext = new PrincipalContext(ContextType.Domain);
                    
                    services.AddSingleton(principalContext);
 
-                  /*  services.AddMvc(options =>
+                    services.AddMvc(options =>
                      {
                          options.Filters.Add(typeof(ValidarSesion));
-                     });*/
+                     });
                });
     }
 }

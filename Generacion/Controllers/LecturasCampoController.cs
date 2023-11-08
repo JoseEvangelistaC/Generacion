@@ -7,6 +7,8 @@ using Generacion.Models.LecturasCampo;
 using Generacion.Models;
 using Newtonsoft.Json;
 using Generacion.Models.DatosConsola;
+using Generacion.Models.Usuario;
+using Generacion.Application.DataBase.cache;
 
 namespace Generacion.Controllers
 {
@@ -14,8 +16,11 @@ namespace Generacion.Controllers
     {
         private readonly LecturaCampo _lecturaCampo;
         private readonly ILecturaCampo _datosRegistroCampo;
-        public LecturasCampoController(LecturaCampo lecturaCampo, ILecturaCampo datosRegistroCampo)
+        private readonly CacheDatos _cacheDatos;
+        
+        public LecturasCampoController(LecturaCampo lecturaCampo, ILecturaCampo datosRegistroCampo, CacheDatos cacheDatos)
         {
+            _cacheDatos = cacheDatos;
             _datosRegistroCampo = datosRegistroCampo;
             _lecturaCampo = lecturaCampo;
         }
@@ -25,46 +30,36 @@ namespace Generacion.Controllers
             DateTime fechaActual = DateTime.Now;
             DateTime fechaMedianoche = DateTime.Now;
 
+            string usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
+            DetalleOperario user = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);
+
+            string datoscabeceraJson = HttpContext.Session.GetString("datoscabecera");
+            Dictionary<string, CabecerasTabla> datoscabecera = JsonConvert.DeserializeObject<Dictionary<string, CabecerasTabla>>(datoscabeceraJson);
+
             if (int.Parse(fechaActual.ToString("HH")) >= 0 && int.Parse(fechaActual.ToString("HH")) < 2)
             {
                 fechaActual = fechaActual.AddDays(-1);
             }
 
             Respuesta<List<TiposRegistroCampo>> tipoRegistrosCampo = await _lecturaCampo.ObtenerTiposDeRegistro();
-            Respuesta<Dictionary<string, List<DatosFormatoCampo>>> datosRegistro = await _lecturaCampo.ObtenerTiposDeRegistro(fechaActual.ToString("dd/MM/yyyy"), fechaMedianoche.ToString("dd/MM/yyyy"));
-            //Respuesta<List<RegistrosDatosGenerator>> datosGenerador = await _lecturaCampo.ObtenerDetalleGenerador(fechaActual.ToString("dd/MM/yyyy"));
-            //Respuesta<List<RegistrosDatosEngine>> datosEngine = await _lecturaCampo.ObtenerDatosEngine(fechaActual.ToString("dd/MM/yyyy"));
-            //Dictionary<string, LecturasMedianoche> datosLecturas = await _lecturaCampo.ObtenerLecturaMediaNoche("ELD-CTL-OM002_" + fechaActual.ToString("yyyy-MM-dd"));
+            var datosCampo = await _lecturaCampo.ObtenerDetalleCampo(fechaActual.ToString("dd/MM/yyyy"), fechaMedianoche.ToString("dd/MM/yyyy"), user.IdSitio);
 
-            string usuarioDetail = HttpContext.Session.GetString("datoscabecera");
-            Dictionary<string, CabecerasTablaCampo> datoscabecera = JsonConvert.DeserializeObject<Dictionary<string, CabecerasTablaCampo>>(usuarioDetail);
+            Dictionary<int, List<string>> horarioOperarios = JsonConvert.DeserializeObject<Dictionary<int, List<string>>>(_cacheDatos.ObtenerContenidoCache("HorarioOperario"));
 
+            ViewData["horarioOperarios"] = horarioOperarios;
 
             ViewData["TipoRegistros"] = tipoRegistrosCampo.Detalle;
-            //ViewData["datosLecturas"] = datosLecturas;
-            ViewData["GasCombustible"] = datosRegistro.Detalle["SIST_GAS_COMBUSTIBLE"];
-            ViewData["AguaRefrigMotor"] = datosRegistro.Detalle["SIST_AGUA_REFRIG_MOTOR"];
-            ViewData["AguaRefrigLt"] = datosRegistro.Detalle["SIST_AGUA_REFRIG_LT"];
-            ViewData["AguaRefrigHt"] = datosRegistro.Detalle["SIST_AGUA_REFRIG_HT"];
-            ViewData["GasCombustible"] = datosRegistro.Detalle["ENTRADA_SALIDA_AGUA_RADIADORES"];
-            ViewData["GasCombustible"] = datosRegistro.Detalle["COMPRESOR_INSTRUMENTACION"];
-            ViewData["GasCombustible"] = datosRegistro.Detalle["COMPRESOR_AIRE_ARRANQUE"];
-            ViewData["GasCombustible"] = datosRegistro.Detalle["GENERADOR"];
-            ViewData["GasCombustible"] = datosRegistro.Detalle["COMPLEMENTARIOS"];
-            ViewData["GasCombustible"] = datosRegistro.Detalle["INSPECCIONES"];
-            ViewData["GasCombustible"] = datosRegistro.Detalle["SIST_COMUNES"];
             ViewData["DatoscabeceraCampo"] = datoscabecera;
-
-
+            ViewData["DatosCampo"] = datosCampo.Detalle;
 
             return View();
         }
 
         [HttpPost]
-        public async Task<JsonResult> GuardarDatosConsola([FromBody] DatosFormatoCampo datos)
+        public async Task<JsonResult> GuardarDatosConsola([FromBody] List<DatosFormatoCampo> datos)
         {
             Respuesta<string> respuesta = await _datosRegistroCampo.GuardarDatosPrincipal(datos);
-            return Json(new { respuesta = respuesta });
+            return Json( new { respuesta = respuesta } );
         }
     }
 }

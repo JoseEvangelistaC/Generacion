@@ -1,6 +1,7 @@
 ﻿@using Generacion.Models.DatosConsola;
 @using Generacion.Models.ReporteDiarioGAS;
 @using MReporteGAS =Generacion.Models.ReporteDiarioGAS.ReporteGAS;
+@using Newtonsoft.Json;
 
 @{
     Dictionary<string, CabecerasTabla> detalleCabeceras = ViewData["Datoscabecera"] as Dictionary<string, CabecerasTabla>;
@@ -8,15 +9,13 @@
     MReporteGAS idReportegas = ViewData["idReporteGas"] as MReporteGAS;
 
 
-  /*  string display6Count = detalleReporte["6"].Count != 0 ? "initial" : "none";
-    string display18Count = detalleReporte["18"].Count != 0 ? "initial" : "none";*/
     string display6Count = detalleReporte["6"].Count >= 0 ? "initial" : "none";
     string display18Count = detalleReporte["18"].Count >= 0 ? "initial" : "none";
 
 
     string displayBtnIniciar = detalleReporte["18"].Count == 0 ? "initial" : "none";
     bool displayNuevaTabla18 = detalleReporte["18"].Count >= 1 && detalleReporte["18"].Count <= 6 ? true : false;
-    bool displayNuevaTabla6 =  detalleReporte["6"].Count >= 1 && detalleReporte["6"].Count <= 6 ? true : false;
+    bool displayNuevaTabla6 = detalleReporte["6"].Count >= 1 && detalleReporte["6"].Count <= 6 ? true : false;
 
     var date = DateTime.Now;
 
@@ -99,11 +98,11 @@
         display: none;
         height: 10px !important;
     }
-    .delimitador-tablas{
+
+    .delimitador-tablas {
         padding: 10px;
         background: #666EFA;
-        width:92%;
-        
+        width: 92%;
     }
 
 </style>
@@ -113,9 +112,6 @@
     </div>
 
     <div>
-        @*  <button style="display:@displayBtnIniciar;" id="iniciar">INICIAR</button>*@
-         <button style="display:none;" id="iniciar">INICIAR</button>
-
         <button class="btn btn-outline-secondary" style="display:@(display18Count);" id="mostrar-linea">Ver Linea2</button>
         <button class="btn btn-outline-secondary" id="mostrar-todo">Mostrar Ambos</button>
     </div>
@@ -228,7 +224,7 @@
                                             <p class="titulo-tabla-horas" @*style="border: none; position: absolute;" *@ id="fechaRegistroGas@(cantidadTablas)" fechaDato="@item.Fecha" versionReporte='@idReportegas.IdReporteGas'>@fechaObjeto.ToString("dd/MM/yyyy")</p>
                                             @if (date.ToString("dd/MM/yyyy") == fechaObjeto.ToString("dd/MM/yyyy"))
                                             {
-                                             <input @*style="margin-left: 80%; display: flex; padding: 0 0 0 0;" *@ type="checkbox" valueId='@item.IdDetalleReporte' id='checkEdt@(cantidadTablas)' />
+                                                <input @*style="margin-left: 80%; display: flex; padding: 0 0 0 0;" *@ type="checkbox" valueId='@item.IdDetalleReporte' id='checkEdt@(cantidadTablas)' />
                                             }
                                         </th>
                                     </tr>
@@ -325,7 +321,7 @@
                             }
                             break;
                         case false:
-                            <table  style="display:@(display18Count);" id="tabla-contenedor@(cantidadTablas)" class="table table-bordered datos-table-consola">
+                            <table style="display:@(display18Count);" id="tabla-contenedor@(cantidadTablas)" class="table table-bordered datos-table-consola">
                                 <tr>
                                     <th style="height: 50px;">
                                         <p class="titulo-tabla-horas" id="fechaRegistroGas@(cantidadTablas)" fechaDato='@fechaObjeto.ToString("dd/MM/yyyy")' versionReporte='@idReportegas.IdReporteGas'> @fechaObjeto.ToString("dd/MM/yyyy")</p>
@@ -422,7 +418,6 @@
         </div>
 
         <div id="delimitador">
-
         </div>
 
         <div style="display: none;" id="linea6">
@@ -520,7 +515,7 @@
                                             <p class="titulo-tabla-horas" @*style="border: none; position: absolute;"*@ id="fechaRegistroGas2@(cantidadTablas)" fechaDato="@item.Fecha" versionReporte='@(idReportegas.IdReporteGas)'>@fechaObjeto.ToString("dd/MM/yyyy")</p>
                                             @if (date.ToString("dd/MM/yyyy") == fechaObjeto.ToString("dd/MM/yyyy"))
                                             {
-                                              <input @*style="margin-left: 80%; display: flex; padding: 0 0 0 0;"*@ type="checkbox" valueId='@item.IdDetalleReporte' id='checkEdt2@(cantidadTablas)' />
+                                                <input @*style="margin-left: 80%; display: flex; padding: 0 0 0 0;"*@ type="checkbox" valueId='@item.IdDetalleReporte' id='checkEdt2@(cantidadTablas)' />
 
                                             }
                                         </th>
@@ -724,20 +719,20 @@
 
     document.getElementById('GuardarDatos').addEventListener('click', function () {
 
-        const element = document.getElementById('contenido-reporte-gas'); 
+        const element = document.getElementById('contenido-reporte-gas');
         const elementDiv = document.getElementById('contendor-datos-gas');
         const elementUltimoDiv = document.getElementById('tabla-contenedor27');
 
         const delimitador = document.getElementById('delimitador');
-        console.log("delimitador ",delimitador);
+        console.log("delimitador ", delimitador);
         delimitador.classList.add('delimitador-tablas');
 
         element.classList.add('savePDF');
         elementDiv.style.overflowX = "clip";
         elementDiv.style.color = "black";
         elementDiv.style.height = "753";
-       // elementUltimoDiv.style.display = "revert";
-   
+        // elementUltimoDiv.style.display = "revert";
+
 
         var $inputs = $('#tabla-contenedor27 input');
         var $tablas = $('#contenido-reporte-gas table');
@@ -775,10 +770,14 @@
 
 </script>
 <script>
+
     var fechaid;
 
     var idReporte = "";
+
+
     let vistaActual = 1;
+
     document.getElementById('mostrar-linea').addEventListener('click', function () {
 
         var linea6 = document.getElementById('linea6');
@@ -822,23 +821,9 @@
     });
 
 
-    document.getElementById('iniciar').addEventListener('click', function () {
-
-        var btnMostrar = document.getElementById('mostrar-linea');
-        var contenedordDatos = document.getElementById('contendor-datos-gas');
-        var tblMostrar = document.getElementById('tabla-contenedor1');
-
-        fechaid = obtenerFecha("format");
-
-        contenedordDatos.style.display = 'initial';
-        btnMostrar.style.display = 'initial';
-        tblMostrar.style.display = 'initial';
-        this.style.display = 'none';
-        idReporte = "ELD.CTL-OM-003_" + fechaid;
-    });
-
 
     document.getElementById('GuardarDatos').addEventListener('click', function () {
+        idReporte = datosOperario.IdSitio + "-ELD.CTL-OM-003_" + obtenerFecha("format");
 
         var inputs = document.querySelectorAll('input');
 
@@ -883,6 +868,23 @@
                 .then(function (response) {
                     console.log(response);
                 })
+                .then(function (data) {
+                    if (data.respuesta.idRespuesta === 0 || data.respuesta.idRespuesta === 1) {
+                        Swal.fire({
+                            title: "Success!!",
+                            text: "Se guardaron los datos.",
+                            icon: "success",
+                            button: "Aww yiss!",
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Error",
+                            text: data.respuesta.mensaje,
+                            icon: "error",
+                            button: "OK",
+                        });
+                    }
+                })
                 .catch(function (error) {
                     console.error("Error:", error);
                 });
@@ -911,13 +913,14 @@
 
             fechaRegistro = document.getElementById('fechaRegistroGas' + idTabla + i);
 
+            console.log("idReporte : ", idReporte);
 
             if (fechaRegistro != null) {
                 idPredeterminado = fechaRegistro.getAttribute('versionReporte');
                 var fechaDato = fechaRegistro.getAttribute('fechaDato');
 
-                idReporte = idReporte == "" ? idPredeterminado : idReporte;
-
+                idReporte = idPredeterminado == "" || idPredeterminado == null ? idReporte : idPredeterminado;
+                console.log("idPredeterminado : ", idPredeterminado);
                 contenidoTabla = document.getElementById("tabla-contenedor" + idTabla + i);
                 checkIdTabla = document.getElementById("checkEdt" + idTabla + i);
 
@@ -927,7 +930,7 @@
                     claveRegistro = checkIdTabla.getAttribute('valueId');
                 }
 
-                var nuevoIdDetalle = "DET-GAS-DIARIO_" + fechaid + "-" + horaSplit[0];
+                var nuevoIdDetalle = datosOperario.IdSitio + "-DET-GAS-DIARIO_" + fechaid + "-" + horaSplit[0];
 
                 var inputVC = contenidoTabla.querySelector('#vc input');
                 var inputVN = contenidoTabla.querySelector('#vn input');

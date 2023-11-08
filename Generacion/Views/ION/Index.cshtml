@@ -1,14 +1,15 @@
 ﻿@using Generacion.Models.ION;
 @{
-    @model List<Revenue>
+    @model List<DatosFormatoMGD>
 
 }
 
 <div style="display: flex;">
-    <table class="table table-bordered EG">
+    <table style="font-size: 10px;" class="table table-bordered EG">
         <thead>
             <tr>
                 <th>Date/Time</th>
+                <th>kWh del int</th>
                 <th>kVARh del int</th>
                 <th>kWh rec int</th>
                 <th>kVARh rec int</th>
@@ -18,7 +19,6 @@
                 <th>kVAR del int</th>
                 <th>kW del int</th>
                 <th>kVAR rec int</th>
-                <th>kW rec int</th>
 
             </tr>
         </thead>

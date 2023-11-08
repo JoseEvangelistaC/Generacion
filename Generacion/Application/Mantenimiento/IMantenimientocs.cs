@@ -1,4 +1,5 @@
-﻿using Generacion.Models.Mantenimiento;
+﻿using Generacion.Models;
+using Generacion.Models.Mantenimiento;
 
 namespace Generacion.Application.Mantenimiento
 {
@@ -8,6 +9,8 @@ namespace Generacion.Application.Mantenimiento
         Task<string> GuardarDatosServ(List<MantenimientoServicios> detalleServicio);
         Task<string> GuardarDatosAceiteCarter(List<CilindroAceiteCarter> datos);
         Task<string> GuardarExpansionVessel(List<ExpansionVersel> listaMotoGeneradores);
+        Task<Respuesta<string>> GuardarReporteDiario(ReporteDiarioMantenimiento datosReporte);
+
 
     }
 }

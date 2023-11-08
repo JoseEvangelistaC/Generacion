@@ -6,5 +6,6 @@ namespace Generacion.Application.Funciones
     {
         public FuncionesDeDatos() { }
 
+
     }
 }

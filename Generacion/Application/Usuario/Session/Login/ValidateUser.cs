@@ -28,7 +28,7 @@ namespace Generacion.Application.ValidationSession.Login
 
             try
             {
-                var respuestaClaveRed = true;//_activeDirectoryProvider.ValidateUserCredentials(usuario);
+                var respuestaClaveRed = _activeDirectoryProvider.ValidateUserCredentials(usuario);
                 if (respuestaClaveRed)
                 {
                     if (respuesta.IdRespuesta == 0)
@@ -37,6 +37,11 @@ namespace Generacion.Application.ValidationSession.Login
                         respuesta.Detalle = datos.Detalle;
                         respuesta.Mensaje = "Bienvenido.";
                     }
+                }
+                else
+                {
+                    respuesta.IdRespuesta = 99;
+                    respuesta.Mensaje = "Error en credenciales.";
                 }
             }
             catch (Exception ex)

@@ -13,7 +13,7 @@ namespace WebApi.Application.ValidatePassword.Queries
         }
         public bool ValidateUserCredentials(UsuarioSession usuario)
         {
-            return true;//_principalContext.ValidateCredentials(usuario.UsuarioRed, usuario.Clave);
+            return _principalContext.ValidateCredentials(usuario.UsuarioRed, usuario.Clave);
         }
     }
 }

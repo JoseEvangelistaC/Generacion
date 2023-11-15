@@ -3,6 +3,8 @@
 
 @model Respuesta<Dictionary<string, List<HistorialUsuario>>>
 @{
+    ViewBag.Title = "Historial";
+
     string estiloActive = Model.Detalle.Count() == 1 ? "active" : "";
     string contenedorActive = Model.Detalle.Count() == 1 ? "inherit" : "none";
 }
@@ -144,7 +146,7 @@
         }
         function eliminarDatos(id) {
             console.log("listaHistorial : ", listaHistorial);
-            fetch("/Historial/GuardarHistorial", {
+            fetch('@Url.Action("GuardarHistorial", "Historial")', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -261,7 +263,7 @@
         });
 
         console.log("listaHistorial : ", listaHistorial);
-        fetch("/Historial/GuardarHistorial", {
+        fetch('@Url.Action("GuardarHistorial", "Historial")', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -310,27 +312,4 @@
         });
         return listaValores;
     }
-
-    function obtenerFecha(value) {
-        const fechaActual = new Date();
-        const dia = fechaActual.getDate().toString().padStart(2, '0');
-        const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
-        const año = fechaActual.getFullYear();
-
-        var fechaFormateada = "";
-        if (value == "format") {
-
-            fechaFormateada = dia + "_" + mes + "_" + año;
-        }
-        if (value == "fecha") {
-            fechaFormateada = `${año}-${mes}-${dia}`;
-
-        }
-        return fechaFormateada;
-    }
-
-
-
-
-
 </script>

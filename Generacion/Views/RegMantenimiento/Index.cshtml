@@ -1029,7 +1029,7 @@
 
         var expansionVerselJson = JSON.stringify(datosAEnviar);
 
-        fetch("/RegMantenimiento/Index", {
+        fetch('@Url.Action("Index", "RegMantenimiento")' , {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -1305,7 +1305,7 @@
     }
 
     function enviarSolicitudPOST(datosImagenes) {
-        fetch("/RegMantenimiento/GuardarImagen", {
+        fetch('@Url.Action("GuardarImagen", "RegMantenimiento")' , {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

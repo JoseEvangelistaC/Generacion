@@ -60,8 +60,12 @@ namespace Generacion.Controllers
             Dictionary<string, CabecerasTabla> datoscabecera = JsonConvert.DeserializeObject<Dictionary<string, CabecerasTabla>>(cabecera);
 
             var datosControlCambio = await _consultaBujias.ObtenerControlCambioPorLado(user.IdSitio);
+            var datosControl = await _consultaBujias.ObtenerControlCambio(user.IdSitio);
+
+            Dictionary<int,DetalleRegistroBujias> diccinarioEG = datosControl.Detalle.ToDictionary(x => x.Numerogenerador);
 
             ViewData["Datoscabecera"] = datoscabecera;
+            ViewData["diccinarioEG"] = diccinarioEG; //Dictionary<int,DetalleRegistroBujias>
 
 
             return View(datosControlCambio.Detalle);
@@ -82,7 +86,8 @@ namespace Generacion.Controllers
         {
             string usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
             DetalleOperario user = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);
-            Respuesta<List<RegistroBujias>> respuesta = await _consultaBujias.ObtenerControlCambio(lado, fila, EG,user.IdSitio);
+            Respuesta<List<RegistroBujias>> respuesta = await _consultaBujias.ObtenerdetalleControlCambio(lado, fila, EG,user.IdSitio);
+
 
             return Json(new { respuesta = respuesta });
         }

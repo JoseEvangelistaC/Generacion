@@ -17,7 +17,7 @@ namespace Generacion.Application.Bujias.Query
             _conexion = conexion;
         }
 
-        public async Task<Respuesta<List<RegistroBujias>>> ObtenerControlCambio(string lado, int fila, int GE, string sitio)
+        public async Task<Respuesta<List<RegistroBujias>>> ObtenerdetalleControlCambio(string lado, int fila, int GE, string sitio)
         {
             Respuesta<List<RegistroBujias>> respuesta = new Respuesta<List<RegistroBujias>>();
             using (OracleConnection connection = _conexion.ObtenerConexion())
@@ -26,7 +26,6 @@ namespace Generacion.Application.Bujias.Query
                 {
                     connection.Open();
 
-                    // Llamada al procedimiento almacenado
                     OracleCommand cmd = new OracleCommand("GetDetalleControlCambio", connection);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("p_Lado", OracleDbType.Varchar2).Value = lado;
@@ -36,11 +35,8 @@ namespace Generacion.Application.Bujias.Query
 
                     cmd.Parameters.Add("p_item", OracleDbType.Int32).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("p_Cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
-
-                    // Ejecutar el procedimiento almacenado
                     cmd.ExecuteNonQuery();
 
-                    // Obtener el resultado
                     OracleDataReader reader = ((OracleRefCursor)cmd.Parameters["p_Cursor"].Value).GetDataReader();
 
                     Dictionary<string, List<RegistroBujias>> registros = new Dictionary<string, List<RegistroBujias>>();
@@ -57,7 +53,8 @@ namespace Generacion.Application.Bujias.Query
                             IdSubtituloCampo = reader["IdSubtituloCampo"].ToString(),
                             Fila = int.Parse(reader["Fila"].ToString()),
                             Item = int.Parse(reader["Item"].ToString()),
-                            IdControlCambio = reader["IdControlCambio"].ToString()
+                            IdControlCambio = reader["IdControlCambio"].ToString(),
+                            Nota = reader["nota"].ToString()
                         };
                         listaRegistro.Add(registro);
                     }
@@ -80,8 +77,8 @@ namespace Generacion.Application.Bujias.Query
             Respuesta<Dictionary<int, Dictionary<string, List<Dictionary<int, Dictionary<string, List<RegistroBujias>>>>>>> respuesta = new Respuesta<Dictionary<int, Dictionary<string, List<Dictionary<int, Dictionary<string, List<RegistroBujias>>>>>>>();
             try
             {
-                Respuesta<List<RegistroBujias>> listaEg1 = await ObtenerControlCambio(string.Empty, 0, 1, sitio);
-                Respuesta<List<RegistroBujias>> listaEg2 = await ObtenerControlCambio(string.Empty, 0, 2, sitio);
+                Respuesta<List<RegistroBujias>> listaEg1 = await ObtenerdetalleControlCambio(string.Empty, 0, 1, sitio);
+                Respuesta<List<RegistroBujias>> listaEg2 = await ObtenerdetalleControlCambio(string.Empty, 0, 2, sitio);
 
                 respuesta.Detalle = new Dictionary<int, Dictionary<string, List<Dictionary<int, Dictionary<string, List<RegistroBujias>>>>>>();
                 respuesta.Detalle.Add(1, new Dictionary<string, List<Dictionary<int, Dictionary<string, List<RegistroBujias>>>>>
@@ -130,6 +127,49 @@ namespace Generacion.Application.Bujias.Query
                     )
                 )
                 .ToList();
+        }
+
+
+        public async Task<Respuesta<List<DetalleRegistroBujias>>> ObtenerControlCambio(string sitio)
+        {
+            Respuesta<List<DetalleRegistroBujias>> respuesta = new Respuesta<List<DetalleRegistroBujias>>();
+            using (OracleConnection connection = _conexion.ObtenerConexion())
+            {
+                try
+                {
+                    connection.Open();
+
+                    OracleCommand cmd = new OracleCommand("GETCONTROLCAMBIO", connection);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("p_Sitio", OracleDbType.Varchar2).Value = sitio;
+                    cmd.Parameters.Add("p_Cursor", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+                    // Ejecutar el procedimiento almacenado
+                    cmd.ExecuteNonQuery();
+
+                    // Obtener el resultado
+                    OracleDataReader reader = ((OracleRefCursor)cmd.Parameters["p_Cursor"].Value).GetDataReader();
+
+                    respuesta.IdRespuesta = 0;
+                    respuesta.Detalle = new List<DetalleRegistroBujias>();
+                    DetalleRegistroBujias registro = new DetalleRegistroBujias();
+                    while (reader.Read())
+                    {
+                        registro = new DetalleRegistroBujias()
+                        {
+                            Horasoperacion = int.Parse(reader["horasoperacion"].ToString()),
+                            Numerogenerador = int.Parse(reader["numerogenerador"].ToString()),
+                            Bujiasgastadas = int.Parse(reader["bujiasgastadas"].ToString()),
+                        };
+                        respuesta.Detalle.Add(registro);
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            return respuesta;
         }
     }
 }

@@ -34,6 +34,7 @@ namespace Generacion.Application.Bujias.Command
 
                             cmd.Parameters.Add("p_IdDetalleControlCambio", OracleDbType.Varchar2).Value = registro.IdDetalleControlCambio;
                             cmd.Parameters.Add("p_Detalle", OracleDbType.Int32).Value = registro.Detalle;
+                            cmd.Parameters.Add("p_Nota", OracleDbType.Varchar2).Value = registro.Nota;
                             cmd.Parameters.Add("p_NumeroEG", OracleDbType.Int32).Value = registro.NumeroGenerador;
                             cmd.Parameters.Add("p_Sitio", OracleDbType.Varchar2).Value = registro.Sitio;
                             cmd.Parameters.Add("p_Fecha", OracleDbType.Varchar2).Value = registro.Fecha;

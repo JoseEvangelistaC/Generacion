@@ -37,6 +37,12 @@ using Generacion.Application.Bujias;
 using Generacion.Application.Bujias.Command;
 using Generacion.Application.Bujias.Query;
 using Generacion.Application.Usuario.Session.SessionStatus;
+using Generacion.Application.DashBoard;
+using Generacion.Application.DashBoard.Command;
+using Generacion.Application.DashBoard.Query;
+using Generacion.Application.FiltroCentrifugo.Query;
+using Generacion.Application.FiltroCentrifugo;
+using Generacion.Application.FiltroCentrifugo.Command;
 
 namespace Generacion
 {
@@ -70,7 +76,7 @@ namespace Generacion
                    {
                        options.IdleTimeout = TimeSpan.FromHours(8);
                    });
-               
+
                    services.AddScoped<ValidarSesion>();
                    services.AddScoped<IConexionBD>(_ => new ConexionBD(cadenaConexion, cadenaConexionSQL));
                    services.AddScoped<IMantenimiento, Mantenimiento>();
@@ -85,9 +91,11 @@ namespace Generacion
                    services.AddScoped<IReporteProduccion, RegistrarProduccion>();
                    services.AddScoped<IAlmacen, RegistrosAlmacen>();
                    services.AddScoped<IBujias, RegistoBujias>();
+                   services.AddScoped<IDashBoard, RegistroDashBoard>();
+                   services.AddScoped<IRegistroFiltroCentrifugo, RegistroFiltroCentrifugo>();
 
 
-				   services.AddScoped(typeof(FotoServidor));
+                   services.AddScoped(typeof(FotoServidor));
                    services.AddScoped(typeof(ConsultarUsuario));
                    services.AddScoped(typeof(DatosConsola));
                    services.AddScoped(typeof(ObtenerDatosReporteGAS));
@@ -100,18 +108,20 @@ namespace Generacion
                    services.AddScoped(typeof(CacheDatos));
                    services.AddScoped(typeof(ConsultasAlmacen));
                    services.AddScoped(typeof(ConsultaBujias));
-                   
-
+                   services.AddScoped(typeof(DatosFiltro));
+                   services.AddScoped(typeof(Function));
+                   services.AddScoped(typeof(DatosFiltroCentrifugo));
+                   services.AddHttpContextAccessor();
 
                    services.AddSingleton<IActiveDirectoryProvider, ActiveDirectoryProvider>();
                    var principalContext = new PrincipalContext(ContextType.Domain);
-                   
+
                    services.AddSingleton(principalContext);
 
-                    services.AddMvc(options =>
-                     {
-                         options.Filters.Add(typeof(ValidarSesion));
-                     });
+                   /*  services.AddMvc(options =>
+                      {
+                          options.Filters.Add(typeof(ValidarSesion));
+                      });**/
                });
     }
 }

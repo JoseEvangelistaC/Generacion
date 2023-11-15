@@ -1817,7 +1817,7 @@
         };
         loader.style.display = 'block';
 
-        fetch("/ReporteProduccion/GuardarDetalleProduccion", {
+        fetch('@Url.Action("GuardarDetalleProduccion", "ReporteProduccion")', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -2169,7 +2169,7 @@
         };
         console.log("insertarDatosEnergia : ", datos);
 
-        return fetch("/ReporteProduccion/GuardarDatosEnergiaProducida", {
+        return fetch('@Url.Action("GuardarDatosEnergiaProducida", "ReporteProduccion")' , {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -2191,7 +2191,7 @@
         };
         console.log("insertarDatosOilCarter : ", datos);
 
-        return fetch("/ReporteProduccion/GuardarDatosLevelOilCarter", {
+        return fetch('@Url.Action("GuardarDatosLevelOilCarter", "ReporteProduccion")' , {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -2213,7 +2213,7 @@
         };
         console.log("insertarDatosRefrescamiento : ", datos);
 
-        return fetch("/ReporteProduccion/GuardarDatosRefCarter", {
+        return fetch('@Url.Action("GuardarDatosRefCarter", "ReporteProduccion")'  , {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -2234,7 +2234,7 @@
         };
         console.log("insertarCityGate : ", datos);
 
-        return fetch("/ReporteProduccion/GuardarDatosCityGate", {
+        return fetch('@Url.Action("GuardarDatosCityGate", "ReporteProduccion")' , {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -2311,7 +2311,7 @@
     async function insertarRegistro(datos) {
 
         try {
-            const response = await fetch("/ReporteProduccion/GuardarDatosManttoVessel", {
+            const response = await fetch('@Url.Action("GuardarDatosManttoVessel", "ReporteProduccion")', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -2339,7 +2339,7 @@
             TkRead: Valor2,
         };
 
-        return fetch("/ReporteProduccion/GuardarDatosTkCleanLube", {
+        return fetch('@Url.Action("GuardarDatosTkCleanLube", "ReporteProduccion")' , {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

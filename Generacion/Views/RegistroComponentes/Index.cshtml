@@ -79,7 +79,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/RegistroComponentes/GuardarComponentes",
+                url: '@Url.Action("GuardarComponentes", "RegistroComponentes")' ,
                 data: formData,
                 success: function (data) {
 

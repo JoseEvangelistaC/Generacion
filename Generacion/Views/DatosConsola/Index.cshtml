@@ -853,7 +853,7 @@
         };
 
 
-        fetch("/DatosConsola/GuardarFormato", {
+        fetch('@Url.Action("GuardarFormato", "DatosConsola")', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -947,7 +947,7 @@
                 IdFormatoConsola: idFormatoConsola,
             };
 
-            fetch("/DatosConsola/GuardarDatosLectMedianoche", {
+            fetch('@Url.Action("GuardarDatosLectMedianoche", "DatosConsola")', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -990,7 +990,7 @@
     var botonGuardarDatos = document.getElementById('GuardarDatos');
 
     botonGuardarDatos.addEventListener('click', function () {
-
+        loader.style.display = 'block';
         var inputs = document.querySelectorAll('input');
 
         inputs.forEach(function (input) {
@@ -1010,6 +1010,7 @@
         ObtenerDatosLectMedianoche();
         GuardarDatosBAO();
         ObtenerDatosFormato();
+        loader.style.display = 'none';
         //location.reload(true);
     });
 
@@ -1017,7 +1018,7 @@
 
 
     botonGuardarDatos2.addEventListener('click', function () {
-
+        loader.style.display = 'block';
         var inputs = document.querySelectorAll('input');
 
         inputs.forEach(function (input) {
@@ -1036,6 +1037,7 @@
         ObtenerDatosLectMedianoche();
         GuardarDatosBAO();
         ObtenerDatosFormato();
+        loader.style.display = 'none';
         // location.reload(true);
     });
 
@@ -1096,7 +1098,7 @@
             listaDatos.push(dato);
         });
 
-        fetch("/DatosConsola/GuardarDatosConsola", {
+        fetch('@Url.Action("GuardarDatosConsola", "DatosConsola")', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -1161,7 +1163,7 @@
             listaDetalle.push(datos);
         }
 
-        fetch("/DatosConsola/GuardarDetalleBAO", {
+        fetch('@Url.Action("GuardarDetalleBAO",  "DatosConsola")', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -1280,7 +1282,7 @@
 
 
 
-        fetch("/DatosConsola/GuardarDatosGenerador", {
+        fetch('@Url.Action("GuardarDatosGenerador", "DatosConsola")', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -1394,7 +1396,7 @@
 
         });
         
-        fetch("/DatosConsola/GuardarDatosEngine", {
+        fetch('@Url.Action("GuardarDatosEngine", "DatosConsola")', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

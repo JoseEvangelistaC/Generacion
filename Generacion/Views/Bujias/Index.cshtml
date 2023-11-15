@@ -219,7 +219,7 @@
         });
 
 
-        return fetch("/Bujias/GuardarDatosPrestamo", {
+        return fetch('@Url.Action("GuardarDatosPrestamo", "Bujias")'  , {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -23,7 +23,7 @@
     <meta http-equiv="Expires" content="0" />
 
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>@ViewBag.Title</title>
 
     <!-- Custom fonts for this template-->
     <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -274,7 +274,7 @@
             <hr class="sidebar-divider my-0">
 
             <li class="nav-item active">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="@Url.Action("Index", "Home")">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span>
                 </a>
@@ -344,7 +344,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages1"
                    aria-expanded="true" aria-controls="collapsePages1">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Ingreso</span>
+                    <span>Almacen</span>
                 </a>
                 <div id="collapsePages1" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -370,16 +370,20 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
                    aria-expanded="true" aria-controls="collapsePages">
                     <i class="fas fa-fw fa-table"></i>
-                    <span> -- </span>
+                    <span>Componentes</span>
                 </a>
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Utilizados</h6>
-                        <a class="collapse-item" href="@Url.Action("Index", "Bujias")">Bujias</a>
+                        <h6 class="collapse-header">Bujias</h6>
+                        <!--<a class="collapse-item" href="@Url.Action("Index", "Bujias")">Bujias</a>-->
                         <a class="collapse-item" href="@Url.Action("ControlCambio", "Bujias")">Control Cambio</a>
                         <a class="collapse-item" href="@Url.Action("RegistroControlCambio", "Bujias")">Registro Control</a>
                         <div class="collapse-divider"></div>
-                        </>
+                        
+                        
+                        <h6 class="collapse-header">Registro Mantenimiento</h6>
+                        <a class="collapse-item" href="@Url.Action("Index", "FiltroCentrifugo")">Filtro Centrifugo</a>
+                        <div class="collapse-divider"></div>
                     </div>
             </li>
             <hr class="sidebar-divider d-none d-md-block">

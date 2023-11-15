@@ -98,7 +98,7 @@ namespace Generacion.Application.Usuario.Query
                         command.CommandType = System.Data.CommandType.StoredProcedure;
 
                         // Parámetro de entrada
-                       command.Parameters.Add(new OracleParameter("p_fecha", OracleDbType.Varchar2, fecha, System.Data.ParameterDirection.Input));
+                        command.Parameters.Add(new OracleParameter("p_fecha", OracleDbType.Varchar2, fecha, System.Data.ParameterDirection.Input));
 
                         // Parámetro de salida (cursor)
                         command.Parameters.Add(new OracleParameter("p_resultado", OracleDbType.Decimal, System.Data.ParameterDirection.Output));
@@ -133,13 +133,13 @@ namespace Generacion.Application.Usuario.Query
 
                             respuesta.Detalle = new Dictionary<string, List<HistorialUsuario>>();
 
-                           
-                             foreach (string item in idOperarios)
+
+                            foreach (string item in idOperarios)
                             {
-                                var lista = historialUsuarios.Where(x =>x.idUsuario.Equals(item)).Select(x => x).ToList();
+                                var lista = historialUsuarios.Where(x => x.idUsuario.Equals(item)).Select(x => x).ToList();
                                 respuesta.Detalle.Add(item, lista);
                             }
-                            
+
 
 
                         }
@@ -163,5 +163,47 @@ namespace Generacion.Application.Usuario.Query
             }
             return respuesta;
         }
+
+        public async Task<Respuesta<List<DetalleOperario>>> ObtenerOperarios()
+        {
+            Respuesta<List<DetalleOperario>> respuesta = new Respuesta<List<DetalleOperario>>();
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
+
+                    using (OracleCommand command = new OracleCommand("ObtenerOperarios", connection))
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        command.Parameters.Add(new OracleParameter("p_Resultado", OracleDbType.RefCursor, System.Data.ParameterDirection.Output));
+
+                        using (OracleDataReader reader = command.ExecuteReader())
+                        {
+                            respuesta.Detalle = new List<DetalleOperario>();
+                            DetalleOperario operario = new DetalleOperario();
+                            while (reader.Read())
+                            {
+                                operario = new DetalleOperario();
+
+                                operario.IdOperario = reader["idOperario"].ToString();
+                                operario.Nombre = reader["nombre"].ToString();
+                                operario.Apellidos = reader["apellidos"].ToString();
+
+                                respuesta.Detalle.Add(operario);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                respuesta.IdRespuesta = 99;
+                respuesta.Mensaje = ex.Message.ToString();
+            }
+            return respuesta;
+        }
+
     }
 }

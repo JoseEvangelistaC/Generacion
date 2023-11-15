@@ -1,10 +1,16 @@
-﻿using Generacion.Application.DataBase.cache;
+﻿using Generacion.Application.Bujias.Query;
+using Generacion.Application.DashBoard;
+using Generacion.Application.DashBoard.Query;
+using Generacion.Application.DataBase.cache;
 using Generacion.Application.DatosConsola.Query;
 using Generacion.Application.Usuario;
+using Generacion.Application.Usuario.Query;
 using Generacion.Models;
+using Generacion.Models.DashBoard;
 using Generacion.Models.DatosConsola;
 using Generacion.Models.Usuario;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Evaluation;
 using Newtonsoft.Json;
 using System.Data;
 using System.Diagnostics;
@@ -15,22 +21,27 @@ namespace Generacion.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IUsuario _usuario;
+        private readonly IDashBoard _dashBoard;
         private readonly DatosConsola _datosConsola;
         private readonly IConfiguration _configuration;
         private readonly CacheDatos _cacheDatos;
+        private readonly ConsultarUsuario _consultarUsuario;
+        private readonly DatosFiltro _datosFiltro;
         public HomeController(
             ILogger<HomeController> logger,
-            IUsuario usuario,
             DatosConsola datosConsola,
             IConfiguration configuration,
-            CacheDatos cacheDatos)
+            CacheDatos cacheDatos, ConsultarUsuario consultarUsuario,
+            IDashBoard dashBoard,
+            DatosFiltro datosFiltro)
         {
+            _consultarUsuario = consultarUsuario;
             _configuration = configuration;
             _cacheDatos = cacheDatos;
             _logger = logger;
-            _usuario = usuario;
+            _dashBoard = dashBoard;
             _datosConsola = datosConsola;
+            _datosFiltro = datosFiltro;
         }
 
         public async Task<IActionResult> Index()
@@ -52,9 +63,21 @@ namespace Generacion.Controllers
                 GuardarDatosHorario($"{datos.Nombre} {datos.Apellidos}", horario);
 
                 ViewData["DetalleOperario"] = datos;
-
+                ObtenerListaOperarios();
             }
+
+            var datosFiltro = await _datosFiltro.ObtenerDetalleDashboardPorNumeroGE(user.IdSitio);
+
+            ViewData["datosFiltroCentrifugo"] = datosFiltro.Detalle;
+
             return View();
+        }
+        public async void ObtenerListaOperarios()
+        {
+
+            Respuesta<List<DetalleOperario>> operarios = await _consultarUsuario.ObtenerOperarios();
+
+            ViewData["ListaOperarios"] = operarios.Detalle;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -138,6 +161,35 @@ namespace Generacion.Controllers
                 jsonConvert = JsonConvert.SerializeObject(horarioOperario);
             }
             _cacheDatos.GuardarDatosCache("HorarioOperario", jsonConvert);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GuardarDatosDashBoard([FromBody] List<DashboardDetalleFiltro> detalleFiltro)
+        {
+            string usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
+            DetalleOperario user = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);
+            try
+            {
+                Respuesta<string>   respuesta = new Respuesta<string>();    
+                foreach (var item in detalleFiltro)
+                {
+                    string mensajesError = item.ValidarPropiedadesNulasOVacias();
+                    if (mensajesError.Any())
+                    {
+                        respuesta.IdRespuesta = 99;
+                        respuesta.Mensaje = mensajesError;
+                        return Json(new { respuesta = respuesta });
+                    }
+                }
+
+                respuesta = await _dashBoard.GuardarDatosFiltro(detalleFiltro, user.IdSitio);
+                return Json(new { respuesta = respuesta });
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { respuesta = "" });
+            }
         }
     }
 }

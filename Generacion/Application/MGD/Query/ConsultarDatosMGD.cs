@@ -14,9 +14,10 @@ namespace Generacion.Application.MGD.Query
             _conexion = conexion;
         }
 
-        public async Task<Respuesta<List<DatosION>>> ObtenerDatosMGD(string fechaMes)
+        public async Task<Respuesta<List<DatosFormatoMGD>>> ObtenerDatosMGD(string fechaMes)
         {
-            Respuesta<List<DatosION>> respuesta = new Respuesta<List<DatosION>>();
+            Respuesta<List<DatosFormatoMGD>> respuesta = new Respuesta<List<DatosFormatoMGD>>();
+            respuesta.Detalle = new List<DatosFormatoMGD>();
             try
             {
                 using (OracleConnection connection = _conexion.ObtenerConexion())
@@ -35,11 +36,21 @@ namespace Generacion.Application.MGD.Query
                             DataTable dataTable = new DataTable();
                             adapter.Fill(dataTable);
 
-                            List<DatosION> datos = new List<DatosION>();
-                            DatosION dato = new DatosION();
+                            List<DatosFormatoMGD> datos = new List<DatosFormatoMGD>();
+                            DatosFormatoMGD dato = new DatosFormatoMGD();
+                            DateTime fechaHora;
+                            string fecha = string.Empty;
+                            string hora = string.Empty;
                             foreach (DataRow row in dataTable.Rows)
                             {
-                                dato = new DatosION();
+
+                                fechaHora = DateTime.Parse(row["FECHA"].ToString());
+
+                                fecha = fechaHora.ToShortDateString();
+                                hora = fechaHora.ToString("HH:mm");
+
+                                dato = new DatosFormatoMGD();
+                                dato.Hora = hora;
                                 dato.KWDelInt = decimal.Parse(row["Potencia_Activa_MW"].ToString());
                                 dato.KVARDelInt = decimal.Parse(row["Potencia_Reactiva_MVAR"].ToString());
                                 dato.KWRecInt = decimal.Parse(row["tension_kV"].ToString());

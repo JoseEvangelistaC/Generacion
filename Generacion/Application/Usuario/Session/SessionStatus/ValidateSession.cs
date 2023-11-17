@@ -15,27 +15,29 @@ namespace Generacion.Application.Usuario.Session.SessionStatus
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var httpContext = _httpContextAccessor.HttpContext;
-
             var actionName = filterContext.ActionDescriptor.DisplayName;
-
-            if (actionName.Equals("Generacion.Controllers.LoginController.Index (Generacion)", System.StringComparison.OrdinalIgnoreCase))
-            {
-                if (filterContext.ActionArguments.Values.Count() ==0)
+  //          if (actionName.Equals("Generacion.Controllers.LoginController.Index (Generacion)", StringComparison.OrdinalIgnoreCase))
+         //   {
+                if (filterContext.ActionArguments.Values.Count() == 0)
                 {
                     base.OnActionExecuting(filterContext);
                     return;
                 }
-            }
+        //    }
 
             string usuarioDetail = httpContext.Session.GetString("usuarioDetail");
 
-            if (filterContext.ActionArguments.Values.Count() == 0 && usuarioDetail == null)
+            // Verifica si el usuario está intentando cerrar sesión
+            bool esCerrarSesion = actionName.EndsWith("Generacion.Controllers.LoginController.CerrarSesion", StringComparison.OrdinalIgnoreCase);
+
+            if (filterContext.ActionArguments.Values.Count() == 0 && usuarioDetail == null && !esCerrarSesion)
             {
                 filterContext.Result = new RedirectResult("~/Login/Index");
             }
 
             base.OnActionExecuting(filterContext);
         }
+
 
     }
 

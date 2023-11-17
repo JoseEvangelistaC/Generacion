@@ -2,10 +2,9 @@
 using Generacion.Models;
 using Oracle.ManagedDataAccess.Client;
 using Generacion.Models.DatosConsola;
-using Generacion.Models.Usuario;
 using Oracle.ManagedDataAccess.Types;
-using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 
 namespace Generacion.Application.DatosConsola.Query
 {
@@ -17,7 +16,7 @@ namespace Generacion.Application.DatosConsola.Query
             _conexion = conexion;
         }
         // AQUI TRAE DATA DE LA TABLA DET_CONSOLA DONDE LO ORDENA SEGUN LA FILE DE FOMRA DESCENDIENTE
-        public async Task<Respuesta<Dictionary<string, List<DatosFormatoConsola>>>> ObtenerRegistroDeConsola(string fechaInicio, string fechaFin)
+        public async Task<Respuesta<Dictionary<string, List<DatosFormatoConsola>>>> ObtenerRegistroDeConsola(string fechaInicio, string fechaFin, string idSitio)
         {
             Respuesta<Dictionary<string, List<DatosFormatoConsola>>> respuesta = new Respuesta<Dictionary<string, List<DatosFormatoConsola>>>();
             Dictionary<string, List<DatosFormatoConsola>> datosFormatoConsola = new Dictionary<string, List<DatosFormatoConsola>>();
@@ -27,22 +26,30 @@ namespace Generacion.Application.DatosConsola.Query
                 {
                     connection.Open();
 
-                    string sqlQuery = @"select IdDetalleConsola,
-                                            P , Q, E, EQ, IL1, IL2 ,
-                                            IL3, U12 , U23 , U31 ,Hora,fila
-                                        from tbl_Det_Consola
-                                        WHERE fecha BETWEEN :fechaInicio AND :fechaFin ";
-
-                    string orderBy = fechaInicio == fechaFin ? string.Empty : " ORDER BY  fila asc ";
-                    string condicionalMedianoche = " and hora !='0:00'";
-                    sqlQuery = $"{sqlQuery}{condicionalMedianoche}{orderBy}";
-
-
+                    string sqlQuery = @"SELECT
+                                            IdDetalleConsola, P, Q, E, EQ, IL1, IL2,
+                                            IL3, U12, U23, U31, Hora, fila,fecha
+                                        FROM
+                                            tbl_Det_Consola
+                                        WHERE
+                                            fecha = TO_DATE(:fechaInicio, 'DD/MM/YY HH24:MI') 
+                                            ORDER BY  fila asc";
+                    /*"SELECT
+                                            IdDetalleConsola, P, Q, E, EQ, IL1, IL2,
+                                            IL3, U12, U23, U31, Hora, fila,fecha
+                                        FROM
+                                            tbl_Det_Consola
+                                        WHERE
+                                            fecha BETWEEN
+                                            TO_DATE(:fechaInicio, 'DD/MM/YY HH24:MI') AND TO_DATE(:fechaFin, 'DD/MM/YY HH24:MI')
+                                           and (fila <> 24 and fecha = TO_DATE(:fechaInicio, 'DD/MM/YY HH24:MI')) 
+                                            or (fila >= 24 and fecha = TO_DATE(:fechaFin, 'DD/MM/YY HH24:MI'))    
+                                            ORDER BY  fila asc";*/
                     using (OracleCommand command = new OracleCommand(sqlQuery, connection))
                     {
 
                         command.Parameters.Add(":fechaInicio", OracleDbType.Varchar2).Value = fechaInicio;
-                        command.Parameters.Add(":fechaFin", OracleDbType.Varchar2).Value = fechaFin;
+                        //command.Parameters.Add(":fechaFin", OracleDbType.Varchar2).Value = fechaFin;
                         using (OracleDataReader reader = command.ExecuteReader())
                         {
                             List<DatosFormatoConsola> listaRegistroConsola = new List<DatosFormatoConsola>();
@@ -69,22 +76,22 @@ namespace Generacion.Application.DatosConsola.Query
                             }
                             // Obtener la primera línea para ID "BAA901"
                             var primeraLineaBAA = listaRegistroConsola
-                                .Where(x => x.IdDetalleConsola.StartsWith("BAA901"))
+                                .Where(x => x.IdDetalleConsola.StartsWith($"{idSitio}-BAA901"))
                                 .ToList();
 
                             // Obtener la primera línea para ID "EG01"
                             var primeraLineaEG1 = listaRegistroConsola
-                                .Where(x => x.IdDetalleConsola.StartsWith("EG01"))
+                                .Where(x => x.IdDetalleConsola.StartsWith($"{idSitio}-EG01"))
                                 .ToList();
 
                             // Obtener la primera línea para ID "EG02"
                             var primeraLineaEG2 = listaRegistroConsola
-                                .Where(x => x.IdDetalleConsola.StartsWith("EG02"))
+                                .Where(x => x.IdDetalleConsola.StartsWith($"{idSitio}-EG02"))
                                 .ToList();
 
                             // Obtener la primera línea para ID "EG01"
                             var primeraLineaBFA = listaRegistroConsola
-                                .Where(x => x.IdDetalleConsola.StartsWith("BFA901"))
+                                .Where(x => x.IdDetalleConsola.StartsWith($"{idSitio}-BFA901"))
                                 .ToList();
 
                             primeraLineaBAA = primeraLineaBAA
@@ -187,7 +194,7 @@ namespace Generacion.Application.DatosConsola.Query
                 {
                     connection.Open();
 
-                    string sqlQuery = @"select IdTipoEngine,Detalle,Descripcion from tbl_Tipo_Cabecera";
+                    string sqlQuery = @"select IdTipoEngine,Detalle,Descripcion,TablaReference from tbl_Tipo_Cabecera";
 
                     using (OracleCommand command = new OracleCommand(sqlQuery, connection))
                     {
@@ -201,6 +208,7 @@ namespace Generacion.Application.DatosConsola.Query
                                 cabecerasTabla.IdTipoEngine = reader["IdTipoEngine"].ToString();
                                 cabecerasTabla.Detalle = reader["Detalle"].ToString();
                                 cabecerasTabla.Descripcion = reader["Descripcion"].ToString();
+                                cabecerasTabla.TablaReference = reader["TablaReference"].ToString();
 
                                 keyValuesHeaders.Add(cabecerasTabla.IdTipoEngine, cabecerasTabla);
                             }
@@ -229,9 +237,10 @@ namespace Generacion.Application.DatosConsola.Query
             return respuesta;
         }
 
-        public async Task<Respuesta<List<RegistrosDatosGenerator>>> ObtenerDetalleGenerador(string fecha)
+        public async Task<Respuesta<Dictionary<string, List<RegistrosDatosGenerator>>>> ObtenerDetalleGenerador(string fecha, string fechaFin, string idSitio)
         {
-            Respuesta<List<RegistrosDatosGenerator>> respuesta = new Respuesta<List<RegistrosDatosGenerator>>();
+            Respuesta<Dictionary<string, List<RegistrosDatosGenerator>>> respuesta = new Respuesta<Dictionary<string, List<RegistrosDatosGenerator>>>();
+            Dictionary<string, List<RegistrosDatosGenerator>> datosGenerator = new Dictionary<string, List<RegistrosDatosGenerator>>();
             try
             {
                 using (OracleConnection connection = _conexion.ObtenerConexion())
@@ -243,6 +252,7 @@ namespace Generacion.Application.DatosConsola.Query
                         command.CommandType = System.Data.CommandType.StoredProcedure;
 
                         command.Parameters.Add(new OracleParameter("p_Fecha", OracleDbType.Varchar2, fecha, System.Data.ParameterDirection.Input));
+                        command.Parameters.Add(new OracleParameter("p_FechaFin", OracleDbType.Varchar2, fechaFin, System.Data.ParameterDirection.Input));
 
                         command.Parameters.Add(new OracleParameter("p_resultado", OracleDbType.Decimal, System.Data.ParameterDirection.Output));
                         command.Parameters.Add(new OracleParameter("p_Cursor", OracleDbType.RefCursor, System.Data.ParameterDirection.Output));
@@ -270,16 +280,34 @@ namespace Generacion.Application.DatosConsola.Query
                                 registrosDatosGenerator.detalleGeneradores = await ObtenerDetalleTC(registrosDatosGenerator.IdDetGeneratorConsola);
                                 registrosDatosGenerators.Add(registrosDatosGenerator);
                             }
-                            registrosDatosGenerators = registrosDatosGenerators.OrderBy(h => TimeSpan.Parse(h.Hora)).ToList();
+                            //DateTime fechaComparar = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
-                            respuesta.Detalle = new List<RegistrosDatosGenerator>();
-                            respuesta.Detalle = registrosDatosGenerators;
+                           // registrosDatosGenerators.RemoveAll(item => item.Fecha == fechaComparar.Date.ToString() && item.Hora == "0:00");
+
+                           // registrosDatosGenerators = registrosDatosGenerators.OrderBy(h => TimeSpan.Parse(h.Hora)).ToList();
+                            registrosDatosGenerators = registrosDatosGenerators.OrderBy(h => int.Parse(h.Hora.Split(':')[0])).ToList();
+
+
+                            var generator1 = registrosDatosGenerators
+                                .Where(x => x.IdDetGeneratorConsola.StartsWith($"{idSitio}-Generator1"))
+                                .ToList();
+
+                            var generator2 = registrosDatosGenerators
+                                .Where(x => x.IdDetGeneratorConsola.StartsWith($"{idSitio}-Generator2"))
+                                .ToList();
+
+                            datosGenerator.Add("Generator1", generator1);
+                            datosGenerator.Add("Generator2", generator2);
+
+                            respuesta.Detalle = datosGenerator;
                             if (!command.Parameters["p_resultado"].Value.Equals(DBNull.Value))
                             {
                                 OracleDecimal oracleDecimalValue = (OracleDecimal)command.Parameters["p_resultado"].Value;
 
                                 respuesta.IdRespuesta = (int)oracleDecimalValue.Value;
                             }
+
+
                         }
                     }
                     if (respuesta.IdRespuesta == 0)
@@ -346,9 +374,10 @@ namespace Generacion.Application.DatosConsola.Query
             return respuesta;
         }
 
-        public async Task<Respuesta<List<RegistrosDatosEngine>>> ObtenerDatosEngine(string fecha)
+        public async Task<Respuesta<Dictionary<string, List<RegistrosDatosEngine>>>> ObtenerDatosEngine(string fecha, string fechaFin, string idSitio)
         {
-            Respuesta<List<RegistrosDatosEngine>> respuesta = new Respuesta<List<RegistrosDatosEngine>>();
+            Respuesta<Dictionary<string, List<RegistrosDatosEngine>>> respuesta = new Respuesta<Dictionary<string, List<RegistrosDatosEngine>>>();
+            Dictionary<string, List<RegistrosDatosEngine>> detalle = new Dictionary<string, List<RegistrosDatosEngine>>();
             try
             {
                 using (OracleConnection connection = _conexion.ObtenerConexion())
@@ -360,6 +389,7 @@ namespace Generacion.Application.DatosConsola.Query
                         command.CommandType = System.Data.CommandType.StoredProcedure;
 
                         command.Parameters.Add(new OracleParameter("p_Fecha", OracleDbType.Varchar2, fecha, System.Data.ParameterDirection.Input));
+                        command.Parameters.Add(new OracleParameter("p_FechaFin", OracleDbType.Varchar2, fechaFin, System.Data.ParameterDirection.Input));
 
                         command.Parameters.Add(new OracleParameter("p_resultado", OracleDbType.Decimal, System.Data.ParameterDirection.Output));
                         command.Parameters.Add(new OracleParameter("p_Cursor", OracleDbType.RefCursor, System.Data.ParameterDirection.Output));
@@ -387,10 +417,27 @@ namespace Generacion.Application.DatosConsola.Query
                                 registros.detalleEngine = await ObtenerDetalleEng(registros.IdDetEngineConsola);
                                 registrosDatosEngines.Add(registros);
                             }
-                            registrosDatosEngines = registrosDatosEngines.OrderBy(h => TimeSpan.Parse(h.Hora)).ToList();
+/*
+                            DateTime fechaComparar = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
-                            respuesta.Detalle = new List<RegistrosDatosEngine>();
-                            respuesta.Detalle = registrosDatosEngines;
+                            registrosDatosEngines.RemoveAll(item => item.Fecha == fechaComparar.Date.ToString() && item.Hora == "0:00");
+                            */
+
+                            registrosDatosEngines = registrosDatosEngines.OrderBy(h => int.Parse(h.Hora.Split(':')[0])).ToList();
+
+                            var datosEngine1 = registrosDatosEngines
+                                .Where(x => x.IdDetEngineConsola.StartsWith($"{idSitio}-Engine1"))
+                                .ToList();
+
+                            var datosEngine2 = registrosDatosEngines
+                                .Where(x => x.IdDetEngineConsola.StartsWith($"{idSitio}-Engine2"))
+                                .ToList();
+
+
+                            detalle.Add("Engine1", datosEngine1);
+                            detalle.Add("Engine2", datosEngine2);
+
+                            respuesta.Detalle = detalle;
                             if (!command.Parameters["p_resultado"].Value.Equals(DBNull.Value))
                             {
                                 OracleDecimal oracleDecimalValue = (OracleDecimal)command.Parameters["p_resultado"].Value;
@@ -508,7 +555,7 @@ namespace Generacion.Application.DatosConsola.Query
             return respuesta;
         }
 
-        public async Task<Respuesta<List<OutGoingFeeder>>> ObtenerDetalleBAO(string id ,string fecha)
+        public async Task<Respuesta<List<OutGoingFeeder>>> ObtenerDetalleBAO(string id, string fecha)
         {
             Respuesta<List<OutGoingFeeder>> respuesta = new Respuesta<List<OutGoingFeeder>>();
             try
@@ -547,7 +594,7 @@ namespace Generacion.Application.DatosConsola.Query
                             }
 
                             datos = datos.OrderBy(h => h.Fila).ToList();
-                            respuesta.Detalle= datos;
+                            respuesta.Detalle = datos;
                         }
                     }
                 }
@@ -559,7 +606,7 @@ namespace Generacion.Application.DatosConsola.Query
         }
         public async Task<Respuesta<FormatoConsola>> ObtenerFormatoConsola(string id)
         {
-            Respuesta<FormatoConsola> respuesta = new Respuesta<FormatoConsola>();  
+            Respuesta<FormatoConsola> respuesta = new Respuesta<FormatoConsola>();
             try
             {
                 using (OracleConnection connection = _conexion.ObtenerConexion())
@@ -588,6 +635,51 @@ namespace Generacion.Application.DatosConsola.Query
                             }
 
                             respuesta.Detalle = formatoConsola;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return respuesta;
+        }
+
+        public async Task<Respuesta<List<decimal>>> ObtenerDatosDetConsola(string fechaInicio, string fechaFin, int fila)
+        {
+            Respuesta<List<decimal>> respuesta = new Respuesta<List<decimal>>();
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
+
+                    using (OracleCommand command = new OracleCommand("proc_ObtenerDatosDetConsola", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        command.Parameters.Add("p_fechaInicio", OracleDbType.Varchar2).Value = fechaInicio;
+                        command.Parameters.Add("p_fechaFin", OracleDbType.Varchar2).Value = fechaFin;
+                        command.Parameters.Add("p_fila", OracleDbType.Int32).Value = fila;
+
+                        command.Parameters.Add("p_resultado", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                        {
+                            DataTable dataTable = new DataTable();
+                            adapter.Fill(dataTable);
+
+                            List<decimal> datos = new List<decimal>();
+                            foreach (DataRow row in dataTable.Rows)
+                            {
+                                decimal valorBFA =int.Parse(row["E"].ToString());
+                                decimal filadb =int.Parse(row["fila"].ToString());
+                                string fecha = row["Fecha"].ToString();
+
+                                datos.Add(valorBFA);
+                            }
+
+                            respuesta.Detalle = datos;
                         }
                     }
                 }

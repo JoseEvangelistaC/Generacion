@@ -15,7 +15,7 @@ namespace Generacion.Application.LecturaCampo.Command
             _conexion = conexion;
         }
 
-        public async Task<Respuesta<string>> GuardarDatosPrincipal(DatosFormatoCampo datosFormatoCampo)
+        public async Task<Respuesta<string>> GuardarDatosPrincipal(List<DatosFormatoCampo> datosFormatoCampo)
         {
             Respuesta<string> respuesta = new Respuesta<string>();
             try
@@ -24,38 +24,31 @@ namespace Generacion.Application.LecturaCampo.Command
                 {
                     connection.Open();
 
-                    using (OracleCommand command = new OracleCommand("proc_InsertarDetConsola", connection))
+                    foreach (var dato in datosFormatoCampo)
                     {
-                        command.CommandType = CommandType.StoredProcedure;
-
-                        // Parámetros de entrada
-                        command.Parameters.Add("p_IdDetalleInicioCampo", OracleDbType.Varchar2).Value = datosFormatoCampo.IdDetalleInicioCampo;
-                        command.Parameters.Add("p_Fecha", OracleDbType.Varchar2).Value = datosFormatoCampo.Fecha;
-                        command.Parameters.Add("p_Hora", OracleDbType.Varchar2).Value = datosFormatoCampo.Hora;
-                        command.Parameters.Add("p_IdRegistroConsola", OracleDbType.Varchar2).Value = datosFormatoCampo.IdRegistroConsola;
-                        command.Parameters.Add("p_Und", OracleDbType.Varchar2).Value = datosFormatoCampo.Und;
-                        command.Parameters.Add("p_Rango", OracleDbType.Varchar2).Value = datosFormatoCampo.Rango;
-                        command.Parameters.Add("p_P_Activa", OracleDbType.Int32).Value = datosFormatoCampo.P_Activa;
-                        command.Parameters.Add("p_H_Operacion ", OracleDbType.Int32).Value = datosFormatoCampo.H_Operacion;
-                        command.Parameters.Add("p_Temp_Ambiente", OracleDbType.Int32).Value = datosFormatoCampo.Temp_Ambiente;
-                        command.Parameters.Add("p_Humed_Relativa", OracleDbType.Int32).Value = datosFormatoCampo.Humed_Relativa;
-                        command.Parameters.Add("p_IdOperario", OracleDbType.Varchar2).Value = datosFormatoCampo.IdOperario;
-                        command.Parameters.Add("p_IdFormatoConsola", OracleDbType.Varchar2).Value = datosFormatoCampo.IdformatoConsola;
-
-                        command.Parameters.Add("p_resultado", OracleDbType.Decimal).Direction = ParameterDirection.Output;
-
-                        command.ExecuteNonQuery();
-
-                        OracleDecimal oracleDecimalValue = (OracleDecimal)command.Parameters["p_resultado"].Value;
-
-                        respuesta.IdRespuesta = (int)oracleDecimalValue.Value;
-                        if (respuesta.IdRespuesta == 0 || respuesta.IdRespuesta == 1)
+                        using (OracleCommand cmd = new OracleCommand("InsertOrUpdateDetalleCampo", connection))
                         {
-                            respuesta.Mensaje = "Ok";
-                        }
-                        else
-                        {
-                            respuesta.Mensaje = "No pudo consultar.";
+                            cmd.CommandType = CommandType.StoredProcedure;
+
+                            cmd.Parameters.Add("p_IdDetalleCampo", OracleDbType.Varchar2).Value = dato.IdDetalleCampo;
+                            cmd.Parameters.Add("p_Detalle", OracleDbType.Decimal).Value = dato.Detalle;
+                            cmd.Parameters.Add("p_IdSubtituloCampo", OracleDbType.Varchar2).Value = dato.IdSubtituloCampo;
+                            cmd.Parameters.Add("p_IdReporteCampo", OracleDbType.Varchar2).Value = dato.IdReporteCampo;
+                            cmd.Parameters.Add("p_Hora", OracleDbType.Varchar2).Value = dato.Hora;
+                            cmd.Parameters.Add("p_Fila", OracleDbType.Decimal).Value = dato.Fila;
+                            cmd.Parameters.Add("p_Sitio", OracleDbType.Varchar2).Value = dato.Sitio;
+                            cmd.Parameters.Add("p_Fecha", OracleDbType.Varchar2).Value = dato.Fecha;
+                            cmd.Parameters.Add("p_NumeroGenerador", OracleDbType.Decimal).Value = dato.NumeroGenerador;
+
+                            OracleParameter p_Respuesta = new OracleParameter("p_resultado", OracleDbType.Decimal);
+                            p_Respuesta.Direction = ParameterDirection.Output;
+                            cmd.Parameters.Add(p_Respuesta);
+
+                            cmd.ExecuteNonQuery();
+
+                            OracleDecimal oracleDecimalValue = (OracleDecimal)cmd.Parameters["p_resultado"].Value;
+
+                            respuesta.IdRespuesta = (int)oracleDecimalValue.Value;
                         }
                     }
                 }
@@ -67,6 +60,5 @@ namespace Generacion.Application.LecturaCampo.Command
             }
             return respuesta;
         }
-
     }
 }

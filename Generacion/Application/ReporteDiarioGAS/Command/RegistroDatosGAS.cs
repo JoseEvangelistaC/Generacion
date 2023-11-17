@@ -4,6 +4,8 @@ using Generacion.Models;
 using Generacion.Models.ReporteDiarioGAS;
 using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
+using System.Data;
+using MReporteGAS = Generacion.Models.ReporteDiarioGAS.ReporteGAS;
 
 namespace Generacion.Application.ReporteGAS.Command
 {
@@ -124,5 +126,32 @@ namespace Generacion.Application.ReporteGAS.Command
             return respuesta;
         }
 
+
+        public void guardarIdReporte(MReporteGAS reporteGAS)
+        {
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
+
+                    using (OracleCommand command = new OracleCommand("InsertOrUpdateReporteGas", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        command.Parameters.Add("p_IdReporteGas", OracleDbType.Varchar2).Value = reporteGAS.IdReporteGas;
+                        command.Parameters.Add("p_Fecha", OracleDbType.Varchar2).Value = reporteGAS.Fecha;
+                        command.Parameters.Add("p_Activo", OracleDbType.Int32).Value = reporteGAS.Activo;
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            
+        }
     }
 }

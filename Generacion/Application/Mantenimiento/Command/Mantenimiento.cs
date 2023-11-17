@@ -1,7 +1,10 @@
 ﻿using Generacion.Application.DataBase;
+using Generacion.Models;
+using Generacion.Models.LecturasCampo;
 using Generacion.Models.Mantenimiento;
 using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
+using System.Data;
 
 namespace Generacion.Application.Mantenimiento.Command
 {
@@ -177,7 +180,7 @@ namespace Generacion.Application.Mantenimiento.Command
                     using (OracleCommand command = new OracleCommand("proc_InsertarAceiteCarter", connection))
                     {
                         command.CommandType = System.Data.CommandType.StoredProcedure;
-                       
+
                         OracleParameter idCarter = new OracleParameter("p_IdCarter", OracleDbType.Varchar2);
                         OracleParameter numeroGenerador = new OracleParameter("p_NumeroGenerador", OracleDbType.Varchar2);
                         OracleParameter nivelCarterNuevo = new OracleParameter("p_NivelCarterNuevo", OracleDbType.Varchar2);
@@ -298,6 +301,51 @@ namespace Generacion.Application.Mantenimiento.Command
             {
             }
             return mensaje;
+        }
+
+        public async Task<Respuesta<string>> GuardarReporteDiario(ReporteDiarioMantenimiento datos)       
+        {
+            Respuesta<string> respuesta = new Respuesta<string>();
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
+
+                    using (OracleCommand command = new OracleCommand("proc_InsertarReporteDiario", connection))
+                    {
+                        command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                        command.Parameters.Add("p_idReporteDiario", OracleDbType.Varchar2).Value = datos.IdReporteDiario;
+                        command.Parameters.Add("p_Fecha", OracleDbType.Varchar2).Value = datos.Fecha;
+                        command.Parameters.Add("p_HorasMotor01", OracleDbType.Decimal).Value = datos.HorasMotor01;
+                        command.Parameters.Add("p_HorasMotor02", OracleDbType.Decimal).Value = datos.HorasMotor02;
+                        command.Parameters.Add("p_IdOperario", OracleDbType.Varchar2).Value = datos.IdOperario;
+
+                        command.Parameters.Add("p_resultado", OracleDbType.Decimal).Direction = ParameterDirection.Output;
+
+                        command.ExecuteNonQuery();
+
+                        OracleDecimal oracleDecimalValue = (OracleDecimal)command.Parameters["p_resultado"].Value;
+
+                        respuesta.IdRespuesta = (int)oracleDecimalValue.Value;
+                        if (respuesta.IdRespuesta == 0 || respuesta.IdRespuesta == 1)
+                        {
+                            respuesta.Mensaje = "Ok";
+                        }
+                        else
+                        {
+                            respuesta.Mensaje = "Error al guardar.";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                respuesta.IdRespuesta = 99;
+                respuesta.Mensaje = ex.Message.ToString();
+            }
+            return respuesta;
         }
     }
 }

@@ -1,9 +1,19 @@
-﻿using Generacion.Application.DataBase.cache;
+﻿using Generacion.Application.Common;
+using Generacion.Application.DashBoard;
+using Generacion.Application.DashBoard.Query;
+using Generacion.Application.DataBase.cache;
 using Generacion.Application.DatosConsola.Query;
-using Generacion.Application.Usuario;
+using Generacion.Application.FiltroCentrifugo.Command;
+using Generacion.Application.FiltroCentrifugo.Query;
+using Generacion.Application.Funciones;
+using Generacion.Application.Usuario.Query;
+using Generacion.Infraestructura;
 using Generacion.Models;
+using Generacion.Models.DashBoard;
 using Generacion.Models.DatosConsola;
+using Generacion.Models.FiltroCentrifugo;
 using Generacion.Models.Usuario;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Data;
@@ -12,31 +22,37 @@ using System.Diagnostics;
 namespace Generacion.Controllers
 {
 
-    public class HomeController : Controller
+    public class HomeController : ApiControllerBase
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IUsuario _usuario;
+        private readonly IDashBoard _dashBoard;
         private readonly DatosConsola _datosConsola;
         private readonly IConfiguration _configuration;
         private readonly CacheDatos _cacheDatos;
+        private readonly ConsultarUsuario _consultarUsuario;
+        private readonly Function _function; 
+        private readonly DatosFiltroCentrifugo _datosFiltroCentrifugo; 
         public HomeController(
             ILogger<HomeController> logger,
-            IUsuario usuario,
             DatosConsola datosConsola,
             IConfiguration configuration,
-            CacheDatos cacheDatos)
+            CacheDatos cacheDatos, ConsultarUsuario consultarUsuario,
+            IDashBoard dashBoard,
+            DatosFiltro datosFiltro, DatosFiltroCentrifugo datosFiltroCentrifugo, Function function)
         {
+            _consultarUsuario = consultarUsuario;
             _configuration = configuration;
             _cacheDatos = cacheDatos;
             _logger = logger;
-            _usuario = usuario;
+            _dashBoard = dashBoard;
             _datosConsola = datosConsola;
+            _function = function;
+            _datosFiltroCentrifugo = datosFiltroCentrifugo;
         }
 
         public async Task<IActionResult> Index()
         {
-            string usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
-            DetalleOperario user = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);
+            DetalleOperario user = await _function.ObtenerDatosOperario();
 
             if (user != null)
             {
@@ -44,22 +60,46 @@ namespace Generacion.Controllers
                 HttpContext.Session.SetString("datoscabecera", JsonConvert.SerializeObject(datoscabecera.Detalle));
 
                 int horario = ObtenerTurnoHorario();
-                usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
-                DetalleOperario datos = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);
+                // DetalleOperario datos = await _function.ObtenerDatosOperario();
 
-                datos.IdTurno = horario;
+                user.IdTurno = horario;
 
-                GuardarDatosHorario($"{datos.Nombre} {datos.Apellidos}", horario);
+                 GuardarDatosHorario($"{user.Nombre} {user.Apellidos}", horario);
 
-                ViewData["DetalleOperario"] = datos;
-
+                ViewData["DetalleOperario"] = user;
+                ObtenerListaOperarios();
             }
+
+            MantenimientoComponentes requestCentrifugo = new MantenimientoComponentes()
+            {
+                TipoComponente = TipoComponente.filtroCentrifugo,
+                RequiereId = true,
+                Seleccion = string.Empty
+            };
+
+            var respuestaCentrifugo = await Mediator.Send(requestCentrifugo);
+
+            MantenimientoComponentes requestAutomatico = new MantenimientoComponentes()
+            {
+                TipoComponente = TipoComponente.filtroAutomatico,
+                RequiereId = true,
+                Seleccion = string.Empty
+            };
+
+            var respuestaAutomatico = await Mediator.Send(requestAutomatico);
+
+            ViewData["datosFiltroCentrifugo"] = respuestaCentrifugo.Detalle["datosDashboard"];
+            ViewData["datosFiltroAutomatico"] = respuestaAutomatico.Detalle["datosDashboard"];
+
+
             return View();
         }
-
-        public IActionResult Privacy()
+        public async void ObtenerListaOperarios()
         {
-            return View();
+
+            Respuesta<List<DetalleOperario>> operarios = await _consultarUsuario.ObtenerOperarios();
+
+            ViewData["ListaOperarios"] = operarios.Detalle;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -143,6 +183,35 @@ namespace Generacion.Controllers
                 jsonConvert = JsonConvert.SerializeObject(horarioOperario);
             }
             _cacheDatos.GuardarDatosCache("HorarioOperario", jsonConvert);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GuardarDatosDashBoard([FromBody] List<DashboardDetalleFiltro> detalleFiltro)
+        {
+            string usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
+            DetalleOperario user = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);
+            try
+            {
+                Respuesta<string> respuesta = new Respuesta<string>();
+                foreach (var item in detalleFiltro)
+                {
+                    string mensajesError = item.ValidarPropiedadesNulasOVacias();
+                    if (mensajesError.Any())
+                    {
+                        respuesta.IdRespuesta = 99;
+                        respuesta.Mensaje = mensajesError;
+                        return Json(new { respuesta = respuesta });
+                    }
+                }
+
+                respuesta = await _dashBoard.GuardarDatosFiltro(detalleFiltro, user.IdSitio);
+                return Json(new { respuesta = respuesta });
+
+            }
+            catch (Exception e)
+            {
+                return Json(new { respuesta = "" });
+            }
         }
     }
 }

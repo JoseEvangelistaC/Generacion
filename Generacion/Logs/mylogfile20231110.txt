@@ -1,0 +1,1042 @@
+2023-11-10 08:08:48.673 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/LecturasCampo - -
+2023-11-10 08:08:48.732 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LecturasCampoController.Index (Generacion)'
+2023-11-10 08:08:48.732 -05:00 [INF] Route matched with {action = "Index", controller = "LecturasCampo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.LecturasCampoController (Generacion).
+2023-11-10 08:08:48.735 -05:00 [INF] Accessing expired session, Key:c1d1fc4b-56a6-6f16-8905-0ca22124a42b
+2023-11-10 08:08:48.960 -05:00 [INF] Executed action Generacion.Controllers.LecturasCampoController.Index (Generacion) in 228.2368ms
+2023-11-10 08:08:48.961 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LecturasCampoController.Index (Generacion)'
+2023-11-10 08:08:49.011 -05:00 [ERR] An unhandled exception has occurred while executing the request.
+System.ArgumentNullException: Value cannot be null. (Parameter 'value')
+   at Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   at Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   at Generacion.Controllers.LecturasCampoController.Index() in C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\Controllers\LecturasCampoController.cs:line 34
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+2023-11-10 08:08:49.080 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/LecturasCampo - - - 500 - text/html;+charset=utf-8 406.8092ms
+2023-11-10 08:08:49.162 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 08:08:49.214 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 08:08:49.218 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 4.1664ms
+2023-11-10 08:08:49.380 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 217.6299ms
+2023-11-10 08:13:38.052 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 08:13:38.515 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 08:13:38.517 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 08:13:38.525 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 08:13:38.527 -05:00 [INF] Hosting environment: Development
+2023-11-10 08:13:38.529 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 08:13:41.189 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 08:13:41.276 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 08:13:41.339 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:13:41.357 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 08:13:41.471 -05:00 [INF] Executed ViewResult - view Index executed in 117.6711ms.
+2023-11-10 08:13:41.473 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 133.895ms
+2023-11-10 08:13:41.474 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 08:13:41.483 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 297.9061ms
+2023-11-10 08:13:41.501 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 08:13:41.505 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 4.1351ms
+2023-11-10 08:13:41.570 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 08:13:41.574 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 4.3903ms
+2023-11-10 08:13:45.915 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 45
+2023-11-10 08:13:45.923 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:13:46.015 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:13:48.890 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType2`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 08:13:48.900 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 2884.0448ms
+2023-11-10 08:13:48.900 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:13:48.908 -05:00 [INF] Session started; Key:a4e13c60-a5ca-fa1a-9dd3-8528b7226d74, Id:34d969f8-bb8b-70b5-0053-d0b8217fe0e2
+2023-11-10 08:13:48.909 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 45 - 200 - application/json;+charset=utf-8 2993.9660ms
+2023-11-10 08:13:51.788 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/Home - -
+2023-11-10 08:13:51.814 -05:00 [INF] Executing endpoint 'Generacion.Controllers.HomeController.Index (Generacion)'
+2023-11-10 08:13:51.872 -05:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.HomeController (Generacion).
+2023-11-10 08:13:52.781 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 08:13:53.204 -05:00 [INF] Executed ViewResult - view Index executed in 427.1069ms.
+2023-11-10 08:13:53.222 -05:00 [INF] Executed action Generacion.Controllers.HomeController.Index (Generacion) in 1349.6119ms
+2023-11-10 08:13:53.223 -05:00 [INF] Executed endpoint 'Generacion.Controllers.HomeController.Index (Generacion)'
+2023-11-10 08:13:53.246 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/Home - - - 200 - text/html;+charset=utf-8 1457.7710ms
+2023-11-10 08:13:53.427 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/img/WhatsApp Image 2023-10-20 at 8.46.04 AM.jpeg - -
+2023-11-10 08:13:53.471 -05:00 [INF] The file /img/WhatsApp Image 2023-10-20 at 8.46.04 AM.jpeg was not modified
+2023-11-10 08:13:53.472 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/img/WhatsApp Image 2023-10-20 at 8.46.04 AM.jpeg - - - 304 - image/jpeg 45.3143ms
+2023-11-10 08:13:53.487 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 08:13:53.487 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 08:13:53.488 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/GIF/download.gif - -
+2023-11-10 08:13:53.488 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 1.2066ms
+2023-11-10 08:13:53.489 -05:00 [INF] The file /GIF/download.gif was not modified
+2023-11-10 08:13:53.489 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/GIF/download.gif - - - 304 - image/gif 0.8073ms
+2023-11-10 08:13:53.564 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 76.2802ms
+2023-11-10 08:13:53.680 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 08:13:53.705 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 08:13:53.705 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 25.8711ms
+2023-11-10 08:13:55.484 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/LecturasCampo - -
+2023-11-10 08:13:55.485 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LecturasCampoController.Index (Generacion)'
+2023-11-10 08:13:55.488 -05:00 [INF] Route matched with {action = "Index", controller = "LecturasCampo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.LecturasCampoController (Generacion).
+2023-11-10 08:13:55.701 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 08:13:55.776 -05:00 [INF] Executed ViewResult - view Index executed in 76.3815ms.
+2023-11-10 08:13:55.777 -05:00 [INF] Executed action Generacion.Controllers.LecturasCampoController.Index (Generacion) in 288.6717ms
+2023-11-10 08:13:55.777 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LecturasCampoController.Index (Generacion)'
+2023-11-10 08:13:55.794 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/LecturasCampo - - - 200 - text/html;+charset=utf-8 309.7752ms
+2023-11-10 08:13:55.827 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 08:13:55.828 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.4901ms
+2023-11-10 08:13:55.828 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 08:13:55.840 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 11.8954ms
+2023-11-10 08:13:55.976 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 08:13:55.992 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 08:13:55.993 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 16.9428ms
+2023-11-10 08:14:25.991 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ReporteProduccion - -
+2023-11-10 08:14:25.992 -05:00 [INF] Executing endpoint 'Generacion.Controllers.ReporteProduccionController.Index (Generacion)'
+2023-11-10 08:14:25.996 -05:00 [INF] Route matched with {action = "Index", controller = "ReporteProduccion"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.ReporteProduccionController (Generacion).
+2023-11-10 08:14:26.858 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 08:14:26.884 -05:00 [INF] Executed ViewResult - view Index executed in 27.3183ms.
+2023-11-10 08:14:26.884 -05:00 [INF] Executed action Generacion.Controllers.ReporteProduccionController.Index (Generacion) in 887.6021ms
+2023-11-10 08:14:26.884 -05:00 [INF] Executed endpoint 'Generacion.Controllers.ReporteProduccionController.Index (Generacion)'
+2023-11-10 08:14:26.896 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ReporteProduccion - - - 200 - text/html;+charset=utf-8 905.2224ms
+2023-11-10 08:14:26.982 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 08:14:26.982 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 08:14:26.982 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.6799ms
+2023-11-10 08:14:26.993 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 10.8032ms
+2023-11-10 08:14:27.151 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 08:14:27.153 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 08:14:27.153 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 2.2607ms
+2023-11-10 08:14:34.134 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/CerrarSession - 0
+2023-11-10 08:14:34.135 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.CerrarSession (Generacion)'
+2023-11-10 08:14:34.138 -05:00 [INF] Route matched with {action = "CerrarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] CerrarSession() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:14:34.141 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType2`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 08:14:34.141 -05:00 [INF] Executed action Generacion.Controllers.LoginController.CerrarSession (Generacion) in 3.4432ms
+2023-11-10 08:14:34.141 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.CerrarSession (Generacion)'
+2023-11-10 08:14:34.142 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/CerrarSession - 0 - 200 - application/json;+charset=utf-8 7.9773ms
+2023-11-10 08:14:34.156 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 08:14:34.157 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 08:14:34.157 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:14:34.157 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 08:14:34.158 -05:00 [INF] Executed ViewResult - view Index executed in 0.7435ms.
+2023-11-10 08:14:34.158 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 0.9026ms
+2023-11-10 08:14:34.158 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 08:14:34.158 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 1.9865ms
+2023-11-10 08:14:34.184 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 08:14:34.184 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.2683ms
+2023-11-10 08:14:34.201 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 08:14:34.202 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 0.7322ms
+2023-11-10 08:14:40.736 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 46
+2023-11-10 08:14:40.737 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:14:40.737 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:14:40.852 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 08:14:40.853 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 116.2938ms
+2023-11-10 08:14:40.854 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:14:40.854 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 46 - 200 - application/json;+charset=utf-8 119.2689ms
+2023-11-10 08:14:44.112 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 46
+2023-11-10 08:14:44.114 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:14:44.115 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:14:44.167 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 08:14:44.168 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 52.2366ms
+2023-11-10 08:14:44.168 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:14:44.168 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 46 - 200 - application/json;+charset=utf-8 56.6010ms
+2023-11-10 08:15:09.533 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 46
+2023-11-10 08:15:09.535 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:15:09.535 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:16:21.305 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 08:16:21.753 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 08:16:21.755 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 08:16:21.766 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 08:16:21.770 -05:00 [INF] Hosting environment: Development
+2023-11-10 08:16:21.772 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 08:16:23.805 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 08:16:23.966 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 08:16:24.042 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:16:24.067 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 08:16:24.206 -05:00 [INF] Executed ViewResult - view Index executed in 138.1112ms.
+2023-11-10 08:16:24.214 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 169.9966ms
+2023-11-10 08:16:24.214 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 08:16:24.232 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 436.2342ms
+2023-11-10 08:16:24.441 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 08:16:24.461 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 08:16:24.462 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 20.3987ms
+2023-11-10 08:16:24.474 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 14.3608ms
+2023-11-10 08:16:28.958 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 45
+2023-11-10 08:16:28.970 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:16:29.092 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:16:33.383 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 08:16:33.422 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 4330.4542ms
+2023-11-10 08:16:33.423 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:16:33.424 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 45 - 200 - application/json;+charset=utf-8 4466.8388ms
+2023-11-10 08:16:41.425 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 45
+2023-11-10 08:16:41.428 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:16:41.429 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:17:04.329 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 08:17:04.715 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 08:17:04.716 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 08:17:04.725 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 08:17:04.728 -05:00 [INF] Hosting environment: Development
+2023-11-10 08:17:04.730 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 08:17:06.585 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 08:17:06.701 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 08:17:06.746 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:17:06.780 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 08:17:06.903 -05:00 [INF] Executed ViewResult - view Index executed in 132.0552ms.
+2023-11-10 08:17:06.906 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 159.4562ms
+2023-11-10 08:17:06.907 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 08:17:06.924 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 350.7783ms
+2023-11-10 08:17:06.939 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 08:17:06.942 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 3.2470ms
+2023-11-10 08:17:07.056 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 08:17:07.062 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 5.7484ms
+2023-11-10 08:17:14.266 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 08:17:14.281 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:17:14.587 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:17:42.535 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 08:17:42.540 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 27950.9501ms
+2023-11-10 08:17:42.541 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:17:42.541 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 28275.0810ms
+2023-11-10 08:17:45.675 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 08:17:45.681 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:17:45.682 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:17:59.347 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 08:17:59.657 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 08:17:59.662 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 08:17:59.669 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 08:17:59.671 -05:00 [INF] Hosting environment: Development
+2023-11-10 08:17:59.672 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 08:18:01.033 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 08:18:01.161 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 08:18:01.199 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:18:01.214 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 08:18:01.320 -05:00 [INF] Executed ViewResult - view Index executed in 108.5766ms.
+2023-11-10 08:18:01.322 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 122.6695ms
+2023-11-10 08:18:01.323 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 08:18:01.356 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 334.0353ms
+2023-11-10 08:18:01.381 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 08:18:01.387 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 5.6818ms
+2023-11-10 08:18:01.482 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 08:18:01.489 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 6.6398ms
+2023-11-10 08:18:05.650 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 08:18:05.658 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:18:05.753 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:18:22.094 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 08:18:22.100 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 16346.2373ms
+2023-11-10 08:18:22.100 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 08:18:22.100 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 16450.1263ms
+2023-11-10 08:59:52.048 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 08:59:52.623 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 08:59:52.624 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 08:59:52.632 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 08:59:52.636 -05:00 [INF] Hosting environment: Development
+2023-11-10 08:59:52.637 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 08:59:55.059 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 08:59:55.170 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 08:59:55.233 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 08:59:55.259 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 08:59:55.399 -05:00 [INF] Executed ViewResult - view Index executed in 139.8571ms.
+2023-11-10 08:59:55.404 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 170.0167ms
+2023-11-10 08:59:55.404 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 08:59:55.419 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 365.8086ms
+2023-11-10 08:59:55.442 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 08:59:55.448 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 6.3646ms
+2023-11-10 08:59:55.703 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 08:59:55.718 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 15.3355ms
+2023-11-10 09:00:05.547 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 61
+2023-11-10 09:00:05.556 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:00:05.630 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:00:35.234 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 61
+2023-11-10 09:00:35.240 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:00:35.241 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:01:06.415 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:01:06.418 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 31177.393ms
+2023-11-10 09:01:06.418 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:01:06.418 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 61 - 200 - application/json;+charset=utf-8 31185.2337ms
+2023-11-10 09:01:06.449 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:01:06.449 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 60817.9214ms
+2023-11-10 09:01:06.449 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:01:06.449 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 61 - 200 - application/json;+charset=utf-8 60902.6940ms
+2023-11-10 09:07:49.096 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 09:07:49.463 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 09:07:49.465 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 09:07:49.473 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 09:07:49.475 -05:00 [INF] Hosting environment: Development
+2023-11-10 09:07:49.476 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 09:07:51.152 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 09:07:51.241 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:07:51.282 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:07:51.298 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:07:51.423 -05:00 [INF] Executed ViewResult - view Index executed in 122.7013ms.
+2023-11-10 09:07:51.425 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 143.2145ms
+2023-11-10 09:07:51.425 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:07:51.444 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 295.9467ms
+2023-11-10 09:07:51.466 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:07:51.475 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 8.8840ms
+2023-11-10 09:07:51.564 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 09:07:51.575 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 10.9429ms
+2023-11-10 09:08:48.171 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:08:48.176 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:08:48.236 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:09:04.185 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:09:04.189 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15950.9867ms
+2023-11-10 09:09:04.189 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:09:04.189 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 16018.8134ms
+2023-11-10 09:09:07.669 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:09:07.672 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:09:07.675 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:09:22.735 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:09:22.736 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15059.8127ms
+2023-11-10 09:09:22.736 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:09:22.737 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15067.5504ms
+2023-11-10 09:09:31.988 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:09:31.988 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:09:31.989 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:09:47.057 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:09:47.058 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15067.947ms
+2023-11-10 09:09:47.058 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:09:47.058 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15070.0000ms
+2023-11-10 09:09:49.606 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:09:49.608 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:09:49.608 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:09:58.079 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:09:58.081 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:09:58.082 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:10:04.736 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:10:04.740 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15131.931ms
+2023-11-10 09:10:04.741 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:10:04.748 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15141.7837ms
+2023-11-10 09:10:07.840 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:10:07.842 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:10:07.843 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:10:13.223 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:10:13.224 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15141.8086ms
+2023-11-10 09:10:13.224 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:10:13.225 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15146.0531ms
+2023-11-10 09:10:22.909 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:10:22.909 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15065.8693ms
+2023-11-10 09:10:22.909 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:10:22.909 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15069.3668ms
+2023-11-10 09:10:30.617 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:10:30.619 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:10:30.619 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:10:44.029 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:10:44.039 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:10:44.049 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:10:45.679 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:10:45.679 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15059.4836ms
+2023-11-10 09:10:45.679 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:10:45.679 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15062.6141ms
+2023-11-10 09:10:57.681 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:10:57.682 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:10:57.683 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:10:59.119 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:10:59.122 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15072.0482ms
+2023-11-10 09:10:59.122 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:10:59.122 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15096.2161ms
+2023-11-10 09:11:01.468 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:11:01.469 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:11:01.469 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:11:12.761 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:11:12.761 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15078.0537ms
+2023-11-10 09:11:12.761 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:11:12.762 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15081.0448ms
+2023-11-10 09:11:14.414 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:11:14.416 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:11:14.416 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:11:15.289 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:11:15.289 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:11:15.289 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:11:16.557 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:11:16.558 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15088.9119ms
+2023-11-10 09:11:16.559 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:11:16.559 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15091.6043ms
+2023-11-10 09:11:18.806 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:11:18.808 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:11:18.808 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:11:29.475 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:11:29.476 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15059.0162ms
+2023-11-10 09:11:29.476 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:11:29.476 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15062.0609ms
+2023-11-10 09:11:30.357 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:11:30.358 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15068.2368ms
+2023-11-10 09:11:30.358 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:11:30.358 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15069.2238ms
+2023-11-10 09:11:31.773 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 60
+2023-11-10 09:11:31.774 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:11:31.774 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:11:33.876 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:11:33.877 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15068.0691ms
+2023-11-10 09:11:33.877 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:11:33.877 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15075.0541ms
+2023-11-10 09:11:46.845 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:11:46.846 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15071.8265ms
+2023-11-10 09:11:46.846 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:11:46.846 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 60 - 200 - application/json;+charset=utf-8 15072.6216ms
+2023-11-10 09:11:59.956 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 60
+2023-11-10 09:11:59.956 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:11:59.956 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:12:15.032 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:12:15.032 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15075.7363ms
+2023-11-10 09:12:15.032 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:12:15.032 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 60 - 200 - application/json;+charset=utf-8 15076.5039ms
+2023-11-10 09:12:23.115 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 09:12:23.734 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 09:12:23.737 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 09:12:23.761 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 09:12:23.771 -05:00 [INF] Hosting environment: Development
+2023-11-10 09:12:23.774 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 09:12:27.220 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 09:12:27.399 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:12:27.453 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:12:27.474 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:12:27.594 -05:00 [INF] Executed ViewResult - view Index executed in 118.7104ms.
+2023-11-10 09:12:27.597 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 143.1868ms
+2023-11-10 09:12:27.597 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:12:27.611 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 396.0925ms
+2023-11-10 09:12:27.626 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:12:27.629 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 3.4391ms
+2023-11-10 09:12:27.709 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 09:12:27.713 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 4.1087ms
+2023-11-10 09:12:37.227 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 38
+2023-11-10 09:12:37.233 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:12:37.298 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:12:37.410 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:12:37.425 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 126.7454ms
+2023-11-10 09:12:37.425 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:12:37.426 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 38 - 200 - application/json;+charset=utf-8 199.1779ms
+2023-11-10 09:12:40.623 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43
+2023-11-10 09:12:40.625 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:12:40.625 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:12:56.292 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:12:56.294 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15668.4585ms
+2023-11-10 09:12:56.295 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:12:56.298 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43 - 200 - application/json;+charset=utf-8 15675.0467ms
+2023-11-10 09:12:59.003 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43
+2023-11-10 09:12:59.005 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:12:59.005 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:13:14.053 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:13:14.054 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15048.1504ms
+2023-11-10 09:13:14.054 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:13:14.054 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43 - 200 - application/json;+charset=utf-8 15050.9421ms
+2023-11-10 09:15:24.292 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43
+2023-11-10 09:15:24.294 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:15:24.296 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:15:39.597 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 09:15:39.891 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 09:15:39.894 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 09:15:39.902 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 09:15:39.904 -05:00 [INF] Hosting environment: Development
+2023-11-10 09:15:39.906 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 09:15:41.233 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 09:15:41.422 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:15:41.469 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:15:41.490 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:15:41.627 -05:00 [INF] Executed ViewResult - view Index executed in 140.292ms.
+2023-11-10 09:15:41.631 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 160.7368ms
+2023-11-10 09:15:41.631 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:15:41.642 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 414.6085ms
+2023-11-10 09:15:41.657 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:15:41.660 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 3.1465ms
+2023-11-10 09:15:41.727 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 09:15:41.735 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 7.3640ms
+2023-11-10 09:15:47.577 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43
+2023-11-10 09:15:47.586 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:15:47.646 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:16:03.523 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:16:03.529 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15883.0347ms
+2023-11-10 09:16:03.529 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:16:03.529 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43 - 200 - application/json;+charset=utf-8 15951.8068ms
+2023-11-10 09:16:05.675 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43
+2023-11-10 09:16:05.678 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:16:05.678 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:16:20.747 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:16:20.747 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15068.4242ms
+2023-11-10 09:16:20.747 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:16:20.747 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43 - 200 - application/json;+charset=utf-8 15072.5123ms
+2023-11-10 09:16:23.599 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43
+2023-11-10 09:16:23.602 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:16:23.603 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:16:38.702 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:16:38.704 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15100.6539ms
+2023-11-10 09:16:38.705 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:16:38.709 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43 - 200 - application/json;+charset=utf-8 15110.0688ms
+2023-11-10 09:16:44.139 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 09:16:44.480 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 09:16:44.482 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 09:16:44.489 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 09:16:44.492 -05:00 [INF] Hosting environment: Development
+2023-11-10 09:16:44.493 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 09:16:45.526 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 09:16:45.635 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:16:45.674 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:16:45.690 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:16:45.798 -05:00 [INF] Executed ViewResult - view Index executed in 104.6686ms.
+2023-11-10 09:16:45.800 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 125.9473ms
+2023-11-10 09:16:45.800 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:16:45.815 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 289.5537ms
+2023-11-10 09:16:45.839 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:16:45.849 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 9.7223ms
+2023-11-10 09:16:45.930 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 09:16:45.943 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 13.3942ms
+2023-11-10 09:16:51.523 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:16:51.528 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:16:51.583 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:17:07.404 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:17:07.411 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15827.2262ms
+2023-11-10 09:17:07.411 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:17:07.411 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15888.1169ms
+2023-11-10 09:17:14.856 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:17:14.860 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:17:14.861 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:17:29.919 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:17:29.920 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15058.4825ms
+2023-11-10 09:17:29.920 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:17:29.920 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15064.2830ms
+2023-11-10 09:17:38.995 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 09:17:39.310 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 09:17:39.313 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 09:17:39.320 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 09:17:39.323 -05:00 [INF] Hosting environment: Development
+2023-11-10 09:17:39.324 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 09:17:40.563 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 09:17:40.675 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:17:40.708 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:17:40.723 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:17:40.823 -05:00 [INF] Executed ViewResult - view Index executed in 101.2177ms.
+2023-11-10 09:17:40.825 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 116.5968ms
+2023-11-10 09:17:40.825 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:17:40.836 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 284.3254ms
+2023-11-10 09:17:40.850 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:17:40.853 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 2.7773ms
+2023-11-10 09:17:40.923 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 09:17:40.928 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 4.9798ms
+2023-11-10 09:17:45.292 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:17:45.302 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:17:45.379 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:18:01.135 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:18:01.141 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15762.5427ms
+2023-11-10 09:18:01.141 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:18:01.142 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15850.5609ms
+2023-11-10 09:18:14.384 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 09:18:14.740 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 09:18:14.742 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 09:18:14.751 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 09:18:14.753 -05:00 [INF] Hosting environment: Development
+2023-11-10 09:18:14.754 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 09:18:15.831 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 09:18:15.954 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:18:16.000 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:18:16.022 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:18:16.119 -05:00 [INF] Executed ViewResult - view Index executed in 99.8107ms.
+2023-11-10 09:18:16.122 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 120.6901ms
+2023-11-10 09:18:16.122 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:18:16.131 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 315.0611ms
+2023-11-10 09:18:16.155 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:18:16.159 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 4.1380ms
+2023-11-10 09:18:16.245 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 09:18:16.255 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 10.1549ms
+2023-11-10 09:18:26.816 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43
+2023-11-10 09:18:26.822 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:18:26.889 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:18:53.160 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:18:53.165 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 26275.3619ms
+2023-11-10 09:18:53.165 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:18:53.166 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43 - 200 - application/json;+charset=utf-8 26349.5947ms
+2023-11-10 09:18:55.996 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43
+2023-11-10 09:18:55.999 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:18:56.000 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:19:11.052 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:19:11.052 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15052.7555ms
+2023-11-10 09:19:11.053 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:19:11.053 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43 - 200 - application/json;+charset=utf-8 15057.2347ms
+2023-11-10 09:23:49.263 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43
+2023-11-10 09:23:49.265 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:23:49.270 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:24:04.338 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:24:04.339 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15063.2499ms
+2023-11-10 09:24:04.341 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:24:04.345 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43 - 200 - application/json;+charset=utf-8 15081.6337ms
+2023-11-10 09:24:24.394 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43
+2023-11-10 09:24:24.397 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:24:24.400 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:24:39.522 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:24:39.524 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15121.9941ms
+2023-11-10 09:24:39.525 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:24:39.533 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43 - 200 - application/json;+charset=utf-8 15138.5726ms
+2023-11-10 09:25:46.660 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43
+2023-11-10 09:25:46.665 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:25:46.675 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:25:47.564 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType2`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:25:47.573 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 897.175ms
+2023-11-10 09:25:47.573 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:25:47.589 -05:00 [INF] Session started; Key:abd1dfc8-df8f-d7f9-8574-bbaa0473b91e, Id:c748c82b-987b-9cac-2102-18460afd17a1
+2023-11-10 09:25:47.591 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43 - 200 - application/json;+charset=utf-8 933.2623ms
+2023-11-10 09:25:48.986 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/Home - -
+2023-11-10 09:25:48.988 -05:00 [INF] Executing endpoint 'Generacion.Controllers.HomeController.Index (Generacion)'
+2023-11-10 09:25:48.991 -05:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.HomeController (Generacion).
+2023-11-10 09:25:49.590 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:25:49.783 -05:00 [INF] Executed ViewResult - view Index executed in 193.9342ms.
+2023-11-10 09:25:49.787 -05:00 [INF] Executed action Generacion.Controllers.HomeController.Index (Generacion) in 795.8389ms
+2023-11-10 09:25:49.787 -05:00 [INF] Executed endpoint 'Generacion.Controllers.HomeController.Index (Generacion)'
+2023-11-10 09:25:49.825 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/Home - - - 200 - text/html;+charset=utf-8 839.2238ms
+2023-11-10 09:25:49.903 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:25:49.904 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 09:25:49.908 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 4.4281ms
+2023-11-10 09:25:49.994 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 09:25:50.013 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 108.7998ms
+2023-11-10 09:25:50.024 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 09:25:50.025 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 30.7427ms
+2023-11-10 09:29:41.880 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 09:29:42.229 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 09:29:42.233 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 09:29:42.240 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 09:29:42.243 -05:00 [INF] Hosting environment: Development
+2023-11-10 09:29:42.244 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 09:29:43.510 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 09:29:43.623 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:29:43.672 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:29:43.691 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:29:43.810 -05:00 [INF] Executed ViewResult - view Index executed in 120.3629ms.
+2023-11-10 09:29:43.814 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 140.7601ms
+2023-11-10 09:29:43.816 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:29:43.825 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 321.3177ms
+2023-11-10 09:29:43.841 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:29:43.843 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 2.7925ms
+2023-11-10 09:29:43.908 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 09:29:43.913 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 5.1895ms
+2023-11-10 09:29:57.232 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:29:57.239 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:29:57.298 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:30:13.152 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:30:13.158 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15858.8617ms
+2023-11-10 09:30:13.159 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:30:13.159 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15927.9221ms
+2023-11-10 09:30:16.933 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:30:16.937 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:30:16.938 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:30:32.020 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:30:32.022 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15084.3698ms
+2023-11-10 09:30:32.022 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:30:32.023 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15090.4178ms
+2023-11-10 09:30:52.090 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 09:30:52.402 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 09:30:52.404 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 09:30:52.411 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 09:30:52.414 -05:00 [INF] Hosting environment: Development
+2023-11-10 09:30:52.415 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 09:30:53.793 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 09:30:53.936 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:30:53.979 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:30:53.997 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:30:54.100 -05:00 [INF] Executed ViewResult - view Index executed in 104.2704ms.
+2023-11-10 09:30:54.103 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 122.9468ms
+2023-11-10 09:30:54.103 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:30:54.117 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 344.0112ms
+2023-11-10 09:30:54.131 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:30:54.135 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 3.6876ms
+2023-11-10 09:30:54.198 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 09:30:54.204 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 6.4733ms
+2023-11-10 09:31:07.874 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:31:07.884 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:31:07.939 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:31:23.781 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:31:23.788 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15848.9231ms
+2023-11-10 09:31:23.788 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:31:23.788 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15914.8010ms
+2023-11-10 09:31:29.243 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 09:31:29.603 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 09:31:29.605 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 09:31:29.614 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 09:31:29.617 -05:00 [INF] Hosting environment: Development
+2023-11-10 09:31:29.618 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 09:31:30.825 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 09:31:30.917 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:31:30.962 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:31:30.993 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:31:31.095 -05:00 [INF] Executed ViewResult - view Index executed in 113.5734ms.
+2023-11-10 09:31:31.100 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 136.1881ms
+2023-11-10 09:31:31.100 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:31:31.111 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 293.5970ms
+2023-11-10 09:31:31.126 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:31:31.130 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 3.3855ms
+2023-11-10 09:31:31.194 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 09:31:31.200 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 6.7138ms
+2023-11-10 09:31:34.749 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:31:34.756 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:31:34.816 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:31:50.566 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:31:50.573 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15756.3508ms
+2023-11-10 09:31:50.573 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:31:50.573 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15824.8959ms
+2023-11-10 09:31:54.525 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:31:54.528 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:31:54.529 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:32:09.580 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:32:09.580 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15051.3034ms
+2023-11-10 09:32:09.580 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:32:09.580 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15056.5021ms
+2023-11-10 09:32:13.136 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:32:13.137 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:32:13.138 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:32:26.400 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 09:32:26.742 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 09:32:26.743 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 09:32:26.754 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 09:32:26.757 -05:00 [INF] Hosting environment: Development
+2023-11-10 09:32:26.758 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 09:32:27.947 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 09:32:28.091 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:32:28.131 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:32:28.145 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:32:28.239 -05:00 [INF] Executed ViewResult - view Index executed in 92.0558ms.
+2023-11-10 09:32:28.242 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 111.0406ms
+2023-11-10 09:32:28.243 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:32:28.260 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 320.3369ms
+2023-11-10 09:32:28.279 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:32:28.290 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 10.6035ms
+2023-11-10 09:32:28.359 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 09:32:28.365 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 5.2339ms
+2023-11-10 09:32:35.356 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:32:35.363 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:32:35.418 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:32:51.172 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:32:51.176 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15757.6556ms
+2023-11-10 09:32:51.176 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:32:51.176 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15820.5275ms
+2023-11-10 09:32:54.115 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:32:54.118 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:32:54.119 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:33:08.091 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 09:33:08.092 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:33:08.092 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:33:09.223 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:33:09.226 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15105.9898ms
+2023-11-10 09:33:09.227 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:33:09.228 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15112.8012ms
+2023-11-10 09:33:23.179 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:33:23.181 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15088.4851ms
+2023-11-10 09:33:23.182 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:33:23.188 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 15097.1705ms
+2023-11-10 09:33:30.509 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 09:33:30.877 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 09:33:30.878 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 09:33:30.885 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 09:33:30.888 -05:00 [INF] Hosting environment: Development
+2023-11-10 09:33:30.889 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 09:33:32.060 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 09:33:32.162 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:33:32.198 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:33:32.213 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:33:32.324 -05:00 [INF] Executed ViewResult - view Index executed in 106.2389ms.
+2023-11-10 09:33:32.326 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 127.8426ms
+2023-11-10 09:33:32.327 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 09:33:32.343 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 286.0033ms
+2023-11-10 09:33:32.355 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:33:32.359 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 4.1548ms
+2023-11-10 09:33:32.432 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 09:33:32.438 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 6.4568ms
+2023-11-10 09:33:40.463 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43
+2023-11-10 09:33:40.476 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:33:40.588 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:33:56.591 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:33:56.599 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 16009.3162ms
+2023-11-10 09:33:56.599 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:33:56.599 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43 - 200 - application/json;+charset=utf-8 16137.6610ms
+2023-11-10 09:34:07.443 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43
+2023-11-10 09:34:07.448 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:34:07.449 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 09:34:17.512 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType2`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 09:34:17.517 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 10067.58ms
+2023-11-10 09:34:17.517 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 09:34:17.526 -05:00 [INF] Session started; Key:bc259c4f-f236-e0b4-a1e2-13e316549259, Id:e41885e7-c268-28c3-617f-0cc7c06cc2f2
+2023-11-10 09:34:17.535 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 43 - 200 - application/json;+charset=utf-8 10091.7124ms
+2023-11-10 09:34:18.513 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/Home - -
+2023-11-10 09:34:18.549 -05:00 [INF] Executing endpoint 'Generacion.Controllers.HomeController.Index (Generacion)'
+2023-11-10 09:34:18.568 -05:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.HomeController (Generacion).
+2023-11-10 09:34:19.165 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:34:19.403 -05:00 [INF] Executed ViewResult - view Index executed in 238.5016ms.
+2023-11-10 09:34:19.407 -05:00 [INF] Executed action Generacion.Controllers.HomeController.Index (Generacion) in 838.4042ms
+2023-11-10 09:34:19.407 -05:00 [INF] Executed endpoint 'Generacion.Controllers.HomeController.Index (Generacion)'
+2023-11-10 09:34:19.422 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/Home - - - 200 - text/html;+charset=utf-8 909.3704ms
+2023-11-10 09:34:19.484 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:34:19.484 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.3703ms
+2023-11-10 09:34:19.489 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 09:34:19.531 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 41.3589ms
+2023-11-10 09:34:19.582 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 09:34:19.629 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 09:34:19.629 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 47.0562ms
+2023-11-10 09:34:22.737 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/LecturasCampo - -
+2023-11-10 09:34:22.738 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LecturasCampoController.Index (Generacion)'
+2023-11-10 09:34:22.741 -05:00 [INF] Route matched with {action = "Index", controller = "LecturasCampo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.LecturasCampoController (Generacion).
+2023-11-10 09:34:22.925 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:34:22.988 -05:00 [INF] Executed ViewResult - view Index executed in 63.4387ms.
+2023-11-10 09:34:22.989 -05:00 [INF] Executed action Generacion.Controllers.LecturasCampoController.Index (Generacion) in 247.1411ms
+2023-11-10 09:34:22.989 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LecturasCampoController.Index (Generacion)'
+2023-11-10 09:34:23.005 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/LecturasCampo - - - 200 - text/html;+charset=utf-8 268.0778ms
+2023-11-10 09:34:23.038 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:34:23.038 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.3211ms
+2023-11-10 09:34:23.038 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 09:34:23.046 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 7.5458ms
+2023-11-10 09:34:23.181 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 09:34:23.185 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 09:34:23.185 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 3.6353ms
+2023-11-10 09:34:29.220 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/LecturasCampo/GuardarDatosConsola application/json 199453
+2023-11-10 09:34:29.221 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LecturasCampoController.GuardarDatosConsola (Generacion)'
+2023-11-10 09:34:29.224 -05:00 [INF] Route matched with {action = "GuardarDatosConsola", controller = "LecturasCampo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.JsonResult] GuardarDatosConsola(System.Collections.Generic.List`1[Generacion.Models.LecturasCampo.DatosFormatoCampo]) on controller Generacion.Controllers.LecturasCampoController (Generacion).
+2023-11-10 09:37:51.181 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType0`1[[Generacion.Models.Respuesta`1[[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], Generacion, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2023-11-10 09:37:51.184 -05:00 [INF] Executed action Generacion.Controllers.LecturasCampoController.GuardarDatosConsola (Generacion) in 201959.8027ms
+2023-11-10 09:37:51.185 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LecturasCampoController.GuardarDatosConsola (Generacion)'
+2023-11-10 09:37:51.186 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/LecturasCampo/GuardarDatosConsola application/json 199453 - 200 - application/json;+charset=utf-8 201965.2219ms
+2023-11-10 09:43:25.619 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/LecturasCampo - -
+2023-11-10 09:43:25.620 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LecturasCampoController.Index (Generacion)'
+2023-11-10 09:43:25.620 -05:00 [INF] Route matched with {action = "Index", controller = "LecturasCampo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.LecturasCampoController (Generacion).
+2023-11-10 09:43:25.760 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:43:25.770 -05:00 [INF] Executed ViewResult - view Index executed in 9.9149ms.
+2023-11-10 09:43:25.770 -05:00 [INF] Executed action Generacion.Controllers.LecturasCampoController.Index (Generacion) in 149.9009ms
+2023-11-10 09:43:25.770 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LecturasCampoController.Index (Generacion)'
+2023-11-10 09:43:25.801 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/LecturasCampo - - - 200 - text/html;+charset=utf-8 182.3655ms
+2023-11-10 09:43:25.852 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:43:25.852 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.4292ms
+2023-11-10 09:43:25.853 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 09:43:25.864 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 11.4609ms
+2023-11-10 09:43:25.982 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 09:43:25.986 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 09:43:25.986 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 4.2034ms
+2023-11-10 09:43:27.452 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/LecturasCampo - -
+2023-11-10 09:43:27.453 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LecturasCampoController.Index (Generacion)'
+2023-11-10 09:43:27.453 -05:00 [INF] Route matched with {action = "Index", controller = "LecturasCampo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.LecturasCampoController (Generacion).
+2023-11-10 09:43:27.570 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:43:27.579 -05:00 [INF] Executed ViewResult - view Index executed in 8.9657ms.
+2023-11-10 09:43:27.580 -05:00 [INF] Executed action Generacion.Controllers.LecturasCampoController.Index (Generacion) in 126.2879ms
+2023-11-10 09:43:27.580 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LecturasCampoController.Index (Generacion)'
+2023-11-10 09:43:27.597 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/LecturasCampo - - - 200 - text/html;+charset=utf-8 144.6342ms
+2023-11-10 09:43:27.612 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:43:27.612 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.2836ms
+2023-11-10 09:43:27.612 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 09:43:27.617 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 4.7557ms
+2023-11-10 09:43:27.744 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 09:43:27.752 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 09:43:27.752 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 7.5620ms
+2023-11-10 09:49:52.357 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/DatosConsola - -
+2023-11-10 09:49:52.360 -05:00 [INF] Executing endpoint 'Generacion.Controllers.DatosConsolaController.Index (Generacion)'
+2023-11-10 09:49:52.363 -05:00 [INF] Route matched with {action = "Index", controller = "DatosConsola"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.DatosConsolaController (Generacion).
+2023-11-10 09:49:52.642 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:49:52.694 -05:00 [INF] Executed ViewResult - view Index executed in 53.0204ms.
+2023-11-10 09:49:52.695 -05:00 [INF] Executed action Generacion.Controllers.DatosConsolaController.Index (Generacion) in 331.014ms
+2023-11-10 09:49:52.695 -05:00 [INF] Executed endpoint 'Generacion.Controllers.DatosConsolaController.Index (Generacion)'
+2023-11-10 09:49:53.023 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/DatosConsola - - - 200 - text/html;+charset=utf-8 665.9482ms
+2023-11-10 09:49:53.107 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:49:53.108 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.9099ms
+2023-11-10 09:49:53.110 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 09:49:53.134 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 24.5312ms
+2023-11-10 09:49:53.244 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 09:49:53.251 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 09:49:53.252 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 8.0423ms
+2023-11-10 09:51:08.066 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/LecturasCampo - -
+2023-11-10 09:51:08.067 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LecturasCampoController.Index (Generacion)'
+2023-11-10 09:51:08.068 -05:00 [INF] Route matched with {action = "Index", controller = "LecturasCampo"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.LecturasCampoController (Generacion).
+2023-11-10 09:51:08.163 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 09:51:08.171 -05:00 [INF] Executed ViewResult - view Index executed in 8.2526ms.
+2023-11-10 09:51:08.172 -05:00 [INF] Executed action Generacion.Controllers.LecturasCampoController.Index (Generacion) in 103.133ms
+2023-11-10 09:51:08.172 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LecturasCampoController.Index (Generacion)'
+2023-11-10 09:51:08.212 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/LecturasCampo - - - 200 - text/html;+charset=utf-8 146.5948ms
+2023-11-10 09:51:08.233 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 09:51:08.234 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.3819ms
+2023-11-10 09:51:08.245 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 09:51:08.253 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 8.0486ms
+2023-11-10 09:51:08.408 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 09:51:08.413 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 09:51:08.413 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 4.8460ms
+2023-11-10 14:17:06.067 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 14:17:06.783 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 14:17:06.786 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 14:17:06.797 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 14:17:06.805 -05:00 [INF] Hosting environment: Development
+2023-11-10 14:17:06.807 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 14:17:09.140 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 14:17:09.519 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 14:17:09.614 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 14:17:09.646 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 14:17:09.834 -05:00 [INF] Executed ViewResult - view Index executed in 199.2333ms.
+2023-11-10 14:17:09.842 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 225.8179ms
+2023-11-10 14:17:09.842 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 14:17:09.860 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 735.9780ms
+2023-11-10 14:17:10.523 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 14:17:10.531 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 8.7699ms
+2023-11-10 14:17:10.597 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 14:17:10.613 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 16.5923ms
+2023-11-10 14:31:39.736 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44
+2023-11-10 14:31:39.741 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 14:31:39.788 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 14:31:41.236 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType2`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 14:31:41.245 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 1456.7875ms
+2023-11-10 14:31:41.245 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 14:31:41.250 -05:00 [INF] Session started; Key:a4880370-6bed-1422-c01b-63925518ce28, Id:380e5836-efeb-de70-e8c9-4c1868d5f040
+2023-11-10 14:31:41.251 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 44 - 200 - application/json;+charset=utf-8 1515.5567ms
+2023-11-10 14:31:42.342 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/Home - -
+2023-11-10 14:31:42.380 -05:00 [INF] Executing endpoint 'Generacion.Controllers.HomeController.Index (Generacion)'
+2023-11-10 14:31:42.399 -05:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.HomeController (Generacion).
+2023-11-10 14:31:42.903 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 14:31:43.071 -05:00 [INF] Executed ViewResult - view Index executed in 168.3887ms.
+2023-11-10 14:31:43.079 -05:00 [INF] Executed action Generacion.Controllers.HomeController.Index (Generacion) in 679.9638ms
+2023-11-10 14:31:43.081 -05:00 [INF] Executed endpoint 'Generacion.Controllers.HomeController.Index (Generacion)'
+2023-11-10 14:31:43.098 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/Home - - - 200 - text/html;+charset=utf-8 755.4985ms
+2023-11-10 14:31:43.179 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 14:31:43.180 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 1.7522ms
+2023-11-10 14:31:43.184 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 14:31:43.247 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 62.1719ms
+2023-11-10 14:31:43.252 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 14:31:43.345 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 14:31:43.345 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 92.7996ms
+2023-11-10 14:31:45.999 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/Bujias/RegistroControlCambio - -
+2023-11-10 14:31:46.000 -05:00 [INF] Executing endpoint 'Generacion.Controllers.BujiasController.RegistroControlCambio (Generacion)'
+2023-11-10 14:31:46.003 -05:00 [INF] Route matched with {action = "RegistroControlCambio", controller = "Bujias"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] RegistroControlCambio() on controller Generacion.Controllers.BujiasController (Generacion).
+2023-11-10 14:31:46.013 -05:00 [INF] Executing ViewResult, running view RegistroControlCambio.
+2023-11-10 14:31:46.031 -05:00 [INF] Executed ViewResult - view RegistroControlCambio executed in 18.6536ms.
+2023-11-10 14:31:46.031 -05:00 [INF] Executed action Generacion.Controllers.BujiasController.RegistroControlCambio (Generacion) in 28.0502ms
+2023-11-10 14:31:46.031 -05:00 [INF] Executed endpoint 'Generacion.Controllers.BujiasController.RegistroControlCambio (Generacion)'
+2023-11-10 14:31:46.043 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/Bujias/RegistroControlCambio - - - 200 - text/html;+charset=utf-8 43.6424ms
+2023-11-10 14:31:46.074 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 14:31:46.075 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 14:31:46.075 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.7725ms
+2023-11-10 14:31:46.086 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 11.4564ms
+2023-11-10 14:31:46.128 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 14:31:46.133 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 14:31:46.133 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 4.5780ms
+2023-11-10 14:31:48.144 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/Bujias/ControlCambio - -
+2023-11-10 14:31:48.146 -05:00 [INF] Executing endpoint 'Generacion.Controllers.BujiasController.ControlCambio (Generacion)'
+2023-11-10 14:31:48.150 -05:00 [INF] Route matched with {action = "ControlCambio", controller = "Bujias"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] ControlCambio() on controller Generacion.Controllers.BujiasController (Generacion).
+2023-11-10 14:31:48.378 -05:00 [INF] Executing ViewResult, running view ControlCambio.
+2023-11-10 14:31:48.399 -05:00 [INF] Executed ViewResult - view ControlCambio executed in 21.8914ms.
+2023-11-10 14:31:48.400 -05:00 [INF] Executed action Generacion.Controllers.BujiasController.ControlCambio (Generacion) in 249.6081ms
+2023-11-10 14:31:48.400 -05:00 [INF] Executed endpoint 'Generacion.Controllers.BujiasController.ControlCambio (Generacion)'
+2023-11-10 14:31:48.409 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/Bujias/ControlCambio - - - 200 - text/html;+charset=utf-8 265.1163ms
+2023-11-10 14:31:48.444 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 14:31:48.444 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 14:31:48.445 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.5418ms
+2023-11-10 14:31:48.450 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 5.6137ms
+2023-11-10 14:31:48.496 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 14:31:48.497 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 14:31:48.498 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 2.1541ms
+2023-11-10 14:38:13.319 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/Bujias - -
+2023-11-10 14:38:13.322 -05:00 [INF] Executing endpoint 'Generacion.Controllers.BujiasController.Index (Generacion)'
+2023-11-10 14:38:13.327 -05:00 [INF] Route matched with {action = "Index", controller = "Bujias"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.BujiasController (Generacion).
+2023-11-10 14:38:15.596 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 14:38:15.612 -05:00 [INF] Executed ViewResult - view Index executed in 17.0248ms.
+2023-11-10 14:38:15.613 -05:00 [INF] Executed action Generacion.Controllers.BujiasController.Index (Generacion) in 2285.7174ms
+2023-11-10 14:38:15.613 -05:00 [INF] Executed endpoint 'Generacion.Controllers.BujiasController.Index (Generacion)'
+2023-11-10 14:38:15.618 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/Bujias - - - 200 - text/html;+charset=utf-8 2298.8510ms
+2023-11-10 14:38:15.641 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 14:38:15.641 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.2246ms
+2023-11-10 14:38:15.641 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 14:38:15.658 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 16.4227ms
+2023-11-10 14:38:15.683 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 14:38:15.686 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 14:38:15.686 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 2.6754ms
+2023-11-10 15:08:46.463 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/RegistroComponentes - -
+2023-11-10 15:08:46.475 -05:00 [INF] Executing endpoint 'Generacion.Controllers.RegistroComponentesController.Index (Generacion)'
+2023-11-10 15:08:46.478 -05:00 [INF] Route matched with {action = "Index", controller = "RegistroComponentes"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.RegistroComponentesController (Generacion).
+2023-11-10 15:08:46.523 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 15:08:46.535 -05:00 [INF] Executed ViewResult - view Index executed in 11.7897ms.
+2023-11-10 15:08:46.535 -05:00 [INF] Executed action Generacion.Controllers.RegistroComponentesController.Index (Generacion) in 56.2906ms
+2023-11-10 15:08:46.535 -05:00 [INF] Executed endpoint 'Generacion.Controllers.RegistroComponentesController.Index (Generacion)'
+2023-11-10 15:08:46.547 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/RegistroComponentes - - - 200 - text/html;+charset=utf-8 83.3820ms
+2023-11-10 15:08:46.587 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 15:08:46.587 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.4804ms
+2023-11-10 15:08:46.587 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 15:08:46.612 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 25.2387ms
+2023-11-10 15:08:46.643 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 15:08:46.649 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 15:08:46.649 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 5.7965ms
+2023-11-10 16:15:17.300 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ION - -
+2023-11-10 16:15:17.312 -05:00 [INF] Executing endpoint 'Generacion.Controllers.IONController.Index (Generacion)'
+2023-11-10 16:15:17.323 -05:00 [INF] Route matched with {action = "Index", controller = "ION"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.IONController (Generacion).
+2023-11-10 16:18:41.045 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 16:18:41.055 -05:00 [INF] Executed ViewResult - view Index executed in 11.0745ms.
+2023-11-10 16:18:41.055 -05:00 [INF] Executed action Generacion.Controllers.IONController.Index (Generacion) in 203732.9249ms
+2023-11-10 16:18:41.056 -05:00 [INF] Executed endpoint 'Generacion.Controllers.IONController.Index (Generacion)'
+2023-11-10 16:18:41.065 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ION - - - 200 - text/html;+charset=utf-8 203766.6936ms
+2023-11-10 16:18:41.101 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 16:18:41.101 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 16:18:41.102 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.9042ms
+2023-11-10 16:18:41.120 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 19.2603ms
+2023-11-10 16:18:41.159 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 16:18:41.165 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 16:18:41.165 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 6.5982ms
+2023-11-10 16:42:56.322 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 16:42:56.657 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 16:42:56.663 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 16:42:56.673 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 16:42:56.675 -05:00 [INF] Hosting environment: Development
+2023-11-10 16:42:56.677 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 16:42:58.227 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 16:42:58.433 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 16:42:58.479 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 16:42:58.505 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 16:42:58.623 -05:00 [INF] Executed ViewResult - view Index executed in 113.7649ms.
+2023-11-10 16:42:58.630 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 148.0807ms
+2023-11-10 16:42:58.630 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 16:42:58.647 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 434.4991ms
+2023-11-10 16:42:58.681 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 16:42:58.686 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 5.1172ms
+2023-11-10 16:42:58.805 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 16:42:58.922 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 116.3471ms
+2023-11-10 16:45:08.358 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 45
+2023-11-10 16:45:08.361 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 16:45:08.384 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 16:45:23.869 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType1`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 16:45:23.874 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 15489.7162ms
+2023-11-10 16:45:23.874 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 16:45:23.875 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 45 - 200 - application/json;+charset=utf-8 15516.8274ms
+2023-11-10 16:45:37.797 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 45
+2023-11-10 16:45:37.806 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 16:45:37.809 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 16:45:38.495 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType2`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 16:45:38.500 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 689.9984ms
+2023-11-10 16:45:38.500 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 16:45:38.511 -05:00 [INF] Session started; Key:f21d6434-f546-543f-10ce-ccb663871ff8, Id:a8e6c135-397a-51dc-9ad6-aa0681bce557
+2023-11-10 16:45:38.513 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 45 - 200 - application/json;+charset=utf-8 716.1799ms
+2023-11-10 16:45:43.018 -05:00 [INF] User profile is available. Using 'C:\Users\jevangelista\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2023-11-10 16:45:43.334 -05:00 [INF] Now listening on: https://localhost:7100
+2023-11-10 16:45:43.336 -05:00 [INF] Now listening on: http://localhost:5035
+2023-11-10 16:45:43.348 -05:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-11-10 16:45:43.351 -05:00 [INF] Hosting environment: Development
+2023-11-10 16:45:43.352 -05:00 [INF] Content root path: C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion
+2023-11-10 16:45:45.089 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/ - -
+2023-11-10 16:45:45.213 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 16:45:45.249 -05:00 [INF] Route matched with {action = "Index", controller = "Login"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Index() on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 16:45:45.265 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 16:45:45.367 -05:00 [INF] Executed ViewResult - view Index executed in 105.1363ms.
+2023-11-10 16:45:45.371 -05:00 [INF] Executed action Generacion.Controllers.LoginController.Index (Generacion) in 121.6148ms
+2023-11-10 16:45:45.372 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.Index (Generacion)'
+2023-11-10 16:45:45.383 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/ - - - 200 - text/html;+charset=utf-8 299.4994ms
+2023-11-10 16:45:45.399 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 16:45:45.403 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 4.1124ms
+2023-11-10 16:45:45.483 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - -
+2023-11-10 16:45:45.488 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/PortalGeneracion/img/Fondo_Generacion.png - - - 404 0 - 4.6860ms
+2023-11-10 16:46:01.973 -05:00 [INF] Request starting HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 45
+2023-11-10 16:46:01.977 -05:00 [INF] Executing endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 16:46:02.047 -05:00 [INF] Route matched with {action = "ValidarSession", controller = "Login"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] ValidarSession(Generacion.Models.Session.UsuarioSession) on controller Generacion.Controllers.LoginController (Generacion).
+2023-11-10 16:46:03.703 -05:00 [INF] Executing JsonResult, writing value of type '<>f__AnonymousType2`2[[System.Boolean, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2023-11-10 16:46:03.710 -05:00 [INF] Executed action Generacion.Controllers.LoginController.ValidarSession (Generacion) in 1662.8127ms
+2023-11-10 16:46:03.710 -05:00 [INF] Executed endpoint 'Generacion.Controllers.LoginController.ValidarSession (Generacion)'
+2023-11-10 16:46:03.718 -05:00 [INF] Session started; Key:8ff67821-7a00-f3e7-f912-d1d4863dfce9, Id:e07f865c-01cd-b4f4-8575-8aab17adc302
+2023-11-10 16:46:03.718 -05:00 [INF] Request finished HTTP/2 POST https://localhost:7100/Login/ValidarSession application/x-www-form-urlencoded;+charset=UTF-8 45 - 200 - application/json;+charset=utf-8 1745.9117ms
+2023-11-10 16:46:04.961 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/Home - -
+2023-11-10 16:46:04.975 -05:00 [INF] Executing endpoint 'Generacion.Controllers.HomeController.Index (Generacion)'
+2023-11-10 16:46:05.008 -05:00 [INF] Route matched with {action = "Index", controller = "Home"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index() on controller Generacion.Controllers.HomeController (Generacion).
+2023-11-10 16:46:05.450 -05:00 [INF] Executing ViewResult, running view Index.
+2023-11-10 16:46:05.591 -05:00 [INF] Executed ViewResult - view Index executed in 141.421ms.
+2023-11-10 16:46:05.601 -05:00 [INF] Executed action Generacion.Controllers.HomeController.Index (Generacion) in 590.9699ms
+2023-11-10 16:46:05.602 -05:00 [INF] Executed endpoint 'Generacion.Controllers.HomeController.Index (Generacion)'
+2023-11-10 16:46:05.617 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/Home - - - 200 - text/html;+charset=utf-8 656.6059ms
+2023-11-10 16:46:05.693 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_vs/browserLink - -
+2023-11-10 16:46:05.694 -05:00 [INF] Request starting HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - -
+2023-11-10 16:46:05.694 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_framework/aspnetcore-browser-refresh.js - - - 200 11990 application/javascript;+charset=utf-8 0.7512ms
+2023-11-10 16:46:05.742 -05:00 [INF] Request finished HTTP/2 GET https://localhost:7100/_vs/browserLink - - - 200 - text/javascript;+charset=UTF-8 48.4107ms
+2023-11-10 16:46:05.807 -05:00 [INF] Request starting HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - -
+2023-11-10 16:46:05.835 -05:00 [INF] Sending file. Request path: '/vendor/bootstrap/js/bootstrap.bundle.min.js.map'. Physical path: 'C:\Users\jevangelista\OneDrive - ELECTRO DUNAS S.A.A\Escritorio\Tareas\Generacion\Code\code_Git\Generacion\wwwroot\vendor\bootstrap\js\bootstrap.bundle.min.js.map'
+2023-11-10 16:46:05.835 -05:00 [INF] Request finished HTTP/1.1 GET https://localhost:7100/vendor/bootstrap/js/bootstrap.bundle.min.js.map - - - 200 316181 text/plain 28.6108ms

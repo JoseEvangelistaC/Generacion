@@ -1,4 +1,5 @@
 ﻿@using System.Text;
+@using Microsoft.AspNetCore.Html;
 @{
     Dictionary<int, List<string>> datoHorario = ViewData["horarioOperarios"] as Dictionary<int, List<string>>;
 
@@ -8,6 +9,34 @@
 
     DateTime fechaActual = DateTime.Now;
 
+
+    Func<List<string>, int, IHtmlContent> MostrarTurno = (operarios, maxOperarios) =>
+                   {
+                       StringBuilder sb = new StringBuilder();
+                       int cantidadDeDatos = 0;
+
+                       foreach (string operario in operarios)
+                       {
+                           cantidadDeDatos++;
+                           if (cantidadDeDatos == maxOperarios)
+                           {
+                               sb.Append($"   /   {operario} ");
+                           }
+                           else
+                           {
+                               sb.Append($"{operario}");
+                           }
+                       }
+
+                       if (cantidadDeDatos == 0)
+                       {
+                           return new HtmlString("<p>             /             </p>");
+                       }
+                       else
+                       {
+                           return new HtmlString($"<p>{sb.ToString()}</p>");
+                       }
+                   };
 }
 
 <style>
@@ -159,7 +188,7 @@
                 <div class="content-img-logo">
                     <img class="image-logo" src="./img/logo_elec.png" />
                 </div>
-                <div><p style="width:50%">Horas motor EG01:</p><input style="width:50%; text-align: -webkit-center;" placeholder="0000 H" /> </div>
+                <div><p style="width:50%">Horas motor EG01:</p><input id="horasEG1" style="width:50%; text-align: -webkit-center;" placeholder="0000 Hrs" /> </div>
             </div>
             <div class="col-md-6">
                 @{
@@ -171,85 +200,17 @@
                     </div>
                     <div>
                         <p1>Turno 1</p1>
-                        @if (mañana.Count >= 1)
-                        {
-
-                            @foreach (string operarios in mañana)
-                            {
-                                cantidadDeDatos++;
-                                if (cantidadDeDatos == 2)
-                                {
-                                    sb.Append($"   /   {operarios} ");
-
-                                }
-                                else
-                                {
-                                    sb.Append($"{operarios}");
-                                }
-
-                            }
-                            <p> @sb.ToString() </p>
-                        }
-                        else
-                        {
-                            <p>             /             </p>
-                        }
+                        @MostrarTurno(mañana,2)
                     </div>
 
                     <div>
                         <p1>Turno 2</p1>
-                        @if (tarde.Count >= 1)
-                        {
-                            sb = new StringBuilder();
-                            cantidadDeDatos = 0;
-                            @foreach (string operarios in tarde)
-                            {
-                                cantidadDeDatos++;
-                                if (cantidadDeDatos == 2)
-                                {
-                                    sb.Append($"   /   {operarios} ");
-
-                                }
-                                else
-                                {
-                                    sb.Append($"{operarios}");
-                                }
-
-                            }
-                            <p> @sb.ToString() </p>
-                        }
-                        else
-                        {
-                            <p>             /             </p>
-                        }
+                        @MostrarTurno(tarde,2)
                     </div>
 
                     <div>
                         <p1>Turno 3</p1>
-                        @if (noche.Count >= 1)
-                        {
-                            sb = new StringBuilder();
-                            cantidadDeDatos = 0;
-                            @foreach (string operarios in noche)
-                            {
-                                cantidadDeDatos++;
-                                if (cantidadDeDatos == 2)
-                                {
-                                    sb.Append($"   /   {operarios} ");
-
-                                }
-                                else
-                                {
-                                    sb.Append($"{operarios}");
-                                }
-
-                            }
-                            <p> @sb.ToString() </p>
-                        }
-                        else
-                        {
-                            <p>             /             </p>
-                        }
+                        @MostrarTurno(noche,2)
                     </div>
                     <div>
                         <p1>Fecha</p1>
@@ -259,7 +220,7 @@
 
                 <div>
                     <p1>Horas motor EG02:</p1>
-                    <input style="width:100%; text-align: -webkit-center;" placeholder="0000 H" />
+                    <input id="horasEG2" style="width:100%; text-align: -webkit-center;" placeholder="0000 Hrs" />
                 </div>
             </div>
         </div>
@@ -840,7 +801,7 @@
                 }
             });
         });
-
+        
         $("#btnCerrarModal").click(function () {
             $("#miModal").hide();
         });
@@ -1057,18 +1018,18 @@
 
         var datosCartel = obtenerTablasConAtributo();
         var datosexpansionVersel = ObtenerDatosVersel();
+        var datosHorasGen = obtenerHorasGeneradas();
         const datosAEnviar = {
             motoGeneradores: listaMotoGeneradores,
             mantenimientoServicios: listaDescripcionServicios,
             cilindroAceiteCarter: datosCartel,
-            listaExpansionVersel: datosexpansionVersel
+            listaExpansionVersel: datosexpansionVersel,
+            reporteDiarioMantenimiento: datosHorasGen
         };
 
-        console.log("ExpansionVersel antes de JSON.stringify:", datosAEnviar);
         var expansionVerselJson = JSON.stringify(datosAEnviar);
-        console.log("ExpansionVersel después de JSON.stringify:", expansionVerselJson);
 
-        fetch("/RegMantenimiento/Index", {
+        fetch('@Url.Action("Index", "RegMantenimiento")' , {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -1078,13 +1039,46 @@
             .then(function (response) {
 
             })
+            .then(function (data) {
+                if (data.respuesta.idRespuesta === 0 || data.respuesta.idRespuesta === 1) {
+                    Swal.fire({
+                        title: "Success!!",
+                        text: "Se guardaron los datos.",
+                        icon: "success",
+                        button: "Aww yiss!",
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: data.respuesta.mensaje,
+                        icon: "error",
+                        button: "OK",
+                    });
+                }
+            })
             .catch(function (error) {
                 console.error("Error:", error);
             });
 
         guardarImagenesEnServidor();
-
     });
+
+    function obtenerHorasGeneradas(){
+        const horasEG1 = document.getElementById('horasEG1');
+        const horasEG2 = document.getElementById('horasEG2');
+
+        console.log("datosOperario : ", datosOperario);
+
+
+        var datos = {
+                idReporteDiario: idReporteDiario,
+            fecha: obtenerFecha("fechaVista"),
+                horasMotor01: parseInt(horasEG1.value),
+            horasMotor02: parseInt(horasEG2.value),
+                idOperario: datosOperario.IdOperario
+        };
+        return datos;
+    }
 
     function obtenerDetalleInput(elementosInputs) {
 
@@ -1255,12 +1249,14 @@
         var datosExpansionVersel = [];
 
         inputs.forEach(function (input) {
-            var datos = {
-                numeroGenerador: parseInt(input.getAttribute('position')),
-                medicion: parseInt(input.value),
-                idReporteDiario: idReporteDiario
-            };
-            datosExpansionVersel.push(datos);
+            if (input.value != "" && input.value != null) {
+                var datos = {
+                    numeroGenerador: parseInt(input.getAttribute('position')),
+                    medicion: parseInt(input.value),
+                    idReporteDiario: idReporteDiario
+                };
+                datosExpansionVersel.push(datos);
+            }
         });
 
         return datosExpansionVersel;
@@ -1309,7 +1305,7 @@
     }
 
     function enviarSolicitudPOST(datosImagenes) {
-        fetch("/RegMantenimiento/GuardarImagen", {
+        fetch('@Url.Action("GuardarImagen", "RegMantenimiento")' , {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -1318,6 +1314,23 @@
         })
             .then(function (response) {
                 // Manejar la respuesta del servidor si es necesario
+            })
+            .then(function (data) {
+                if (data.respuesta.idRespuesta === 0 || data.respuesta.idRespuesta === 1) {
+                    Swal.fire({
+                        title: "Success!!",
+                        text: "Se guardaron los datos.",
+                        icon: "success",
+                        button: "Aww yiss!",
+                    });
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: data.respuesta.mensaje,
+                        icon: "error",
+                        button: "OK",
+                    });
+                }
             })
             .catch(function (error) {
                 console.error("Error:", error);

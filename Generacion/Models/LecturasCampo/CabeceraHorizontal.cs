@@ -5,26 +5,16 @@ using System.Security.Principal;
 namespace Generacion.Models.LecturasCampo
 {
 
-    public class CabeceraHorizontal
+    public class DatosFormatoCampo
     {
+        public string IdDetalleCampo { get; set; }
+        public decimal Detalle { get; set; }
+        public string IdSubtituloCampo { get; set; }
+        public string IdReporteCampo { get; set; }
         public string Hora { get; set; }
-        public string Und { get; set; }
-        public string Rango { get; set; }
-        public int P_Activa { get; set; }
-        public int H_Operacion { get; set; }
-        public int Temp_Ambiente { get; set; }
-        public int Humed_Relativa { get; set; }
-
-    }
-
-    public class DatosFormatoCampo: CabeceraHorizontal
-    {
-
-        public string IdDetalleInicioCampo { get; set; }
-        public string Fecha { get; set; }
-        public string IdRegistroConsola { get; set; }
-        public string IdOperario { get; set; }
-        public string IdformatoConsola { get; set; }
+        public string Sitio { get; set; }
         public int Fila { get; set; }
+        public int NumeroGenerador { get; set; }
+        public string Fecha { get; set; }
     }
 }

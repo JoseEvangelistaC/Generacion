@@ -19,14 +19,32 @@ using Generacion.Application.ReporteGAS.Command;
 using Generacion.Application.Usuario;
 using Generacion.Application.Usuario.Command;
 using Generacion.Application.Usuario.Query;
-using System.Reflection;
 using WebApi.Application.Common.Interfaces;
 using WebApi.Application.ValidatePassword.Queries;
 using System.DirectoryServices.AccountManagement;
 using Generacion.Application.Usuario.Session;
-using Generacion.Application.Usuario.Session.SessionStatus;
 using Generacion.Application.ValidationSession.Login;
-using static Generacion.Controllers.LoginController;
+using Generacion.Application.ION;
+using Generacion.Application.ION.Command;
+using Generacion.Application.Mantenimiento.Query;
+using Generacion.Application.ReporteProduccion;
+using Generacion.Application.ReporteProduccion.Command;
+using Generacion.Application.ReporteProduccion.Query;
+using Generacion.Application.Almacen.Query;
+using Generacion.Application.Almacen;
+using Generacion.Application.Almacen.Command;
+using Generacion.Application.Bujias;
+using Generacion.Application.Bujias.Command;
+using Generacion.Application.Bujias.Query;
+using Generacion.Application.Usuario.Session.SessionStatus;
+using Generacion.Application.DashBoard;
+using Generacion.Application.DashBoard.Command;
+using Generacion.Application.DashBoard.Query;
+using Generacion.Application.FiltroCentrifugo.Query;
+using Generacion.Application.FiltroCentrifugo;
+using Generacion.Application.FiltroCentrifugo.Command;
+using MediatR;
+using Generacion.Application.Common;
 
 namespace Generacion
 {
@@ -54,14 +72,17 @@ namespace Generacion
                {
                    IConfiguration configuration = context.Configuration;
                    string cadenaConexion = configuration.GetConnectionString("DefaultConnection");
+                   string cadenaConexionSQL = configuration.GetConnectionString("SQLConnection");
                    //services.AddSession();
                    services.AddSession(options =>
                    {
                        options.IdleTimeout = TimeSpan.FromHours(8);
                    });
-               
-                  // services.AddScoped<ValidarSesion>();
-                   services.AddScoped<IConexionBD>(_ => new ConexionBD(cadenaConexion));
+
+                   services.AddMediatR(typeof(Startup));
+
+                   services.AddScoped<ValidarSesion>();
+                   services.AddScoped<IConexionBD>(_ => new ConexionBD(cadenaConexion, cadenaConexionSQL));
                    services.AddScoped<IMantenimiento, Mantenimiento>();
                    services.AddScoped<IUsuario, DatosUsuario>();
 
@@ -70,6 +91,13 @@ namespace Generacion
                    services.AddScoped<IRegistroDatosGAS, RegistroDatosGAS>();
                    services.AddScoped<IDatosMGD, RegistroDatosMGD>();
                    services.AddScoped<ILecturaCampo, DatosRegistroCampo>();
+                   services.AddScoped<IDatosION, RegistroDatosION>();
+                   services.AddScoped<IReporteProduccion, RegistrarProduccion>();
+                   services.AddScoped<IAlmacen, RegistrosAlmacen>();
+                   services.AddScoped<IBujias, RegistoBujias>();
+                   services.AddScoped<IDashBoard, RegistroDashBoard>();
+                   services.AddScoped<IRegistroFiltroCentrifugo, RegistroFiltroCentrifugo>();
+
 
                    services.AddScoped(typeof(FotoServidor));
                    services.AddScoped(typeof(ConsultarUsuario));
@@ -79,19 +107,26 @@ namespace Generacion
                    services.AddScoped(typeof(ConsultarDatosMGD));
                    services.AddScoped(typeof(CacheDatos));
                    services.AddScoped(typeof(LecturaCampo));
-
+                   services.AddScoped(typeof(DatosMantenimiento));
+                   services.AddScoped(typeof(ConsultarProduccion));
                    services.AddScoped(typeof(CacheDatos));
+                   services.AddScoped(typeof(ConsultasAlmacen));
+                   services.AddScoped(typeof(ConsultaBujias));
+                   services.AddScoped(typeof(DatosFiltro));
+                   services.AddScoped(typeof(Function));
+                   services.AddScoped(typeof(DatosFiltroCentrifugo));
+                   services.AddScoped(typeof(ProcessExecutionContextExtensions));
+                   services.AddHttpContextAccessor(); 
 
                    services.AddSingleton<IActiveDirectoryProvider, ActiveDirectoryProvider>();
-
                    var principalContext = new PrincipalContext(ContextType.Domain);
-                   
+
                    services.AddSingleton(principalContext);
 
-                  /*  services.AddMvc(options =>
-                     {
-                         options.Filters.Add(typeof(ValidarSesion));
-                     });*/
+                   /*  services.AddMvc(options =>
+                      {
+                          options.Filters.Add(typeof(ValidarSesion));
+                      });**/
                });
     }
 }

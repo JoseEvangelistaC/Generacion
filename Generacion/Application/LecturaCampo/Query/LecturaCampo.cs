@@ -2,179 +2,21 @@
 using Generacion.Models;
 using Oracle.ManagedDataAccess.Client;
 using Generacion.Models.LecturasCampo;
-using Generacion.Models.Usuario;
-using Oracle.ManagedDataAccess.Types;
-using Generacion.Models.DatosConsola;
+using System.Data;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace Generacion.Application.LecturaCampo.Query
 {
     public class LecturaCampo
     {
         private readonly IConexionBD _conexion;
-        public LecturaCampo(IConexionBD conexion)
+        private readonly IConfiguration _configuration;
+        public LecturaCampo(IConexionBD conexion, IConfiguration configuration)
         {
+            _configuration = configuration;
             _conexion = conexion;
         }
-
-        // AQUI TRAE DATA DE LA TABLA DET_CONSOLA DONDE LO ORDENA SEGUN LA FILE DE FOMRA DESCENDIENTE
-        public async Task<Respuesta<Dictionary<string, List<DatosFormatoCampo>>>> ObtenerTiposDeRegistro(string fechaInicio, string fechaFin)
-        {
-            Respuesta<Dictionary<string, List<DatosFormatoCampo>>> respuesta = new Respuesta<Dictionary<string, List<DatosFormatoCampo>>>();
-            Dictionary<string, List<DatosFormatoCampo>> datosFormatoConsola = new Dictionary<string, List<DatosFormatoCampo>>();
-            try
-            {
-                using (OracleConnection connection = _conexion.ObtenerConexion())
-                {
-                    connection.Open();
-
-                    string sqlQuery = @"select IdDetalleInicioCampo,
-                                            P_Activa , H_Operacion, Temp_Ambiente, Humed_Relativa,Hora,Fila
-                                        from tbl_Det_Principal_Campo
-                                        WHERE fecha BETWEEN :fechaInicio AND :fechaFin ";
-
-                    string orderBy = fechaInicio == fechaFin ? string.Empty : " ORDER BY  Fila asc ";
-                    string condicionalMedianoche = " and hora !='0:00'";
-                    sqlQuery = $"{sqlQuery}{condicionalMedianoche}{orderBy}";
-
-
-                    using (OracleCommand command = new OracleCommand(sqlQuery, connection))
-                    {
-
-                        command.Parameters.Add(":fechaInicio", OracleDbType.Varchar2).Value = fechaInicio;
-                        command.Parameters.Add(":fechaFin", OracleDbType.Varchar2).Value = fechaFin;
-                        using (OracleDataReader reader = command.ExecuteReader())
-                        {
-                            List<DatosFormatoCampo> listaRegistroCampo= new List<DatosFormatoCampo>();
-                            DatosFormatoCampo registroCampo = new DatosFormatoCampo();
-                            while (reader.Read())
-                            {
-                                registroCampo = new DatosFormatoCampo();
-                                registroCampo.IdDetalleInicioCampo = reader["IdDetalleInicioCampo"].ToString();
-                                registroCampo.P_Activa = int.Parse(reader["P_Activa"].ToString());
-                                registroCampo.H_Operacion = int.Parse(reader["H_Operacion"].ToString());
-                                registroCampo.Temp_Ambiente = int.Parse(reader["Temp_Ambiente"].ToString());
-                                registroCampo.Humed_Relativa = int.Parse(reader["Humed_Relativa"].ToString());
-                                registroCampo.Hora = reader["Hora"].ToString();
-                                registroCampo.Fila = int.Parse(reader["Fila"].ToString());
-
-                                listaRegistroCampo.Add(registroCampo);
-
-                            }
-                            // Obtener la primera línea para ID "SIST_GAS_COMBUSTIBLE"
-                            var primeraLineaGasCombustible = listaRegistroCampo
-                                .Where(x => x.IdDetalleInicioCampo.StartsWith("SIST_GAS_COMBUSTIBLE"))
-                                .ToList();
-
-                            // Obtener la primera línea para ID "SIST_AGUA_REFRIG_MOTOR"
-                            var primeraAguaRefrig = listaRegistroCampo
-                                .Where(x => x.IdDetalleInicioCampo.StartsWith("SIST_AGUA_REFRIG_MOTOR"))
-                                .ToList();
-                            // Obtener la primera línea para ID "SIST_AGUA_REFRIG_LT"
-                            var primeraAguaRefrigLt = listaRegistroCampo
-                                .Where(x => x.IdDetalleInicioCampo.StartsWith("SIST_AGUA_REFRIG_LT"))
-                                .ToList();
-                            // Obtener la primera línea para ID "SIST_AGUA_REFRIG_HT"
-                            var primeraAguaRefrigHt = listaRegistroCampo
-                                .Where(x => x.IdDetalleInicioCampo.StartsWith("SIST_AGUA_REFRIG_HT"))
-                                .ToList();
-                            // Obtener la primera línea para ID "ENTRADA_SALIDA_AGUA_RADIADORES"
-                            var primeraEntradaSalidaRadiadores = listaRegistroCampo
-                                .Where(x => x.IdDetalleInicioCampo.StartsWith("ENTRADA_SALIDA_AGUA_RADIADORES"))
-                                .ToList();
-                            // Obtener la primera línea para ID "COMPRESOR_INSTRUMENTACION"
-                            var primeraCompresInstrumentacion = listaRegistroCampo
-                                .Where(x => x.IdDetalleInicioCampo.StartsWith("COMPRESOR_INSTRUMENTACION"))
-                                .ToList();
-                            // Obtener la primera línea para ID "COMPRESOR_AIRE_ARRANQUE"
-                            var primeraCompresArranque = listaRegistroCampo
-                                .Where(x => x.IdDetalleInicioCampo.StartsWith("COMPRESOR_AIRE_ARRANQUE"))
-                                .ToList();
-                            // Obtener la primera línea para ID "GENERADOR"
-                            var primeraGenerador = listaRegistroCampo
-                                .Where(x => x.IdDetalleInicioCampo.StartsWith("GENERADOR"))
-                                .ToList();
-                            // Obtener la primera línea para ID "COMPLEMENTARIOS"
-                            var primeraComplementarios = listaRegistroCampo
-                                .Where(x => x.IdDetalleInicioCampo.StartsWith("COMPLEMENTARIOS"))
-                                .ToList();
-                            // Obtener la primera línea para ID "INSPECCIONES"
-                            var primeraInspecciones = listaRegistroCampo
-                                .Where(x => x.IdDetalleInicioCampo.StartsWith("INSPECCIONES"))
-                                .ToList();
-                            // Obtener la primera línea para ID "SIST_COMUNES"
-                            var primeraSistComunes = listaRegistroCampo
-                                .Where(x => x.IdDetalleInicioCampo.StartsWith("SIST_COMUNES"))
-                                .ToList();
-
-
-                            //respuesta.Detalle = new Dictionary<string, List<DatosFormatoConsola>>();
-                            primeraLineaGasCombustible = primeraLineaGasCombustible
-                                .OrderBy(h => h.Fila)
-                                .ToList();
-
-                            primeraAguaRefrig = primeraAguaRefrig
-                                .OrderBy(h => h.Fila)
-                                .ToList();
-                            primeraAguaRefrigLt = primeraAguaRefrigLt
-                                .OrderBy(h => h.Fila)
-                                .ToList();
-                            primeraAguaRefrigHt = primeraAguaRefrigHt
-                                .OrderBy(h => h.Fila)
-                                .ToList();
-                            primeraEntradaSalidaRadiadores = primeraEntradaSalidaRadiadores
-                                .OrderBy(h => h.Fila)
-                                .ToList();
-                            primeraCompresInstrumentacion = primeraCompresInstrumentacion
-                                .OrderBy(h => h.Fila)
-                                .ToList();
-                            primeraCompresArranque = primeraCompresArranque
-                                .OrderBy(h => h.Fila)
-                                .ToList();
-                            primeraGenerador = primeraGenerador
-                                .OrderBy(h => h.Fila)
-                                .ToList();
-                            primeraComplementarios = primeraComplementarios
-                                .OrderBy(h => h.Fila)
-                                .ToList();
-                            primeraInspecciones = primeraInspecciones
-                                .OrderBy(h => h.Fila)
-                                .ToList();
-                            primeraSistComunes = primeraSistComunes
-                                .OrderBy(h => h.Fila)
-                                .ToList();
-
-                            //primeraLineaBAA = primeraLineaBAA.OrderBy(h => TimeSpan.Parse(h.Hora)).ToList();
-                            //primeraLineaEG1 = primeraLineaEG1.OrderBy(h => TimeSpan.Parse(h.Hora)).ToList();
-
-                            datosFormatoConsola.Add("SIST_GAS_COMBUSTIBLE", primeraLineaGasCombustible);
-                            datosFormatoConsola.Add("SIST_AGUA_REFRIG_MOTOR", primeraAguaRefrig);
-                            datosFormatoConsola.Add("SIST_AGUA_REFRIG_LT", primeraAguaRefrigLt);
-                            datosFormatoConsola.Add("SIST_AGUA_REFRIG_HT", primeraAguaRefrigHt);
-                            datosFormatoConsola.Add("ENTRADA_SALIDA_AGUA_RADIADORES", primeraEntradaSalidaRadiadores);
-                            datosFormatoConsola.Add("COMPRESOR_INSTRUMENTACION", primeraCompresInstrumentacion);
-                            datosFormatoConsola.Add("COMPRESOR_AIRE_ARRANQUE", primeraCompresArranque);
-                            datosFormatoConsola.Add("GENERADOR", primeraGenerador);
-                            datosFormatoConsola.Add("COMPLEMENTARIOS", primeraComplementarios);
-                            datosFormatoConsola.Add("INSPECCIONES", primeraInspecciones);
-                            datosFormatoConsola.Add("SIST_COMUNES", primeraSistComunes);
-
-
-                            respuesta.Detalle = datosFormatoConsola;
-                            respuesta.IdRespuesta = 0;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                respuesta.IdRespuesta = 99;
-                respuesta.Mensaje = ex.Message.ToString();
-
-            }
-
-            return respuesta;
-        }
-
 
         public async Task<Respuesta<List<TiposRegistroCampo>>> ObtenerTiposDeRegistro()
         {
@@ -227,6 +69,145 @@ namespace Generacion.Application.LecturaCampo.Query
 
             return respuesta;
         }
+        public async Task<Respuesta<Dictionary<int, Dictionary<string, List<DatosFormatoCampo>>>>> ObtenerDetalleCampo(string fecha, string fechaFin, string idSitio)
+        {
+            Respuesta<Dictionary<int, Dictionary<string, List<DatosFormatoCampo>>>> respuesta = new Respuesta<Dictionary<int, Dictionary<string, List<DatosFormatoCampo>>>>();
+            Dictionary<string, List<DatosFormatoCampo>> datosGenerator = new Dictionary<string, List<DatosFormatoCampo>>();
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
 
+                    using (OracleCommand command = new OracleCommand("ObtenerDetalleCampoPorFecha", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetro de entrada
+                        command.Parameters.Add("p_Fecha", OracleDbType.Varchar2).Value = fecha;
+                        command.Parameters.Add("p_Sitio", OracleDbType.Varchar2).Value = idSitio;
+
+                        // Parámetro de salida (cursor)
+                        command.Parameters.Add("p_Resultado", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+                        using (OracleDataAdapter adapter = new OracleDataAdapter(command))
+                        {
+                            DataSet dataSet = new DataSet();
+
+                            adapter.Fill(dataSet);
+                            List<DatosFormatoCampo> datos = new List<DatosFormatoCampo>();
+
+                            foreach (DataRow row in dataSet.Tables[0].Rows)
+                            {
+                                DatosFormatoCampo dato = new DatosFormatoCampo()
+                                {
+                                    IdReporteCampo = row["IdReporteCampo"].ToString(),
+                                    Detalle = decimal.Parse(row["Detalle"].ToString()),
+                                    Fecha = row["Fecha"].ToString(),
+                                    Fila = int.Parse(row["Fila"].ToString()),
+                                    NumeroGenerador = int.Parse(row["NumeroGenerador"].ToString()),
+                                    Hora = row["Hora"].ToString(),
+                                    IdDetalleCampo = row["IdDetalleCampo"].ToString(),
+                                    IdSubtituloCampo = row["IdSubtituloCampo"].ToString(),
+                                    Sitio = row["Sitio"].ToString()
+                                };
+                                datos.Add(dato);
+                            }
+                            respuesta.Detalle = new Dictionary<int, Dictionary<string, List<DatosFormatoCampo>>>();
+                            var idDatosCampo = _configuration.GetSection("IdDatosCampo").Get<List<string>>();
+                            for (int i = 1; i <= 2; i++)
+                            {
+                                datosGenerator = new Dictionary<string, List<DatosFormatoCampo>>();
+                                foreach (string item in idDatosCampo)
+                                {
+                                    var generator = datos
+                                        .Where(x => x.IdSubtituloCampo.Equals(item) && x.NumeroGenerador.Equals(i))
+                                        .OrderBy(x => x.Fila)
+                                        .ToList();
+
+                                    datosGenerator.Add(item, generator);
+                                }
+                                respuesta.Detalle.Add(i, datosGenerator);
+                            }
+
+                            if (respuesta.IdRespuesta == 0)
+                            {
+                                respuesta.IdRespuesta = 0;
+                                respuesta.Mensaje = "Ok";
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                respuesta.IdRespuesta = 99;
+                respuesta.Mensaje = ex.Message.ToString();
+            }
+            return respuesta;
+        }
+
+        public async Task<Respuesta<Dictionary<int, Dictionary<string, DetalleFecha>>>> ObtenerDetalleCampoPorFecha(string idtipoEngine, int fila, string fecha)
+        {
+            Respuesta<Dictionary<int, Dictionary<string, DetalleFecha>>> respuesta = new Respuesta<Dictionary<int, Dictionary<string, DetalleFecha>>>();
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
+
+                    using (OracleCommand command = new OracleCommand("ObtenerDetalleFilaPorFecha", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        // Parámetros de entrada
+                        command.Parameters.Add("p_fecha", OracleDbType.Varchar2).Value = fecha;
+                        command.Parameters.Add("p_fila", OracleDbType.Decimal).Value = fila;
+                        command.Parameters.Add("p_idtipoEngine", OracleDbType.Varchar2).Value = idtipoEngine;
+
+                        // Parámetro de salida (cursor)
+                        command.Parameters.Add("p_resultado", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
+
+                        using (OracleDataReader reader = command.ExecuteReader())
+                        {
+                            List<DetalleFecha> listaDetalle = new List<DetalleFecha>();
+                            DetalleFecha detalle = new DetalleFecha();
+                            while (reader.Read())
+                            {
+                                detalle = new DetalleFecha()
+                                {
+                                    fecha = reader.GetString(0),
+                                    detalle = decimal.Parse(reader.GetString(2)),
+                                    descripcion = reader.GetString(3),
+                                    numeroGenerador = int.Parse(reader.GetString(4)),
+                                    codigoDetalle = reader.GetString(5)
+                                };
+                                listaDetalle.Add(detalle);
+                            }
+
+                            respuesta.Detalle = listaDetalle.GroupBy(x => x.numeroGenerador)
+                                                     .ToDictionary(
+                                                         grupoNumeroGenerador => grupoNumeroGenerador.Key,
+                                                         grupoNumeroGenerador => grupoNumeroGenerador
+                                                             .GroupBy(x => x.codigoDetalle)
+                                                             .ToDictionary(grupoDescripcion => grupoDescripcion.Key, grupoDescripcion => grupoDescripcion.FirstOrDefault())
+                                                     );
+
+                            if (respuesta.IdRespuesta == 0)
+                            {
+                                respuesta.IdRespuesta = 0;
+                                respuesta.Mensaje = "Ok";
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                respuesta.IdRespuesta = 99;
+                respuesta.Mensaje = ex.Message.ToString();
+            }
+            return respuesta;
+        }
     }
 }

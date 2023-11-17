@@ -37,6 +37,7 @@ namespace Generacion.Controllers
             _mantenimiento.GuardarDatosServ(datosAEnviar.MantenimientoServicios);
             _mantenimiento.GuardarDatosAceiteCarter(datosAEnviar.CilindroAceiteCarter);
             _mantenimiento.GuardarExpansionVessel(datosAEnviar.ListaExpansionVersel);
+            _mantenimiento.GuardarReporteDiario(datosAEnviar.reporteDiarioMantenimiento);
 
             Dictionary<int, List<string>> horarioOperarios = JsonConvert.DeserializeObject<Dictionary<int, List<string>>>(_cacheDatos.ObtenerContenidoCache("HorarioOperario"));
 
@@ -74,6 +75,8 @@ namespace Generacion.Controllers
         public List<ExpansionVersel> ListaExpansionVersel { get; set; }
         public List<MantenimientoServicios> MantenimientoServicios { get; set; }
         public List<CilindroAceiteCarter> CilindroAceiteCarter { get; set; }
+        public ReporteDiarioMantenimiento reporteDiarioMantenimiento { get; set; }
         
+
     }
 }

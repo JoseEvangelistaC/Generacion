@@ -31,12 +31,21 @@ namespace Generacion.Application.ValidationSession.Login
                 var respuestaClaveRed = true;//_activeDirectoryProvider.ValidateUserCredentials(usuario);
                 if (respuestaClaveRed)
                 {
-                    if (respuesta.IdRespuesta == 0)
+                    respuesta = await _usuario.ObtenerDatosOperario(usuario.UsuarioRed);
+                    if (respuesta.IdRespuesta == 0 && respuesta.Detalle != null)
                     {
-                        Respuesta<DetalleOperario> datos = await _usuario.ObtenerDatosOperario(usuario.UsuarioRed);
-                        respuesta.Detalle = datos.Detalle;
                         respuesta.Mensaje = "Bienvenido.";
                     }
+                    else
+                    {
+                        respuesta.Mensaje = respuesta.Mensaje;
+                        respuesta.IdRespuesta = 99;
+                    }
+                }
+                else
+                {
+                    respuesta.IdRespuesta = 99;
+                    respuesta.Mensaje = "Error en credenciales.";
                 }
             }
             catch (Exception ex)

@@ -31,7 +31,7 @@ namespace Generacion.Controllers
             }
             else
             {
-                historialOperarios = await _consultarUsuario.ObtenerDatosHistorial(detalleOperario.IdOperario, fecha.ToString("dd-MM-yyyy"));
+                historialOperarios = await _consultarUsuario.ObtenerDatosHistorial(detalleOperario, fecha.ToString("dd-MM-yyyy"));
             }
 
             return View(historialOperarios);
@@ -46,7 +46,7 @@ namespace Generacion.Controllers
 
             Respuesta<List<HistorialUsuario>> respuesta = await _usuario.GuardarHistorial(historialUsuarios,detalleOperario.IdOperario);
 
-            return Json(new { respuesta = respuesta });
+            return Json(new  { respuesta = respuesta });
         }
 
      /*   [HttpPost]

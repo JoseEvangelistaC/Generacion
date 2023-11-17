@@ -1,7 +1,7 @@
 ﻿@using Generacion.Models.ION;
 @using Generacion.Models.Usuario;
 @{
-    @model List<DatosION>
+    @model List<DatosFormatoMGD>
 
     DetalleOperario detalleOperario = ViewData["DetalleOperario"] as DetalleOperario;
 
@@ -51,7 +51,7 @@
                 @foreach (var item in @Model)
                 {
                     <tr>
-                        <td>00</td>
+                        <td>@item.Hora</td>
                         <td>@item.KWDelInt</td>
                         <td>@item.KVARDelInt</td>
                         <td>@item.KWRecInt</td>

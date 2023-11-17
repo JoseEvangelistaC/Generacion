@@ -86,7 +86,7 @@ namespace Generacion.Application.ReporteDiarioGAS.Query
             return respuesta;
         }
 
-        public async Task<Respuesta<MReporteGAS>> ObtenerIdReporteGAS()
+        public async Task<Respuesta<MReporteGAS>> ObtenerIdReporteGAS(string idSitio)
         {
             Respuesta<MReporteGAS> respuesta = new Respuesta<MReporteGAS>();
             try
@@ -112,7 +112,10 @@ namespace Generacion.Application.ReporteDiarioGAS.Query
                                 formatoConsola = new MReporteGAS();
                                 formatoConsola.IdReporteGas = row["IdReporteGas"].ToString();
                                 formatoConsola.Fecha = row["Fecha"].ToString();
+                                formatoConsola.Activo = int.Parse(row["Activo"].ToString());
                             }
+                            //crear una lista de los idReportes validar con el idSitio y obtener el que corresponde
+                            //formatoConsola = listaFormato.where(x => x.idReporteGas.starWith(idSitio)).select(x => x).FistOrDefault();
                             respuesta.Detalle = formatoConsola;
                         }
                     }

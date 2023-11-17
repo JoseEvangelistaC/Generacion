@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using MediatR;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace Generacion
 {
@@ -22,6 +25,22 @@ namespace Generacion
 
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
+
+
+            // LOGS
+            Log.Logger = new LoggerConfiguration()
+           .WriteTo.File("Logs/mylogfile.txt", rollingInterval: RollingInterval.Day)
+           .CreateLogger();
+
+            services.AddControllersWithViews();
+            services.AddHttpContextAccessor();
+
+            services.AddLogging(logging =>
+            {
+                logging.AddSerilog(); // Agrega el proveedor de Serilog
+                logging.AddEventLog();
+            });
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

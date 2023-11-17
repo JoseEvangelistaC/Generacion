@@ -43,6 +43,8 @@ using Generacion.Application.DashBoard.Query;
 using Generacion.Application.FiltroCentrifugo.Query;
 using Generacion.Application.FiltroCentrifugo;
 using Generacion.Application.FiltroCentrifugo.Command;
+using MediatR;
+using Generacion.Application.Common;
 
 namespace Generacion
 {
@@ -76,6 +78,8 @@ namespace Generacion
                    {
                        options.IdleTimeout = TimeSpan.FromHours(8);
                    });
+
+                   services.AddMediatR(typeof(Startup));
 
                    services.AddScoped<ValidarSesion>();
                    services.AddScoped<IConexionBD>(_ => new ConexionBD(cadenaConexion, cadenaConexionSQL));
@@ -111,7 +115,8 @@ namespace Generacion
                    services.AddScoped(typeof(DatosFiltro));
                    services.AddScoped(typeof(Function));
                    services.AddScoped(typeof(DatosFiltroCentrifugo));
-                   services.AddHttpContextAccessor();
+                   services.AddScoped(typeof(ProcessExecutionContextExtensions));
+                   services.AddHttpContextAccessor(); 
 
                    services.AddSingleton<IActiveDirectoryProvider, ActiveDirectoryProvider>();
                    var principalContext = new PrincipalContext(ContextType.Domain);

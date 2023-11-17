@@ -5,6 +5,7 @@
     List<DetalleOperario> listaOperario = ViewData["ListaOperarios"] as List<DetalleOperario>;
 
     Dictionary<decimal, DashboardDetalleFiltro> datosFiltroCentrifugo = ViewData["datosFiltroCentrifugo"] as Dictionary<decimal, DashboardDetalleFiltro>;
+    Dictionary<decimal, DashboardDetalleFiltro> datosFiltroAutomatico = ViewData["datosFiltroAutomatico"] as Dictionary<decimal, DashboardDetalleFiltro>;
 
 }
 <style>
@@ -23,7 +24,6 @@
     }
 
     .table {
-        
         margin: 0;
         color: black;
     }
@@ -32,7 +32,7 @@
             text-align: center;
         }
 
-    .contendor-tablas-iguales{
+    .contendor-tablas-iguales {
         display: flex;
         width: 50%;
     }
@@ -54,12 +54,12 @@
                 </tr>
             </thead>
             <tbody>
-                @if (datosFiltroCentrifugo.ContainsKey(1))
+                @if (datosFiltroCentrifugo != null && datosFiltroCentrifugo.ContainsKey(1))
                 {
                     <tr id="FiltroCentrifugoEG1">
-                        <td><input id-class="ProximaHoraCambio" id="ProximaHoraCambio1" type="number" value="@datosFiltroCentrifugo[1].ProximaHoraCambio"  disabled></td>
+                        <td><input id-class="ProximaHoraCambio" id="ProximaHoraCambio1" type="number" value="@datosFiltroCentrifugo[1].ProximaHoraCambio" disabled></td>
                         <td style="display: flex;padding: 0 0 0 5px;"> EG<input style="width: 50px;" id-class="NumeroGenerador" type="number" min="1" max="2" disabled value="1"></td>
-                        <td><input id-class="fecha" id="fechaInput" value="@datosFiltroCentrifugo[1].Fecha.Split(' ')[0]"></td>
+                        <td><input oninput="convertirYMostrarFecha('fechaInput')" id-class="fecha" id="fechaInput" value="@datosFiltroCentrifugo[1].Fecha.Split(' ')[0]"></td>
                         <td><input id-class="HorasOperacion" value="@datosFiltroCentrifugo[1].HorasOperacion" type="number" id="HorasOperacion1" oninput="actualizarProximaHora('1')"></td>
                         <td><input id-class="espesor" value="@datosFiltroCentrifugo[1].Espesor" type="number"></td>
                         <td style="display:flex;">
@@ -79,7 +79,7 @@
                     <tr id="FiltroCentrifugoEG1">
                         <td><input id-class="ProximaHoraCambio" id="ProximaHoraCambio1" type="number" disabled></td>
                         <td style="display: flex;padding: 0 0 0 5px;"> EG<input style="width: 50px;" id-class="NumeroGenerador" type="number" min="1" max="2" disabled value="1"></td>
-                        <td><input id-class="fecha" id="fechaInput"></td>
+                        <td><input oninput="convertirYMostrarFecha('fechaInput')" id-class="fecha" id="fechaInput"></td>
                         <td><input id-class="HorasOperacion" type="number" id="HorasOperacion1" oninput="actualizarProximaHora('1')"></td>
                         <td><input id-class="espesor" type="number"></td>
                         <td style="display:flex;">
@@ -94,12 +94,12 @@
                         </td>
                     </tr>
                 }
-                @if (datosFiltroCentrifugo.ContainsKey(2))
+                @if (datosFiltroCentrifugo != null && datosFiltroCentrifugo.ContainsKey(2))
                 {
                     <tr id="FiltroCentrifugoEG2">
                         <td><input id-class="ProximaHoraCambio" id="ProximaHoraCambio2" type="number" disabled value="@datosFiltroCentrifugo[2].ProximaHoraCambio"></td>
                         <td style="display: flex;padding: 0 0 0 5px;">EG<input type="number" style="width: 50px;" id-class="NumeroGenerador" min="1" max="2" disabled value="2"></td>
-                        <td><input id-class="fecha" id="fechaInput2" value="@datosFiltroCentrifugo[2].Fecha.Split(' ')[0]"></td>
+                        <td><input oninput="convertirYMostrarFecha('fechaInput2')" id-class="fecha" id="fechaInput2" value="@datosFiltroCentrifugo[2].Fecha.Split(' ')[0]"></td>
                         <td><input id-class="HorasOperacion" type="number" id="HorasOperacion2" oninput="actualizarProximaHora('2')" value="@datosFiltroCentrifugo[2].HorasOperacion"></td>
                         <td><input id-class="espesor" type="number" value="@datosFiltroCentrifugo[2].Espesor"></td>
                         <td style="display:flex;">
@@ -119,7 +119,7 @@
                     <tr id="FiltroCentrifugoEG2">
                         <td><input id-class="ProximaHoraCambio" id="ProximaHoraCambio2" type="number" disabled></td>
                         <td style="display: flex;padding: 0 0 0 5px;">EG<input type="number" style="width: 50px;" id-class="NumeroGenerador" min="1" max="2" disabled value="2"></td>
-                        <td><input id-class="fecha" id="fechaInput2"></td>
+                        <td><input oninput="convertirYMostrarFecha('fechaInput2')" id-class="fecha" id="fechaInput2"></td>
                         <td><input id-class="HorasOperacion" type="number" id="HorasOperacion2" oninput="actualizarProximaHora('2')"></td>
                         <td><input id-class="espesor" type="number"></td>
                         <td style="display:flex;">
@@ -156,38 +156,101 @@
             </thead>
             <tbody>
                 <tr>
-                    <th><input type="text" /></th>
-                    <td><input type="number" /></td>
-                    <td><input type="number" /></td>
+                    <th><input oninput="convertirYMostrarFecha()" id-class="fecha" type="text" /></th>
+                    <td><input id-class="" type="number" /></td>
+                    <td><input id-class="" type="number" /></td>
                 </tr>
             </tbody>
         </table>
 
-        <table class="table table-bordered">
+        <table id="FiltroAutomatico" class="table table-bordered">
             <thead>
                 <tr>
                     <th rowspan="2">Fecha</th>
-                    <th colspan="2">HORAS DE BUJÍA</th>
+                    <th colspan="2">Filtro Automatico</th>
                 </tr>
-                <tr>
-                    <th>EG-1</th>
-                    <th><input type="number" /></th>
-                </tr>
+                @if (datosFiltroAutomatico.ContainsKey(1))
+                {
+                    <tr>
+                        <th>EG-1</th>
+                        <th><input id-class="HorasOperacion" type="number" id="HorasOperacion1" value="@datosFiltroAutomatico[1].HorasOperacion" /></th>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <th>EG-1</th>
+                        <th><input id-class="HorasOperacion" type="number" id="HorasOperacion1" /></th>
+                    </tr>
+                }
             </thead>
             <tbody>
-                <tr>
-                    <th><input type="text" /></th>
-                    <th>EG-2</th>
-                    <td><input type="number" /></td>
-                </tr>
+
+                @if (datosFiltroAutomatico.ContainsKey(2))
+                {
+                    <tr>
+                        <th><input oninput="convertirYMostrarFecha('fechaAutomatico',evento)" id-class="fecha" id="fechaAutomatico" type="text" value="@datosFiltroAutomatico[1].Fecha" /></th>
+                        <th>EG-2</th>
+                        <td><input id-class="HorasOperacion" type="number" id="HorasOperacion2" value="@datosFiltroAutomatico[2].HorasOperacion" /></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <th><input oninput="convertirYMostrarFecha('fechaAutomatico',evento)" id-class="fechaAutomatico" id="fechaAutomatico" type="text" /></th>
+                        <th>EG-2</th>
+                        <td><input id-class="HorasOperacion" type="number" id="HorasOperacion2" /></td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
-    <button onclick="guardarDatosFiltro()">Obtener Valores</button>
+    <button onclick="DatosFiltroAutomatico()">Obtener Valores</button>
 </div>
 
 
 <script>
+
+    function DatosFiltroAutomatico() {
+        var tabla = document.getElementById("FiltroAutomatico");
+
+        var valores1 = {};
+        var valores2 = {};
+
+        // Obtener todos los elementos input dentro de la tabla
+        var inputs = tabla.querySelectorAll('input');
+
+        // Recorrer cada elemento input
+        inputs.forEach(function (input) {
+            // Obtener el número (1 o 2) del id del input
+            var numero = input.id.match(/\d+/);
+            console.log("numero :", numero);
+
+            // Verificar si el input tiene un número en su id
+            if (numero) {
+                // Verificar si es el primer objeto (valores1) o el segundo objeto (valores2)
+                if (numero[0] === '1') {
+                    valores1[input.getAttribute('id-class')] = input.value;
+                } else if (numero[0] === '2') {
+                    valores2[input.getAttribute('id-class')] = input.value;
+                }
+            } else {
+                valores1[input.getAttribute('id-class')] = input.value;
+                valores2[input.getAttribute('id-class')] = input.value;
+            }
+        });
+
+        console.log("Valores 1:", valores1);
+        console.log("Valores 2:", valores2);
+    }
+
+
+
+
+
+
+
+
     function actualizarProximaHora(number) {
         var horasOperacion = document.getElementById("HorasOperacion" + number);
         var idOperarioTrabajo = document.getElementById("ProximaHoraCambio" + number);
@@ -291,6 +354,8 @@
         return datos;
     }
 
+
+
     function obtenerValoresFila(fila) {
         var valores = {};
 
@@ -358,59 +423,31 @@
 </script>
 
 <script>
-    // Obtén el elemento del input por su id
-    var fechaInput = document.getElementById("fechaInput");
-    var fechaInput2 = document.getElementById("fechaInput2");
 
-    fechaInput2.addEventListener('change', function () {
-        // Obtén el valor actual del input
-        var valorInput = fechaInput2.value;
+    function convertirYMostrarFecha(inputId, evento) {
+        var numeroInput = document.getElementById(inputId);
 
-        // Intenta analizar el valor como una fecha
-        var fechaParseada = new Date(valorInput);
+        // Obtener el valor del input y eliminar letras y caracteres no numéricos excepto '/'
+        var valorNumerico = numeroInput.value.replace(/[^0-9/]/g, '');
 
-        // Verifica si la fecha es válida
-        if (!isNaN(fechaParseada.getTime())) {
-            // La fecha es válida, actualiza el valor del input formateado
-            fechaInput2.value = formatDate(fechaParseada);
+        // Verificar si la tecla presionada es "Eliminar" o "Backspace"
+        if (evento && (evento.key === 'Delete' || evento.key === 'Backspace')) {
+            // Permitir eliminar el último carácter incluso si es una barra
+            if (numeroInput.value.length === 11 && numeroInput.value.charAt(10) === '/') {
+                numeroInput.value = numeroInput.value.slice(0, -1);
+            }
+        } else {
+            // Verificar si el valor resultante tiene 8 dígitos
+            if (valorNumerico.length === 2 || valorNumerico.length === 5) {
+                // Agregar '/' automáticamente después del segundo y quinto dígito
+                numeroInput.value = valorNumerico + '/';
+            } else if (valorNumerico.length > 10) {
+                // Limite la longitud a 10 caracteres (MM/DD/YYYY)
+                numeroInput.value = valorNumerico.slice(0, 10);
+            }
         }
-        // Si la fecha no es válida, el usuario ingresó algo que no es una fecha,
-        // entonces podrías manejarlo de acuerdo a tus necesidades
-    });
-    // Agrega un evento de cambio al input
-    fechaInput.addEventListener('change', function () {
-        // Obtén el valor actual del input
-        var valorInput = fechaInput.value;
-
-        // Intenta analizar el valor como una fecha
-        var fechaParseada = new Date(valorInput);
-
-        // Verifica si la fecha es válida
-        if (!isNaN(fechaParseada.getTime())) {
-            // La fecha es válida, actualiza el valor del input formateado
-            fechaInput.value = formatDate(fechaParseada);
-        }
-        // Si la fecha no es válida, el usuario ingresó algo que no es una fecha,
-        // entonces podrías manejarlo de acuerdo a tus necesidades
-    });
-
-    // Función para formatear la fecha como "DD/MM/YYYY"
-    function formatDate(date) {
-        var day = date.getDate();
-        var month = date.getMonth() + 1; // Los meses en JavaScript van de 0 a 11
-        var year = date.getFullYear();
-
-        // Agrega ceros a la izquierda si es necesario
-        if (day < 10) {
-            day = '0' + day;
-        }
-
-        if (month < 10) {
-            month = '0' + month;
-        }
-
-        return day + '/' + month + '/' + year;
     }
+
 </script>
 
 

@@ -5,6 +5,7 @@ using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 using Generacion.Application.Funciones;
 using Generacion.Models.Usuario;
+using Generacion.Models.FiltroCentrifugo;
 
 namespace Generacion.Application.FiltroCentrifugo.Query
 {
@@ -19,7 +20,7 @@ namespace Generacion.Application.FiltroCentrifugo.Query
         }
 
 
-        public async Task<Respuesta<List<DetalleFiltro>>> ObtenerDatosFiltroPorSitio()
+        public async Task<Respuesta<List<DetalleFiltro>>> ObtenerDatosFiltroPorSitio(string seleccion, string IdReporteFiltro)
         {
             Respuesta<List<DetalleFiltro>> respuesta = new Respuesta<List<DetalleFiltro>>();
             DetalleOperario user = await _function.ObtenerDatosOperario();
@@ -33,6 +34,9 @@ namespace Generacion.Application.FiltroCentrifugo.Query
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
+                        cmd.Parameters.Add("p_sitio", OracleDbType.Varchar2).Value = user.IdSitio;
+                        cmd.Parameters.Add("p_Seleccion", OracleDbType.Varchar2).Value = seleccion;
+                        cmd.Parameters.Add("p_IdReporteFiltro", OracleDbType.Varchar2).Value = IdReporteFiltro;
                         cmd.Parameters.Add("p_cursor", OracleDbType.RefCursor).Direction = System.Data.ParameterDirection.Output;
 
                         cmd.ExecuteNonQuery();
@@ -70,9 +74,9 @@ namespace Generacion.Application.FiltroCentrifugo.Query
             }
             return respuesta;
         }
-        public async Task<Respuesta<Dictionary<decimal, List<DetalleFiltro>>>> ObtenerDetallePorNumeroGE()
+        public async Task<Respuesta<Dictionary<decimal, List<DetalleFiltro>>>> ObtenerDetallePorNumeroGE(string seleccion, string IdReporteFiltro)
         {
-            Respuesta<List<DetalleFiltro>> datosFiltro = await ObtenerDatosFiltroPorSitio();
+            Respuesta<List<DetalleFiltro>> datosFiltro = await ObtenerDatosFiltroPorSitio(seleccion,IdReporteFiltro);
 
             Respuesta<Dictionary<decimal, List<DetalleFiltro>>> respuesta = new Respuesta<Dictionary<decimal, List<DetalleFiltro>>>();
 
@@ -93,14 +97,13 @@ namespace Generacion.Application.FiltroCentrifugo.Query
         }
 
 
-
         /// <summary>
         /// Se requiere el TIPO de componente
         /// </summary>
         /// <example> TIPO : FiltroCentrifugo o FiltroAutomatico</example>
-      /*  public async Task<Respuesta<DetalleFiltro>> ObtenerReporteFiltro(string tipoComponente)
+        public async Task<Respuesta<ReporteFiltro>> ObtenerReporteFiltro(string tipoComponente)
         {
-            Respuesta<List<DetalleFiltro>> respuesta = new Respuesta<List<DetalleFiltro>>();
+            Respuesta<ReporteFiltro> respuesta = new Respuesta<ReporteFiltro>();
             DetalleOperario user = await _function.ObtenerDatosOperario();
             try
             {
@@ -121,17 +124,62 @@ namespace Generacion.Application.FiltroCentrifugo.Query
 
                         OracleDataReader reader = ((OracleRefCursor)cmd.Parameters["p_cursor"].Value).GetDataReader();
 
-                        respuesta.Detalle = new List<DetalleFiltro>();
-                        DetalleFiltro detalleFiltro = new DetalleFiltro();
                         while (reader.Read())
                         {
-                            detalleFiltro = new DetalleFiltro()
+                            respuesta.Detalle = new ReporteFiltro()
                             {
-                                HorasOperacionMantto = decimal.Parse(reader["HorasOperacionMANTTO"].ToString()),
-                                IdDetalleFiltro = reader["idDetalleFiltro"].ToString(),
-                                Fecha = reader["Fecha"].ToString()
+                                IdReporteFiltro = reader["idReporteFiltro"].ToString(),
+                                Tipo = reader["tipo"].ToString(),
+                                Fecha = reader["fecha"].ToString()
                             };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return respuesta;
+        }
 
+
+
+        public async Task<Respuesta<List<EspecificacionFiltro>>> ObtenerDatosEspecificacionFiltro(string idReporteFiltro)
+        {
+            Respuesta<List<EspecificacionFiltro>> respuesta = new Respuesta<List<EspecificacionFiltro>>();
+            DetalleOperario user = await _function.ObtenerDatosOperario();
+            try
+            {
+                using (OracleConnection connection = _conexion.ObtenerConexion())
+                {
+                    connection.Open();
+
+                    using (OracleCommand cmd = new OracleCommand("ObtenerEspecificacionesFiltro", connection))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd.Parameters.Add("p_IdReporteFiltro", OracleDbType.Varchar2).Value = idReporteFiltro;
+
+                        cmd.Parameters.Add("p_cursor", OracleDbType.RefCursor).Direction = System.Data.ParameterDirection.Output;
+
+                        cmd.ExecuteNonQuery();
+
+                        OracleDataReader reader = ((OracleRefCursor)cmd.Parameters["p_cursor"].Value).GetDataReader();
+
+                        respuesta.Detalle = new List<EspecificacionFiltro>();
+                        EspecificacionFiltro detalleFiltro = new EspecificacionFiltro();
+                        while (reader.Read())
+                        {
+                            detalleFiltro = new EspecificacionFiltro()
+                            {
+                                NumeroGenerador = decimal.Parse(reader["NumeroGenerador"].ToString()),
+                                Fecha = reader["fecha"].ToString(),
+                                Especificacion = reader["especificacion"].ToString(),
+                                Tipo = reader["tipo"].ToString(),
+                                IdReporteFiltro = reader["idReporteFiltro"].ToString(),
+                                IdFiltro = reader["idFiltro"].ToString(),
+                                Serie = reader["serie"].ToString(),
+                                TipoMantenimiento = reader["tipoMantenimiento"].ToString()
+                            };
                             respuesta.Detalle.Add(detalleFiltro);
                         }
                     }
@@ -142,7 +190,17 @@ namespace Generacion.Application.FiltroCentrifugo.Query
 
             }
             return respuesta;
-        }**/
+        }
+        public async Task<Respuesta<Dictionary<decimal, EspecificacionFiltro>>> ObtenerEspecificacionesPorNumeroGE(string idReporteFiltro)
+        {
+            Respuesta<List<EspecificacionFiltro>> datosFiltro = await ObtenerDatosEspecificacionFiltro(idReporteFiltro);
 
+            Respuesta<Dictionary<decimal, EspecificacionFiltro>> respuesta = new Respuesta<Dictionary<decimal, EspecificacionFiltro>>();
+
+            respuesta.Detalle = datosFiltro.Detalle
+            .ToDictionary(x => x.NumeroGenerador);
+
+            return respuesta;
+        }
     }
 }

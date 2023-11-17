@@ -103,7 +103,13 @@
         padding: 10px;
         background: #666EFA;
         width: 92%;
+        margin: 0 0 15px 0;
     }
+
+    .table td, .table th {
+        padding: 0rem;
+    }
+
 
 </style>
 <div>
@@ -111,10 +117,10 @@
         <button class="btn btn-primary " id="GuardarDatos">Guardar Datos</button>
     </div>
 
-    <div>
-        <button class="btn btn-outline-secondary" style="display:@(display18Count);" id="mostrar-linea">Ver Linea2</button>
-        <button class="btn btn-outline-secondary" id="mostrar-todo">Mostrar Ambos</button>
-    </div>
+    <!--  <div>
+    <button class="btn btn-outline-secondary" style="display:@(display18Count);" id="mostrar-linea">Ver Linea2</button>
+           <button class="btn btn-outline-secondary" id="mostrar-todo">Mostrar Ambos</button>
+    </div>--> 
     <div id="contenido-reporte-gas">
         <div class="row">
             <div class="col-md-3" style="display: flow;">
@@ -323,8 +329,8 @@
                         case false:
                             <table style="display:@(display18Count);" id="tabla-contenedor@(cantidadTablas)" class="table table-bordered datos-table-consola">
                                 <tr>
-                                    <th style="height: 50px;">
-                                        <p class="titulo-tabla-horas" id="fechaRegistroGas@(cantidadTablas)" fechaDato='@fechaObjeto.ToString("dd/MM/yyyy")' versionReporte='@idReportegas.IdReporteGas'> @fechaObjeto.ToString("dd/MM/yyyy")</p>
+                                    <th>
+                                        <p style="margin: 0;" class="titulo-tabla-horas" id="fechaRegistroGas@(cantidadTablas)" fechaDato='@fechaObjeto.ToString("dd/MM/yyyy")' versionReporte='@idReportegas.IdReporteGas'> @fechaObjeto.ToString("dd/MM/yyyy")</p>
                                     </th>
                                 </tr>
                                 <tr>
@@ -332,82 +338,82 @@
                                 </tr>
                                 <tr>
                                     <td id="vc">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="vn">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="pl">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="fl" class="dato-visible-sobreado">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="sv">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="tl">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="fc">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="fs">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="da">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="dp" class="dato-visible-sobreado">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="pr">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="d1">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="d2">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="l">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="caudalimetro" class="dato-visible-sobreado">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="presionIngreso">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                             </table>
@@ -417,10 +423,10 @@
             </div>
         </div>
 
-        <div id="delimitador">
+        <div  class="delimitador-tablas" id="delimitador">
         </div>
 
-        <div style="display: none;" id="linea6">
+        <div style="display: flex;" id="linea6">
             <div style="width: 260px;">
                 <table class="table table-bordered Head-table-consola">
                     <tbody>
@@ -512,7 +518,7 @@
                                 <table id='tabla-contenedor2@(cantidadTablas)' class="table table-bordered datos-table-consola datos-anteriores">
                                     <tr>
                                         <th class="cabecera-fecha-tabla">
-                                            <p class="titulo-tabla-horas" @*style="border: none; position: absolute;"*@ id="fechaRegistroGas2@(cantidadTablas)" fechaDato="@item.Fecha" versionReporte='@(idReportegas.IdReporteGas)'>@fechaObjeto.ToString("dd/MM/yyyy")</p>
+                                            <p style="margin:0;" class="titulo-tabla-horas" @*style="border: none; position: absolute;"*@ id="fechaRegistroGas2@(cantidadTablas)" fechaDato="@item.Fecha" versionReporte='@(idReportegas.IdReporteGas)'>@fechaObjeto.ToString("dd/MM/yyyy")</p>
                                             @if (date.ToString("dd/MM/yyyy") == fechaObjeto.ToString("dd/MM/yyyy"))
                                             {
                                                 <input @*style="margin-left: 80%; display: flex; padding: 0 0 0 0;"*@ type="checkbox" valueId='@item.IdDetalleReporte' id='checkEdt2@(cantidadTablas)' />
@@ -616,8 +622,8 @@
                         case false:
                             <table style="display:@(display6Count);" id="tabla-contenedor2@(cantidadTablas)" class="table table-bordered datos-table-consola">
                                 <tr>
-                                    <th style="height: 50px;">
-                                        <p class="titulo-tabla-horas" id="fechaRegistroGas2@(cantidadTablas)" fechaDato='@fechaObjeto.ToString("dd/MM/yyyy")' versionReporte='@idReportegas.IdReporteGas'> @fechaObjeto.ToString("dd/MM/yyyy")</p>
+                                    <th>
+                                        <p style="margin:0;" class="titulo-tabla-horas" id="fechaRegistroGas2@(cantidadTablas)" fechaDato='@fechaObjeto.ToString("dd/MM/yyyy")' versionReporte='@idReportegas.IdReporteGas'> @fechaObjeto.ToString("dd/MM/yyyy")</p>
                                     </th>
                                 </tr>
                                 <tr>
@@ -625,82 +631,82 @@
                                 </tr>
                                 <tr>
                                     <td id="vc">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="vn">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="pl">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="fl" class="dato-visible-sobreado">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="sv">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="tl">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="fc">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="fs">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="da">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="dp" class="dato-visible-sobreado">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="pr">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="d1">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="d2">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="l">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="caudalimetro" class="dato-visible-sobreado">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td id="presionIngreso">
-                                        <input />
+                                        <input type="number" value="0" />
                                     </td>
                                 </tr>
                             </table>
@@ -834,31 +840,36 @@
         });
 
         fechaid = obtenerFecha("format");
-        var listDetalleReporteGas;
 
+        var listDetalleReporteGas = [];
 
         var miDiv = document.getElementById('linea18');
         var miDiv2 = document.getElementById('linea6');
         var tablas = miDiv.getElementsByTagName('table');
         var tablas2 = miDiv2.getElementsByTagName('table');
 
-        if (vistaActual === 2) {
+       /* if (vistaActual === 2) {
             if (horaActual >= 6 || horaActual < 18) {
                 listDetalleReporteGas = ObtenerDatosTabla('2', tablas2.length - 1);
             } else {
                 console.log("No es posible Actualizar la tabla Intentelo a la hora correspondiente (6:00)");
             }
-        }
-        if (vistaActual === 1) {
+        }*/
+       /* if (vistaActual === 1) {
             if (horaActual < 6 || horaActual >= 18) {
                 listDetalleReporteGas = ObtenerDatosTabla('', tablas.length - 1);
             } else {
                 console.log("No es posible Actualizar la tabla Intentelo a la hora correspondiente (18:00)");
             }
-        }
+        }*/
+
+        var lista1 = ObtenerDatosTabla('2', tablas2.length - 1);
+        var lista2 = ObtenerDatosTabla('', tablas.length - 1);
+
+        listDetalleReporteGas = lista1.concat(lista2);
 
         if (listDetalleReporteGas != null) {
-            fetch("/ReporteGAS/GuardarDetalle", {
+            fetch('@Url.Action("GuardarDetalle", "ReporteGAS")', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

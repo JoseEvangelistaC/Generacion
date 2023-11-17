@@ -1,6 +1,8 @@
 ﻿using Generacion.Application.DataBase;
+using Generacion.Application.Funciones;
 using Generacion.Models;
 using Generacion.Models.DashBoard;
+using Generacion.Models.Usuario;
 using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 using System.Collections.Generic;
@@ -10,15 +12,18 @@ namespace Generacion.Application.DashBoard.Query
     public class DatosFiltro
     {
         private readonly IConexionBD _conexion;
-        public DatosFiltro(IConexionBD conexion)
+        private readonly Function _function;
+        public DatosFiltro(IConexionBD conexion, Function function)
         {
+            _function = function;
             _conexion = conexion;
         }
 
 
-        public async Task<Respuesta<List<DashboardDetalleFiltro>>> ObtenerDatosFiltroPorSitio(string idSitio)
+        public async Task<Respuesta<List<DashboardDetalleFiltro>>> ObtenerDatosFiltroPorSitio(string seleccion, string IdReporteFiltro)
         {
             Respuesta<List<DashboardDetalleFiltro>> respuesta = new Respuesta<List<DashboardDetalleFiltro>>();
+            DetalleOperario user = await _function.ObtenerDatosOperario();
             try
             {
                 using (OracleConnection connection = _conexion.ObtenerConexion())
@@ -29,6 +34,9 @@ namespace Generacion.Application.DashBoard.Query
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
+                        cmd.Parameters.Add("p_sitio", OracleDbType.Varchar2).Value = user.IdSitio;
+                        cmd.Parameters.Add("p_Seleccion", OracleDbType.Varchar2).Value = seleccion;
+                        cmd.Parameters.Add("p_IdReporteFiltro", OracleDbType.Varchar2).Value = IdReporteFiltro;
                         cmd.Parameters.Add("p_cursor", OracleDbType.RefCursor).Direction = System.Data.ParameterDirection.Output;
 
                         cmd.ExecuteNonQuery();
@@ -62,9 +70,9 @@ namespace Generacion.Application.DashBoard.Query
             return respuesta;
         }
 
-        public async Task<Respuesta<Dictionary<decimal, DashboardDetalleFiltro>>> ObtenerDetalleDashboardPorNumeroGE(string sitio)
+        public async Task<Respuesta<Dictionary<decimal, DashboardDetalleFiltro>>> ObtenerDetalleDashboardPorNumeroGE(string seleccion, string IdReporteFiltro)
         {
-            Respuesta<List<DashboardDetalleFiltro>> datosFiltro = await ObtenerDatosFiltroPorSitio(sitio);
+            Respuesta<List<DashboardDetalleFiltro>> datosFiltro = await ObtenerDatosFiltroPorSitio(seleccion, IdReporteFiltro);
             datosFiltro.Detalle = datosFiltro.Detalle
                 .OrderBy(x =>
                 {

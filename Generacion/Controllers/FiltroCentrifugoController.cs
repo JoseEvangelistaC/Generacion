@@ -6,17 +6,21 @@ using Microsoft.AspNetCore.Mvc;
 using Generacion.Application.FiltroCentrifugo;
 using Generacion.Application.Funciones;
 using Generacion.Models.FiltroCentrifugo;
+using MediatR;
+using Generacion.Application.FiltroCentrifugo.Command;
+using Generacion.Infraestructura;
+using Generacion.Application.Common;
 
 namespace Generacion.Controllers
 {
-    public class FiltroCentrifugoController : Controller
+    public class FiltroCentrifugoController : ApiControllerBase
     {
         private readonly IRegistroFiltroCentrifugo _registroFiltroCentrifugo;
         private readonly DatosFiltroCentrifugo _datosFiltroCentrifugo;
         private readonly Function _function;
-        
+
         public FiltroCentrifugoController(
-            DatosFiltroCentrifugo datosFiltroCentrifugo, 
+            DatosFiltroCentrifugo datosFiltroCentrifugo,
             IRegistroFiltroCentrifugo registroFiltroCentrifugo,
             Function function)
         {
@@ -27,27 +31,41 @@ namespace Generacion.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            DetalleOperario user = await _function.ObtenerDatosOperario();
-
-            //Respuesta<ReporteFiltro> detalleFiltro = await _datosFiltroCentrifugo.ObtenerReporteFiltro();
-
-            Respuesta<List<DetalleFiltro>> detalleFiltro = await _datosFiltroCentrifugo.ObtenerDatosFiltroPorSitio();
-            //Respuesta<List<EspecificacionFiltro>> detalleFiltro = await _datosFiltroCentrifugo.ObtenerDetallesPorSitio();
-            detalleFiltro.Detalle = detalleFiltro.Detalle.OrderBy(x =>
+            MantenimientoComponentes request = new MantenimientoComponentes()
             {
-                DateTime fecha;
-                return DateTime.TryParse(x.Fecha, out fecha) ? fecha : DateTime.MinValue;
-            }).ToList();
+                TipoComponente = TipoComponente.filtroCentrifugo,
+                RequiereId = false,
+                Seleccion =Constante.seleccionarTodo
+            };
 
+            var respuesta = await Mediator.Send(request);
 
-            return View(detalleFiltro.Detalle);
+            ViewData["especificacionesFiltro"] = respuesta.Detalle["especificacionesFiltro"];
+
+            return View(respuesta.Detalle["datosFiltro"]);
         }
 
         [HttpPost]
         public async Task<JsonResult> GuardarDatosFiltro([FromBody] List<DetalleFiltro> detalles)
         {
+            Respuesta<string> respuesta = new Respuesta<string>();
+            string mensajesError = "";
+            foreach (var item in detalles)
+            {
+                mensajesError = item.ValidarPropiedadesNulasOVacias();
+                if (!string.IsNullOrEmpty(mensajesError))
+                    break;
 
-            Respuesta<string> respuesta = await _registroFiltroCentrifugo.GuardarDatosFiltro(detalles);
+            }
+            if (string.IsNullOrEmpty(mensajesError))
+            {
+                respuesta = await _registroFiltroCentrifugo.GuardarDatosFiltro(detalles);
+            }
+            else
+            {
+                respuesta.IdRespuesta = 99;
+                respuesta.Mensaje = mensajesError;
+            }
 
             return Json(new { respuesta = respuesta });
         }
@@ -68,6 +86,6 @@ namespace Generacion.Controllers
             return Json(new { respuesta = respuesta });
         }
 
-        
+
     }
 }

@@ -1,12 +1,7 @@
-﻿@using Generacion.Models.DashBoard;
-@using Generacion.Models.FiltroCentrifugo;
-
-@model List<DetalleFiltro>;
+﻿@using Generacion.Models.FiltroCentrifugo;
 
 @{
-
     Dictionary<decimal, EspecificacionFiltro> especificacionesFiltro = ViewData["especificacionesFiltro"] as Dictionary<decimal, EspecificacionFiltro>;
-
 
 }
 
@@ -102,7 +97,9 @@
             .superpuesto.activo img {
                 width: 420px;
             }
-
+    .ocultar-parametros{
+        display:none;
+    }
 </style>
 <div style="display:flex;overflow-x:scroll;">
     <div style="width: 110%;">
@@ -110,14 +107,14 @@
             <thead>
                 <tr>
                     <th style="width: 165px;" rowspan="4"> <img class="img-produccion" src="./img/logo_elec.png"></th>
-                    <th style="height: 70px;" rowspan="2" colspan="5" id="TituloGeneral"></th>
+                    <th style="height: 70px;" rowspan="2" id="TituloGeneral" colspan="5"></th>
                     <th colspan="2"><div style="display: flex;"><p> Código:&nbsp; </p><p style="font-weight: 500;"> O&M - FOR - 01</p></div></th>
                 </tr>
                 <tr>
                     <th colspan="2"><div style="display: flex;">Versión:&nbsp; <p style="font-weight: 500;">001</p></div></th>
                 </tr>
                 <tr>
-                    <th rowspan="2" colspan="5">REGISTRO DE MANTENIMIENTO CAMBIO DE PAPEL FILTRO CENTRIFUGO DE UNIDADES EG01 - EG02</th>
+                    <th rowspan="2" colspan="5">REGISTRO DE MANTENIMIENTO DE FILTRO AUTOMATICO DE UNIDAD EG01 - EG02</th>
                     <th colspan="2" style="text-align: left;">Elaborado: Angel Calderon</th>
                 </tr>
                 <tr>
@@ -128,13 +125,13 @@
                 </tr>
                 <tr class="cabeceraGenerador">
                     <th class="cabeceras-sombreadas">EQUIPO</th>
-                    <td> FILTRO CENTRIFUGO</td>
+                    <td> FILTRO AUTOMATICO</td>
                     <th class="cabeceras-sombreadas"> Sistema:</th>
                     <td>LUBRICACION</td>
                     <th class="cabeceras-sombreadas">Tipo:</th>
                     <td style=" width: 100px;"></td>
                     <th class="cabeceras-sombreadas">Grupo:</th>
-                    <td>EG01 / EG02</td>
+                    <td style=" width: 100px;">EG01 / EG02</td>
                 </tr>
                 <tr>
                     <th colspan="8">&nbsp;</th>
@@ -215,75 +212,42 @@
             </tbody>
         </table>
 
-        <table id="FiltroCentrifugo" class="table table-bordered">
+        <table id="FiltroAutomatico" class="table table-bordered">
             <thead>
                 <tr style="height: 60px;">
                     <th colspan="8">&nbsp;</th>
                 </tr>
                 <tr style="background-color: #92B087;">
                     <th>FECHA DE CAMBIO</th>
-                    <th>H.OP.UNIDAD</td>
                     <th>UNIDAD</th>
-                    <th>H.T.FILTRO</td>
-                    <th>ESPESOR/F</td>
-                    <th>H.OP.UNIDAD.P/MANTTO</td>
-                    <th>R/TRABAJO</td>
-                    <th>OBSERVACIONES</td>
+                    <th>H.OP.UNIDAD ACTUAL</th>
+                    <th>H.OP.UNIDAD ULTIMO MANTTO</th>
+                    <th>H.T.FILTRO</th>
+                    <th>OBSERVACIONES</th>
                 </tr>
             </thead>
             <tbody class="detalleReporte">
-                @if (Model != null)
-                {
-                    @foreach (var item in Model)
-                    {
-                        <tr id="@item.IdDetalleFiltro" idReporteFiltro="@item.IdReporteFiltro">
-                            <td><input id-class="fecha" value="@item.Fecha.Split(' ')[0]"></td>
-                            <td><input id-class="horasOperacion" type="number" value="@item.HorasOperacion"></td>
-                            <td style="width: 95px;">
-                                EG
-                                <input style="width: 32px;text-align: left;padding: 0;" id-class="numeroGenerador" type="number" value="@item.NumeroGenerador">
-                            </td>
-                            <td style="width: 125px;"><input id-class="horasTrabajadasFiltro" type="number" value="@item.HorasTrabajadasFiltro"></td>
-                            <td style="width: 120px;">
-                                <div style="display: flex;">
-                                    <input id-class="espesor" style="text-align: right;width: 70px" type="number" value="@item.Espesor"><p style="width: 30px;"> mm</p>
-                                </div>
-                            </td>
-                            <td><input id-class="horasOperacionMantto" type="number" value="@item.HorasOperacionMantto"></td>
-                            <td><input id-class="operadorEjecutor" value="@item.OperadorEjecutor"></td>
-                            <td style="width: 200px;">
-                                <textarea id-class="Observaciones" class="autoresize">&nbsp;@item.Observaciones</textarea>
-                            </td>
-                        </tr>
-                    }
-                }
                 <tr>
                     <td><input id-class="fecha"></td>
-                    <td><input id-class="horasOperacion"></td>
                     <td style="width: 95px;">
-                        EG
-                        <input style="width: 32px;text-align: left;padding: 0;" id-class="numeroGenerador" type="number">
+                        EG <input style="width: 32px;text-align: left;padding: 0;" id-class="numeroGenerador" type="number" value=" ">
                     </td>
-                    <td><input id-class="horasTrabajadasFiltro"></td>
-                    <td style="width: 120px;">
-                        <div style="display: flex;">
-                            <input id-class="espesor" style="text-align: right;width: 70px"><p style="width: 30px;"> mm</p>
-                        </div>
-                    </td>
-                    <td><input id-class="horasOperacionMantto"></td>
-                    <td><input id-class="operadorEjecutor"></td>
+                    <td><input id-class="horasOperacion"></td>
+                    <td><input id-class="horasOpUltimoMantto"></td>
+                    <td><input id-class="horasTrabajadasFiltro" value="0" type="number"></td>
                     <td>
                         <textarea id-class="Observaciones" class="autoresize">&nbsp;</textarea>
                     </td>
+                    <td class="ocultar-parametros"><input id-class="operadorEjecutor" value="NO APLICA"></td>
                 </tr>
             </tbody>
         </table>
     </div>
 
     <div style="margin: 0 0 0 18vh;height: 350px;" class="contenedor-imagen" onmouseover="activarSuperposicion(this)" onmouseout="desactivarSuperposicion(this)">
-        <img alt="Descripción de la imagen" src="./img/DetallefiltroCentrifugo.jpg">
+        <img alt="Descripción de la imagen" src="./img/FiltroAutomatico.jpg">
         <div class="superpuesto">
-            <img alt="Descripción de la imagen" src="./img/DetallefiltroCentrifugo.jpg">
+            <img alt="Descripción de la imagen" src="./img/FiltroAutomatico.jpg">
             <p></p>
         </div>
     </div>
@@ -299,6 +263,7 @@
     function desactivarSuperposicion(elemento) {
         elemento.querySelector('.superpuesto').classList.remove('activo');
     }
+
 
     async function guardardatos() {
         loader.style.display = 'block';
@@ -336,7 +301,7 @@
         var datos = {
             'idReporteFiltro': idReporteFiltro,
             'Fecha': obtenerFecha("fechaVista"),
-            'Tipo': 'FiltroCentrifugo'
+            'Tipo': 'FiltroAutomatico'
         };
 
         try {
@@ -361,7 +326,7 @@
 
     async function guardarDatosFiltro() {
         var datos = DatosFiltro();
-
+        console.log("guardarDatosFiltro : ", datos);
         try {
             var response = await fetch('@Url.Action("GuardarDatosFiltro", "FiltroCentrifugo")', {
                 method: "POST",
@@ -417,8 +382,6 @@
             for (var j = 0; j < listaFiltroID.length; j++) {
                 var input = document.getElementById(listaFiltroID[j] + i);
                 var nombreClase = input.getAttribute("id-class");
-                console.log("input : ", input.value);
-                console.log("nombreClase : ", nombreClase);
                 if (input.type === 'number') {
                     valores[nombreClase] = parseFloat(input.value);
                 } else {
@@ -429,10 +392,10 @@
             if (idReporteFiltro !== "") {
                 valores["IdReporteFiltro"] = idReporteFiltro;
             } else {
-                valores["IdReporteFiltro"] = datosOperario.IdSitio + "-CENTRIFUGO-O&M-FOR-01-" + obtenerFecha("format");
+                valores["IdReporteFiltro"] = datosOperario.IdSitio + "-AUTOMATICO-O&M-FOR-01-" + obtenerFecha("format");
             }
 
-            valores["idFiltro"] = datosOperario.IdSitio + "-FiltroCentrifugo-" + i + "-" + obtenerFecha("format");
+            valores["idFiltro"] = datosOperario.IdSitio + "-FiltroAutomatico-" + i + "-" + obtenerFecha("format");
             valores["numeroGenerador"] = parseFloat(i);
             valores["fecha"] = obtenerFecha("fechaVista");
             datos.push(valores);
@@ -441,23 +404,8 @@
         return datos;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     function DatosFiltro() {
-        var tabla = document.getElementById("FiltroCentrifugo");
+        var tabla = document.getElementById("FiltroAutomatico");
         var filasTr = tabla.querySelector('tbody').getElementsByTagName('tr');
         var datos = [];
         for (var i = 0; i < filasTr.length; i++) {
@@ -499,9 +447,9 @@
                     valores["IdDetalleFiltro"] = idDetalleFiltro;
                     valores["IdReporteFiltro"] = idReporteFiltro;
                 } else {
-                    valores["IdReporteFiltro"] = datosOperario.IdSitio + "-CENTRIFUGO-O&M-FOR-01-" + obtenerFecha("format");
-                    valores["IdDetalleFiltro"] = datosOperario.IdSitio + "-FiltroCentrifugo-" + i + "-" + valores["numeroGenerador"] + "-" + obtenerFecha("format");
-                    idReporteFiltro = datosOperario.IdSitio + "-CENTRIFUGO-O&M-FOR-01-" + obtenerFecha("format");
+                    valores["IdReporteFiltro"] = datosOperario.IdSitio + "-AUTOMATICO-O&M-FOR-01-" + obtenerFecha("format");
+                    valores["IdDetalleFiltro"] = datosOperario.IdSitio + "-FiltroAutomatico-" + i + "-" + valores["numeroGenerador"] + "-" + obtenerFecha("format");
+                    idReporteFiltro = datosOperario.IdSitio + "-AUTOMATICO-O&M-FOR-01-" + obtenerFecha("format");
                 }
             }
             if (idClass === "fecha" && input.value === "") {
@@ -510,12 +458,9 @@
         }
         return valores;
     }
-
-
-
+    
 
     $(document).ready(function () {
-
         var tituloGeneral = document.getElementById('TituloGeneral');
         tituloGeneral.innerText = "CENTRAL GENERACION DISTRIBUIDA " + datosOperario.IdSitio + " - ICA";
         // Aplica autoajuste de altura a todos los elementos <textarea> con la clase 'autoresize'

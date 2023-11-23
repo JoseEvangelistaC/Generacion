@@ -500,7 +500,7 @@
                     valores["IdReporteFiltro"] = idReporteFiltro;
                 } else {
                     valores["IdReporteFiltro"] = datosOperario.IdSitio + "-CENTRIFUGO-O&M-FOR-01-" + obtenerFecha("format");
-                    valores["IdDetalleFiltro"] = datosOperario.IdSitio + "-FiltroCentrifugo-" + i + "-" + valores["numeroGenerador"] + "-" + obtenerFecha("format");
+                    valores["IdDetalleFiltro"] = datosOperario.IdSitio + "-FiltroCentrifugo-" + valores["numeroGenerador"] + "-" + obtenerFecha("format");
                     idReporteFiltro = datosOperario.IdSitio + "-CENTRIFUGO-O&M-FOR-01-" + obtenerFecha("format");
                 }
             }

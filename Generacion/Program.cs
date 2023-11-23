@@ -37,14 +37,19 @@ using Generacion.Application.Bujias;
 using Generacion.Application.Bujias.Command;
 using Generacion.Application.Bujias.Query;
 using Generacion.Application.Usuario.Session.SessionStatus;
-using Generacion.Application.DashBoard;
-using Generacion.Application.DashBoard.Command;
-using Generacion.Application.DashBoard.Query;
 using Generacion.Application.FiltroCentrifugo.Query;
 using Generacion.Application.FiltroCentrifugo;
 using Generacion.Application.FiltroCentrifugo.Command;
 using MediatR;
 using Generacion.Application.Common;
+using Generacion.Application.DashBoard.Filtro.Query;
+using Generacion.Application.DashBoard.Filtro.Command;
+using Generacion.Application.DashBoard.Filtro;
+using Generacion.Application.DashBoard.ControlGAS;
+using Generacion.Application.DashBoard.ControlGAS.Command;
+using Generacion.Application.DashBoard.ControlGAS.Query;
+using Generacion.Application.DashBoard.CambioAceite;
+using Generacion.Application.DashBoard.CambioAceite.Command;
 
 namespace Generacion
 {
@@ -97,6 +102,9 @@ namespace Generacion
                    services.AddScoped<IBujias, RegistoBujias>();
                    services.AddScoped<IDashBoard, RegistroDashBoard>();
                    services.AddScoped<IRegistroFiltroCentrifugo, RegistroFiltroCentrifugo>();
+                   services.AddScoped<IRegistroControlGas, RegistroControlGas>();
+                   services.AddScoped<IRegistroControlAceite, RegistroControlAceite>();
+
 
 
                    services.AddScoped(typeof(FotoServidor));
@@ -116,6 +124,9 @@ namespace Generacion
                    services.AddScoped(typeof(Function));
                    services.AddScoped(typeof(DatosFiltroCentrifugo));
                    services.AddScoped(typeof(ProcessExecutionContextExtensions));
+                   services.AddScoped(typeof(ObtenerDetalleConsumoGas));
+                   
+
                    services.AddHttpContextAccessor(); 
 
                    services.AddSingleton<IActiveDirectoryProvider, ActiveDirectoryProvider>();

@@ -7,7 +7,7 @@ using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 using System.Collections.Generic;
 
-namespace Generacion.Application.DashBoard.Query
+namespace Generacion.Application.DashBoard.Filtro.Query
 {
     public class DatosFiltro
     {

@@ -2,7 +2,6 @@
 using Generacion.Models.Almacen.Bujias;
 using Generacion.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using Generacion.Models.Almacen;
 using Generacion.Application.Almacen;
 using Generacion.Models.Usuario;

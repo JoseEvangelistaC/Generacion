@@ -1,6 +1,10 @@
 ﻿using Generacion.Application.Common;
 using Generacion.Application.DashBoard;
-using Generacion.Application.DashBoard.Query;
+using Generacion.Application.DashBoard.CambioAceite.Command;
+using Generacion.Application.DashBoard.ControlGAS.Command;
+using Generacion.Application.DashBoard.Filtro;
+using Generacion.Application.DashBoard.Filtro.Command;
+using Generacion.Application.DashBoard.Filtro.Query;
 using Generacion.Application.DataBase.cache;
 using Generacion.Application.DatosConsola.Query;
 using Generacion.Application.FiltroCentrifugo.Command;
@@ -9,10 +13,12 @@ using Generacion.Application.Funciones;
 using Generacion.Application.Usuario.Query;
 using Generacion.Infraestructura;
 using Generacion.Models;
+using Generacion.Models.Aceite;
 using Generacion.Models.DashBoard;
 using Generacion.Models.DatosConsola;
 using Generacion.Models.FiltroCentrifugo;
 using Generacion.Models.Usuario;
+using Generacion.Views.ControlGAS;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -25,29 +31,26 @@ namespace Generacion.Controllers
     public class HomeController : ApiControllerBase
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IDashBoard _dashBoard;
         private readonly DatosConsola _datosConsola;
         private readonly IConfiguration _configuration;
         private readonly CacheDatos _cacheDatos;
         private readonly ConsultarUsuario _consultarUsuario;
-        private readonly Function _function; 
-        private readonly DatosFiltroCentrifugo _datosFiltroCentrifugo; 
+        private readonly Function _function;
         public HomeController(
             ILogger<HomeController> logger,
             DatosConsola datosConsola,
             IConfiguration configuration,
-            CacheDatos cacheDatos, ConsultarUsuario consultarUsuario,
-            IDashBoard dashBoard,
-            DatosFiltro datosFiltro, DatosFiltroCentrifugo datosFiltroCentrifugo, Function function)
+            CacheDatos cacheDatos, 
+            ConsultarUsuario consultarUsuario,
+            Function function
+            )
         {
             _consultarUsuario = consultarUsuario;
             _configuration = configuration;
             _cacheDatos = cacheDatos;
             _logger = logger;
-            _dashBoard = dashBoard;
             _datosConsola = datosConsola;
             _function = function;
-            _datosFiltroCentrifugo = datosFiltroCentrifugo;
         }
 
         public async Task<IActionResult> Index()
@@ -64,33 +67,19 @@ namespace Generacion.Controllers
 
                 user.IdTurno = horario;
 
-                 GuardarDatosHorario($"{user.Nombre} {user.Apellidos}", horario);
+                GuardarDatosHorario($"{user.Nombre} {user.Apellidos}", horario);
 
                 ViewData["DetalleOperario"] = user;
                 ObtenerListaOperarios();
             }
 
-            MantenimientoComponentes requestCentrifugo = new MantenimientoComponentes()
-            {
-                TipoComponente = TipoComponente.filtroCentrifugo,
-                RequiereId = true,
-                Seleccion = string.Empty
-            };
-
-            var respuestaCentrifugo = await Mediator.Send(requestCentrifugo);
-
-            MantenimientoComponentes requestAutomatico = new MantenimientoComponentes()
-            {
-                TipoComponente = TipoComponente.filtroAutomatico,
-                RequiereId = true,
-                Seleccion = string.Empty
-            };
-
-            var respuestaAutomatico = await Mediator.Send(requestAutomatico);
-
-            ViewData["datosFiltroCentrifugo"] = respuestaCentrifugo.Detalle["datosDashboard"];
-            ViewData["datosFiltroAutomatico"] = respuestaAutomatico.Detalle["datosDashboard"];
-
+            var respuestaCentrifugo = await Mediator.Send(new ObtenerDatosDashBoard());
+             
+            ViewData["datosFiltroCentrifugo"] = respuestaCentrifugo.Detalle["datosFiltroCentrifugo"];
+            ViewData["datosFiltroAutomatico"] = respuestaCentrifugo.Detalle["datosFiltroAutomatico"];
+            ViewData["datoContrato"] = respuestaCentrifugo.Detalle["datoContrato"];
+            ViewData["datosConsumo"] = respuestaCentrifugo.Detalle["datosConsumo"];
+            ViewData["datodetalleConsumo"] = respuestaCentrifugo.Detalle["datodetalleConsumo"];
 
             return View();
         }
@@ -188,30 +177,58 @@ namespace Generacion.Controllers
         [HttpPost]
         public async Task<JsonResult> GuardarDatosDashBoard([FromBody] List<DashboardDetalleFiltro> detalleFiltro)
         {
-            string usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
-            DetalleOperario user = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);
-            try
+            var respuesta = await Mediator.Send(new GuardarDatosDashboard()
             {
-                Respuesta<string> respuesta = new Respuesta<string>();
-                foreach (var item in detalleFiltro)
-                {
-                    string mensajesError = item.ValidarPropiedadesNulasOVacias();
-                    if (mensajesError.Any())
-                    {
-                        respuesta.IdRespuesta = 99;
-                        respuesta.Mensaje = mensajesError;
-                        return Json(new { respuesta = respuesta });
-                    }
-                }
+                detalleFiltro = detalleFiltro
+            });
 
-                respuesta = await _dashBoard.GuardarDatosFiltro(detalleFiltro, user.IdSitio);
-                return Json(new { respuesta = respuesta });
-
-            }
-            catch (Exception e)
-            {
-                return Json(new { respuesta = "" });
-            }
+            return Json(new { respuesta = respuesta });
         }
+
+
+        [HttpPost]
+        public async Task<JsonResult> GuardarContratoGAS([FromBody] ContratoGas datos)
+        {
+            var respuesta = await Mediator.Send(new GuardarContratoGas()
+            {
+                contratoGas = datos
+            });
+
+            return Json(new { respuesta = respuesta });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GuardarDatosGAS([FromBody] ConsumoGas datos)
+        {
+            var respuesta = await Mediator.Send(new GuardarControlGas()
+            {
+                consumoGas = datos
+            });
+
+            return Json(new { respuesta = respuesta });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GuardarDetalleGAS([FromBody] DetalleConsumoGas datos)
+        {
+            var respuesta = await Mediator.Send(new GuardarDetalleGas()
+            {
+                detalleConsumoGas = datos
+            });
+
+            return Json(new { respuesta = respuesta });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GuardarDatosControlAceite([FromBody] List<ControlCambioAceite> datos)
+        {
+            var respuesta = await Mediator.Send(new ListaControlCambioAceite()
+            {
+               datosControl = datos
+            });
+
+            return Json(new { respuesta = respuesta });
+        }//IRegistroControlAceite
+
     }
 }

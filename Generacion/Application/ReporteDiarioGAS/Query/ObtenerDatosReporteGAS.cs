@@ -1,6 +1,8 @@
 ﻿using Generacion.Application.DataBase;
+using Generacion.Application.Funciones;
 using Generacion.Models;
 using Generacion.Models.ReporteDiarioGAS;
+using Generacion.Models.Usuario;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
 using MReporteGAS =Generacion.Models.ReporteDiarioGAS.ReporteGAS;
@@ -10,9 +12,11 @@ namespace Generacion.Application.ReporteDiarioGAS.Query
     public class ObtenerDatosReporteGAS
     {
         private readonly IConexionBD _conexion;
-        public ObtenerDatosReporteGAS(IConexionBD conexion)
+        private readonly Function _function;
+        public ObtenerDatosReporteGAS(IConexionBD conexion, Function function)
         {
             _conexion = conexion;
+            _function = function;
         }
         public async Task<Respuesta<Dictionary<string, List<DetalleReporteGas>>>> ObtenerDetallesReporte(string id)
         {
@@ -89,6 +93,8 @@ namespace Generacion.Application.ReporteDiarioGAS.Query
         public async Task<Respuesta<MReporteGAS>> ObtenerIdReporteGAS(string idSitio)
         {
             Respuesta<MReporteGAS> respuesta = new Respuesta<MReporteGAS>();
+            DetalleOperario user = await _function.ObtenerDatosOperario();
+
             try
             {
                 using (OracleConnection connection = _conexion.ObtenerConexion())
@@ -99,6 +105,7 @@ namespace Generacion.Application.ReporteDiarioGAS.Query
                     {
                         command.CommandType = CommandType.StoredProcedure;
 
+                        command.Parameters.Add("p_Sitio", OracleDbType.Varchar2).Value = user.IdSitio;
                         command.Parameters.Add("p_Resultado", OracleDbType.RefCursor).Direction = ParameterDirection.Output;
 
                         using (OracleDataAdapter adapter = new OracleDataAdapter(command))

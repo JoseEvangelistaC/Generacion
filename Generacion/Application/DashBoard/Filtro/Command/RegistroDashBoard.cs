@@ -5,7 +5,7 @@ using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 using System.Data;
 
-namespace Generacion.Application.DashBoard.Command
+namespace Generacion.Application.DashBoard.Filtro.Command
 {
     public class RegistroDashBoard : IDashBoard
     {
@@ -14,7 +14,7 @@ namespace Generacion.Application.DashBoard.Command
         {
             _conexion = conexionBD;
         }
-        public async Task<Respuesta<string>> GuardarDatosFiltro(List<DashboardDetalleFiltro> detalleFiltro,string idSitio)
+        public async Task<Respuesta<string>> GuardarDatosFiltro(List<DashboardDetalleFiltro> detalleFiltro, string idSitio)
         {
             Respuesta<string> respuesta = new Respuesta<string>();
             try

@@ -1,5 +1,5 @@
 ﻿using Generacion.Application.Common;
-using Generacion.Application.DashBoard.Query;
+using Generacion.Application.DashBoard.Filtro.Query;
 using Generacion.Application.FiltroCentrifugo.Query;
 using Generacion.Application.Funciones;
 using Generacion.Models;
@@ -50,12 +50,13 @@ namespace Generacion.Application.FiltroCentrifugo.Command
                 especificacionesFiltro = await _datosFiltroCentrifugo.ObtenerEspecificacionesPorNumeroGE(detalleFiltro.Detalle.IdReporteFiltro);
             }
 
-            string idReporteFiltro = request.RequiereId ? detalleFiltro.Detalle.IdReporteFiltro : string.Empty;
+            string idReporteFiltro = string.Empty;
 
             if (request.RequiereId)
             {
                 if (detalleFiltro.Detalle != null)
                 {
+                    idReporteFiltro = detalleFiltro.Detalle.IdReporteFiltro;
                     datosDashboard = await _datosFiltro.ObtenerDetalleDashboardPorNumeroGE(string.Empty, detalleFiltro.Detalle.IdReporteFiltro);
                 }
             }

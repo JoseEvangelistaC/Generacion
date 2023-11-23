@@ -1,7 +1,9 @@
 ﻿using Generacion.Application.DataBase;
+using Generacion.Application.Funciones;
 using Generacion.Application.ReporteDiarioGAS;
 using Generacion.Models;
 using Generacion.Models.ReporteDiarioGAS;
+using Generacion.Models.Usuario;
 using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 using System.Data;
@@ -12,9 +14,11 @@ namespace Generacion.Application.ReporteGAS.Command
     public class RegistroDatosGAS : IRegistroDatosGAS
     {
         private readonly IConexionBD _conexion;
-        public RegistroDatosGAS(IConexionBD conexionBD)
+        private readonly Function _function;
+        public RegistroDatosGAS(IConexionBD conexionBD, Function function)
         {
             _conexion = conexionBD;
+            _function = function;
         }
 
         public async Task<Respuesta<string>> GuardarDetalle(List<DetalleReporteGas> datos)
@@ -80,7 +84,7 @@ namespace Generacion.Application.ReporteGAS.Command
                             });
 
                             idDetalleReporte.Value = item.IdDetalleReporte;
-                            fecha.Value = item.Fecha;
+                            fecha.Value = item.Fecha.Split(' ')[0];
                             hora.Value = item.Hora;
                             vc.Value = item.VC;
                             vn.Value = item.VN;
@@ -127,8 +131,10 @@ namespace Generacion.Application.ReporteGAS.Command
         }
 
 
-        public void guardarIdReporte(MReporteGAS reporteGAS)
+        public async void guardarIdReporte(MReporteGAS reporteGAS)
         {
+            DetalleOperario user = await _function.ObtenerDatosOperario();
+
             try
             {
                 using (OracleConnection connection = _conexion.ObtenerConexion())
@@ -140,6 +146,7 @@ namespace Generacion.Application.ReporteGAS.Command
                         command.CommandType = CommandType.StoredProcedure;
 
                         command.Parameters.Add("p_IdReporteGas", OracleDbType.Varchar2).Value = reporteGAS.IdReporteGas;
+                        command.Parameters.Add("p_Sitio", OracleDbType.Varchar2).Value = user.IdSitio;
                         command.Parameters.Add("p_Fecha", OracleDbType.Varchar2).Value = reporteGAS.Fecha;
                         command.Parameters.Add("p_Activo", OracleDbType.Int32).Value = reporteGAS.Activo;
 

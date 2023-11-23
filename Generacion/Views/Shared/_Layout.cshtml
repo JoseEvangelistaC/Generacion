@@ -679,5 +679,28 @@
     }
 
 
-</script>
 
+    function convertirYMostrarFecha(inputId) {
+        var numeroInput = document.getElementById(inputId);
+
+        // Obtener el valor del input y eliminar letras y caracteres no numéricos excepto '/'
+        var valorNumerico = numeroInput.value.replace(/[^0-9/]/g, '');
+
+        // Verificar si el valor resultante tiene 8 dígitos
+        if (valorNumerico.length === 2 || valorNumerico.length === 5) {
+            // Agregar '/' automáticamente después del segundo y quinto dígito
+            numeroInput.value = valorNumerico + '/';
+        } else if (valorNumerico.length > 10) {
+            // Limite la longitud a 10 caracteres (MM/DD/YYYY)
+            numeroInput.value = valorNumerico.slice(0, 10);
+        }
+
+        // Verificar si el valor actual contiene una barra en la última posición
+        if (valorNumerico.charAt(valorNumerico.length - 1) === '/') {
+            // Permitir eliminar el último carácter incluso si es una barra
+            numeroInput.value = valorNumerico.slice(0, -1);
+        }
+    }
+
+ 
+</script>

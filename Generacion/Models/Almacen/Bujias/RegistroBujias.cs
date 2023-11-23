@@ -9,7 +9,6 @@
         public string IdSubtituloCampo { get; set; }
         public int Fila { get; set; }
         public int Item { get; set; }
-        public int difiere { get; set; }
         public string IdControlCambio { get; set; }
         public string Sitio { get; set; }
         public string Nota { get; set; }

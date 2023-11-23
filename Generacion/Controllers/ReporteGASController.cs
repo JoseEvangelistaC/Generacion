@@ -24,7 +24,7 @@ namespace Generacion.Controllers
             string usuarioDetail = HttpContext.Session.GetString("usuarioDetail");
             DetalleOperario user = JsonConvert.DeserializeObject<DetalleOperario>(usuarioDetail);
 
-            DateTime dateTime   = DateTime.Now;
+            DateTime dateTime = DateTime.Now;
             // Obtener datos de la sesión
             string cabeceras = HttpContext.Session.GetString("datoscabecera");
             Dictionary<string, CabecerasTabla> datoscabecera = JsonConvert.DeserializeObject<Dictionary<string, CabecerasTabla>>(cabeceras);
@@ -32,7 +32,13 @@ namespace Generacion.Controllers
 
             var idReporteGas = await _obtenerDatosReporteGAS.ObtenerIdReporteGAS(user.IdSitio);
 
-            Respuesta<Dictionary<string, List<DetalleReporteGas>>> detalleReporte = await _obtenerDatosReporteGAS.ObtenerDetallesReporte($"{user.IdSitio}-ELD.CTL-OM-003_{dateTime.ToString("dd_MM_yyyy")}");
+            Respuesta<Dictionary<string, List<DetalleReporteGas>>> detalleReporte = new Respuesta<Dictionary<string, List<DetalleReporteGas>>>();
+
+            if (idReporteGas.Detalle.IdReporteGas != null)
+            {
+                detalleReporte = await _obtenerDatosReporteGAS.ObtenerDetallesReporte(idReporteGas.Detalle.IdReporteGas);
+            }
+
 
             ViewData["detalleReporte"] = detalleReporte.Detalle;
             ViewData["idReporteGas"] = idReporteGas.Detalle ?? new MReporteGAS();
@@ -41,7 +47,7 @@ namespace Generacion.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> GuardarDetalle([FromBody] List<DetalleReporteGas> datos )
+        public async Task<ActionResult> GuardarDetalle([FromBody] List<DetalleReporteGas> datos)
         {
             Respuesta<string> respuesta = await _registroDatosGAS.GuardarDetalle(datos);
 
@@ -50,11 +56,11 @@ namespace Generacion.Controllers
             MReporteGAS reporteGAS = new MReporteGAS()
             {
                 IdReporteGas = datos[0].IdReporteGas,
-                Activo = datos.Count >= 7 ? 1 :0,
+                Activo = datos.Count >= 7 ? 1 : 0,
                 Fecha = dateTime.ToString("dd/MM/yyyy")
             };
 
-                _registroDatosGAS.guardarIdReporte(reporteGAS);
+            _registroDatosGAS.guardarIdReporte(reporteGAS);
 
             return Json(new { respuesta = respuesta });
         }

@@ -42,6 +42,7 @@ msbuild.wrn
 *.log
 
 appsettings.Development.json
+appsettings.Production.json
 
 *.cobertura.xml
 CoverageReport/*

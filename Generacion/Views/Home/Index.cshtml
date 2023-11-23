@@ -1,5 +1,7 @@
 ﻿@using Generacion.Models.DashBoard;
 @using Generacion.Models.Usuario;
+@using Generacion.Views.ControlGAS;
+@using Newtonsoft.Json;
 @{
     ViewBag.Title = "Dashboard";
     List<DetalleOperario> listaOperario = ViewData["ListaOperarios"] as List<DetalleOperario>;
@@ -7,6 +9,13 @@
     Dictionary<decimal, DashboardDetalleFiltro> datosFiltroCentrifugo = ViewData["datosFiltroCentrifugo"] as Dictionary<decimal, DashboardDetalleFiltro>;
     Dictionary<decimal, DashboardDetalleFiltro> datosFiltroAutomatico = ViewData["datosFiltroAutomatico"] as Dictionary<decimal, DashboardDetalleFiltro>;
 
+    ContratoGas datoContrato = ViewData["datoContrato"] as ContratoGas;
+    ConsumoGas datosConsumo = ViewData["datosConsumo"] as ConsumoGas;
+    DetalleConsumoGas datodetalleConsumo = ViewData["datodetalleConsumo"] as DetalleConsumoGas;
+
+    decimal cantidadContratoGas = datoContrato != null ? datoContrato.ConsumoContrato : 0;
+
+    int daysInMonth = DateTime.DaysInMonth(int.Parse(DateTime.Now.ToString("yyyy")), int.Parse(DateTime.Now.ToString("MM")));
 }
 <style>
     .hidden {
@@ -34,11 +43,51 @@
 
     .contendor-tablas-iguales {
         display: flex;
-        width: 50%;
     }
+
+    #chart-container {
+        position: relative;
+    }
+
+    #custom-tooltip {
+        position: absolute;
+        display: none;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+        border: none;
+        margin: 0;
+    }
+
+    #detalle-gas input {
+        width: 60%;
+        text-align: center;
+    }
+
+    #detalle-gas1 input {
+        width: 60%;
+        text-align: right;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #controlCambioAceite tbody td {
+        border: none;
+        border-top: 1px solid #e3e6f0;
+    }
+
+    #controlCambioAceite input {
+        background: transparent;
+    }
+
 </style>
-<div>
-    <div id="div1" style="width: 50%;">
+<div style="width: 58%;">
+    <div id="div1">
         <table id="FiltroCentrifugo" class="table table-bordered">
             <thead style="text-align: center;">
                 <tr>
@@ -169,7 +218,7 @@
                     <th rowspan="2">Fecha</th>
                     <th colspan="2">Filtro Automatico</th>
                 </tr>
-                @if (datosFiltroAutomatico.ContainsKey(1))
+                @if (datosFiltroAutomatico != null && datosFiltroAutomatico.ContainsKey(1))
                 {
                     <tr>
                         <th>EG-1</th>
@@ -186,10 +235,10 @@
             </thead>
             <tbody>
 
-                @if (datosFiltroAutomatico.ContainsKey(2))
+                @if (datosFiltroAutomatico != null && datosFiltroAutomatico.ContainsKey(2))
                 {
                     <tr>
-                        <th><input oninput="convertirYMostrarFecha('fechaAutomatico',evento)" id-class="fecha" id="fechaAutomatico" type="text" value="@datosFiltroAutomatico[1].Fecha" /></th>
+                        <th><input oninput="convertirYMostrarFecha('fechaAutomatico',event)" id-class="fecha" id="fechaAutomatico" type="text" value="@datosFiltroAutomatico[1].Fecha.Split(' ')[0]" /></th>
                         <th>EG-2</th>
                         <td><input id-class="HorasOperacion" type="number" id="HorasOperacion2" value="@datosFiltroAutomatico[2].HorasOperacion" /></td>
                     </tr>
@@ -197,7 +246,7 @@
                 else
                 {
                     <tr>
-                        <th><input oninput="convertirYMostrarFecha('fechaAutomatico',evento*)" id-class="fechaAutomatico" id="fechaAutomatico" type="text" /></th>
+                        <th><input oninput="convertirYMostrarFecha('fechaAutomatico',event)" id-class="fechaAutomatico" id="fechaAutomatico" type="text" /></th>
                         <th>EG-2</th>
                         <td><input id-class="HorasOperacion" type="number" id="HorasOperacion2" /></td>
                     </tr>
@@ -205,17 +254,480 @@
             </tbody>
         </table>
     </div>
-    <button onclick="DatosFiltroAutomatico()">Obtener Valores</button>
+
+    <div id="div3" class="" style="border:1px solid;">
+        <div style="font-weight: bold; text-align: center; display: flex; justify-content: space-between;">
+            <span id="titulo-consumo-gas"></span>
+            <div id="edit-Detalle-Gas" style="display: none;">
+                <span style="font-size: 12px;">EDITAR</span>
+                <input type="checkbox" id="checkEdt">
+            </div>
+        </div>
+        <div id="contenedor-gas">
+            <div id="custom-tooltip"></div>
+
+            <div id="detalle-gas" style="display: none;">
+                <table id="consumo-gas" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>CONTRATO GAS</th>
+                            <th>DIAS DEL MES</th>
+                            <th>CONSUMO DIARIO</th>
+                            <th>
+                                <p>CONSUMO TOTAL</p>
+                                <p>@DateTime.Now.ToString("dd/MM/yyyy")</p>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            @{
+                                var resultadoFormateado = datoContrato != null ? datoContrato.ConsumoContrato.ToString("N2", new System.Globalization.CultureInfo("es-ES")) : "0";
+                                resultadoFormateado = resultadoFormateado.Replace(".", "temp").Replace(",", ".").Replace("temp", ",");
+                                <td><input id-tipo="decimal" id-table="@(datoContrato != null ? datoContrato.IdContratoGas : "")" id-class="consumoContrato" id="consumoContrato" oninput="obtenerConsumoPorContrato()" value="@resultadoFormateado"></td>
+
+
+                                <td><input id-tipo="int" id-table="@(datosConsumo != null ? datosConsumo.IdConsumoGas : "")" id-class="diasMes" id="diasMes" value="@daysInMonth" disabled></td>
+
+                                resultadoFormateado = datodetalleConsumo != null ? datodetalleConsumo.ConsumoDiario.ToString("N2", new System.Globalization.CultureInfo("es-ES")) : "0";
+                                resultadoFormateado = resultadoFormateado.Replace(".", "temp").Replace(",", ".").Replace("temp", ",");
+                                <td><input id-tipo="decimal" id-class="consumoDiario" id="consumoDiario" oninput="parsearCantidad('consumoDiario')" value="@(resultadoFormateado)"></td>
+
+                                resultadoFormateado = datodetalleConsumo != null ? datodetalleConsumo.ConsumoTotalActual.ToString("N2", new System.Globalization.CultureInfo("es-ES")) : "0";
+                                resultadoFormateado = resultadoFormateado.Replace(".", "temp").Replace(",", ".").Replace("temp", ",");
+                                <td><input id-tipo="decimal" id-table="@(datosConsumo != null ? datosConsumo.IdConsumoGas : "")" id-class="consumoTotalActual" id="consumoTotal" oninput="obtenerConsumoFaltante()" value="@(resultadoFormateado)"> SM3</td>
+                            }
+                        </tr>
+                        <tr>
+                            <th colspan="2">CONSUMO GAS JUNIO</th>
+                            <th colspan="2">CONSUMO FALTANTE</th>
+                        </tr>
+                        <tr>
+                            @{
+                                resultadoFormateado = datosConsumo != null ? datosConsumo.ConsumoDelMes.ToString("N2", new System.Globalization.CultureInfo("es-ES")) : "0";
+                                resultadoFormateado = resultadoFormateado.Replace(".", "temp").Replace(",", ".").Replace("temp", ",");
+                                <td colspan="2"><input id-tipo="decimal" id-table="@(datosConsumo != null ? datosConsumo.IdConsumoGas: "")" id-class="consumoDelMes" id="consumoDelMes" oninput="obtenerConsumoPorMes()" value="@(resultadoFormateado)"> SM3</td>
+                                if (datosConsumo != null && datodetalleConsumo != null)
+                                {
+                                    var resultadoOperacion = datosConsumo.ConsumoDelMes - datodetalleConsumo.ConsumoTotalActual;
+                                    resultadoFormateado = resultadoOperacion.ToString("N2", new System.Globalization.CultureInfo("es-ES"));
+                                    resultadoFormateado = resultadoFormateado.Replace(".", "temp").Replace(",", ".").Replace("temp", ",");
+
+                                    <td colspan="2" id="consumoFaltante">@resultadoFormateado SM3</td>
+                                }
+                                else
+                                {
+                                    <td colspan="2" id="consumoFaltante">0 SM3</td>
+
+                                }
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="chart-container">
+                <canvas id="myChart" style="width:400px; height:200px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div id="div4">
+        <div>
+            <table id="control-cambio-aceite" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th colspan="7">CONTROL CAMBIO DE ACEITE GENERADOR CADA 5000 Hrs</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>H. OP</th>
+                        <th>H. Cambio N</th>
+                        <th>H. Cambio ND</th>
+                        <th>F. Cambio N</th>
+                        <th>F. Cambio ND</th>
+                        <th>H. Restante N</th>
+                        <th>H. Restante ND</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>EG1</td>
+                        <td><input id-class="horasOperacion" type="number" /></td>
+                        <td><input id-class="horasCambio" tipo-Comp="N" type="number" /></td>
+                        <td><input id-class="horasCambio" tipo-Comp="ND" type="number" /></td>
+                        <td><input id-class="fechaCambio" tipo-Comp="N" /></td>
+                        <td><input id-class="fechaCambio" tipo-Comp="ND" /></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>EG2</td>
+                        <td><input id-class="horasOperacion" type="number" /></td>
+                        <td><input id-class="horasCambio" tipo-Comp="N" type="number" /></td>
+                        <td><input id-class="horasCambio" tipo-Comp="ND" type="number" /></td>
+                        <td><input id-class="fechaCambio" tipo-Comp="N" /></td>
+                        <td><input id-class="fechaCambio" tipo-Comp="ND" /></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <button onclick="DatosControlCambioAceite()">Obtener Valores</button>
 </div>
 
-
+<script src="./vendor/chart.js/Chart.min.js"></script>
 <script>
+
+
+    function DatosControlCambioAceite() {
+        var datosControlAceite = [];
+        var tabla = document.getElementById("control-cambio-aceite");
+        var filasTr = Array.from(tabla.querySelector('tbody').getElementsByTagName('tr'));
+
+        let contador = 1;
+        filasTr.forEach(function (fila) {
+            var dato = obtenerValoresFilaControlAceite(fila, contador);
+   
+            datosControlAceite = datosControlAceite.concat(dato);
+            contador++;
+        });
+        console.log("datosContrato : ", datosControlAceite);
+
+       guardarDatosControl('@Url.Action("GuardarDatosControlAceite", "Home")', datosControlAceite);
+    }
+
+ 
+    function obtenerValoresFilaControlAceite(fila, contador) {
+        var controlAceiteN = {
+            "idControlCambioAceite": "",
+            "horasCambio": 0,
+            "numeroGenerador": 0,
+            "tipo": "N",
+            "fechaCambio": ""
+        };
+        var controlAceiteND = {
+            "idControlCambioAceite": "",
+            "horasCambio": 0,
+            "numeroGenerador": 0,
+            "tipo": "ND",
+            "fechaCambio": ""
+        };
+        var valores = [];
+
+        for (var i = 0; i < fila.cells.length; i++) {
+
+            var input = fila.cells[i].querySelector('input');
+
+            if (input != null) {
+                var idClass = input.getAttribute("id-class");
+                var tipoComponente = input.getAttribute("tipo-Comp");
+                console.log("contador : ", contador);
+                controlAceiteN["numeroGenerador"] = parseFloat(contador);
+                controlAceiteND["numeroGenerador"] = parseFloat(contador);
+                controlAceiteN["idControlCambioAceite"] =datosOperario.IdSitio +"-Control-Aceite-N-" + contador +"-"+ obtenerFecha("format");
+                controlAceiteND["idControlCambioAceite"] = datosOperario.IdSitio + "-Control-Aceite-ND-" + contador + "-" + obtenerFecha("format");
+                if (tipoComponente === "N") {
+                    if (input.type === 'number') {
+                        controlAceiteN[idClass] = parseFloat(input.value);
+                    } else {
+                        controlAceiteN[idClass] = input.value;
+                    }
+                } else if (tipoComponente === "ND") {
+                    if (input.type === 'number') {
+                        controlAceiteND[idClass] = parseFloat(input.value);
+                    } else {
+                        controlAceiteND[idClass] = input.value;
+                    }
+                }
+            }
+        }
+        valores.push(controlAceiteN);
+        valores.push(controlAceiteND);
+
+        return valores;
+    }
+
+
+    /************CONTROL CONSUMO GAS*************/
+
+
+    var consumoGASMes = parseFloat(@Html.Raw(JsonConvert.SerializeObject(datosConsumo != null ? datosConsumo.ConsumoDelMes : 0)));
+    var contratoAnteriorGAS = parseFloat(@Html.Raw(JsonConvert.SerializeObject(datoContrato != null ? datoContrato.ConsumoContrato: 0)));
+
+
+    function DatosConsumoGas() {
+
+        var tabla = document.getElementById("consumo-gas");
+        var filasTr = Array.from(tabla.querySelector('tbody').getElementsByTagName('tr'));
+
+        filasTr.forEach(function (fila) {
+            obtenerValoresFilaGAS(fila);
+        });
+
+        guardarDatosControl('@Url.Action("GuardarContratoGAS", "Home")', datosContrato);
+        guardarDatosControl('@Url.Action("GuardarDatosGAS", "Home")', datosConsumoGas);
+        guardarDatosControl('@Url.Action("GuardarDetalleGAS", "Home")', datosDetalleGas);
+
+    }
+
+    function guardarDatosControl(url, datos) {
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(datos)
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                mostrarMensaje(data);
+            })
+            .catch(function (error) {
+                console.error("Error:", error);
+                mostrarError();
+            });
+    }
+
+    function mostrarMensaje(data) {
+        if (data.respuesta.idRespuesta === 0 || data.respuesta.idRespuesta === 1) {
+            Swal.fire({
+                title: "Success!!",
+                text: "Se guardaron los datos.",
+                icon: "success",
+                button: "Aww yiss!"
+            });
+        } else {
+            Swal.fire({
+                title: "Error",
+                text: data.respuesta.mensaje,
+                icon: "error",
+                button: "OK",
+            });
+        }
+    }
+
+    function mostrarError() {
+        Swal.fire({
+            title: "Error",
+            text: "Error en la solicitud.",
+            icon: "error",
+            button: "OK",
+        });
+    }
+
+    // Resto del código ...
+
+
+
+    var datosContrato = {
+        "idContratoGas": "",
+        "consumoContrato": "",
+        "activo": 0
+    };
+
+    var datosConsumoGas = {
+        "idConsumoGas": "",
+        "diasMes": 0,
+        "consumoDelMes": 0,
+        "idContratoGas": ""
+    };
+
+    var datosDetalleGas = {
+        "IdDetalleConsumoGas": "",
+        "consumoTotalActual": 0,
+        "consumoDiario": 0
+    };
+
+
+
+    function obtenerValoresFilaGAS(fila) {
+        var valores = {};
+
+        for (var i = 0; i < fila.cells.length; i++) {
+            var input = fila.cells[i].querySelector('input');
+            if (input != null) {
+                var idClass = input.getAttribute("id-class");
+
+                var idTabla = input.getAttribute("id-table");
+                var idTipo = input.getAttribute("id-tipo");
+
+                var datoParseado = input.value.replace(/,/g, '');
+
+                if (datosContrato && datosContrato.hasOwnProperty(idClass)) {
+                    datosContrato[idClass] = parseFloat(datoParseado);
+                    datosContrato["idContratoGas"] = idTabla != "" ? idTabla : datosOperario.IdSitio + "-Contracto-Gas-" + obtenerFecha("format");
+
+                    if (parseFloat(contratoAnteriorGAS) != 0 && parseFloat(contratoAnteriorGAS) !== parseFloat(datoParseado)) {
+                        datosContrato["idContratoGas"] = datosOperario.IdSitio + "-Contracto-Gas-" + obtenerFecha("format");
+                        datosContrato["activo"] = 1;
+                    }
+                }
+
+                if (datosConsumoGas && datosConsumoGas.hasOwnProperty(idClass)) {
+
+                    if (idTipo === "decimal") {
+                        datosConsumoGas[idClass] = parseFloat(datoParseado);
+                    } else if (idTipo === "int") {
+                        datosConsumoGas[idClass] = parseInt(datoParseado);
+                    } else {
+                        datosConsumoGas[idClass] = datoParseado;
+                    }
+
+                    datosConsumoGas["idConsumoGas"] = idTabla != "" ? idTabla : datosOperario.IdSitio + "-Consumo-Gas-" + obtenerFecha("format");
+                    datosConsumoGas["idContratoGas"] = datosContrato["idContratoGas"];
+
+                    if (parseFloat(consumoGASMes) !== parseFloat(datoParseado)) {
+                        datosConsumoGas["idConsumoGas"] = datosOperario.IdSitio + "-Consumo-Gas-" + obtenerFecha("format");
+                    }
+
+                }
+                console.log("datosDetalleGas : ", datosConsumoGas["idConsumoGas"]);
+
+                if (datosDetalleGas && datosDetalleGas.hasOwnProperty(idClass)) {
+                    if (idTipo === "decimal") {
+                        datosDetalleGas[idClass] = parseFloat(datoParseado);
+                    } else if (idTipo === "int") {
+                        datosDetalleGas[idClass] = parseInt(datoParseado);
+                    } else {
+                        datosDetalleGas[idClass] = datoParseado;
+                    }
+
+                    datosDetalleGas["IdDetalleConsumoGas"] = datosOperario.IdSitio + "-Detalle-Gas-" + obtenerFecha("format");
+                    datosDetalleGas["idConsumoGas"] = idTabla != "" ? idTabla : datosOperario.IdSitio + "-Consumo-Gas-" + obtenerFecha("format");
+
+                    console.log("datosDetalleGas : ", datosDetalleGas);
+                }
+            }
+        }
+    }
+
+
+    function obtenerConsumoPorContrato() {
+        var diasMes = document.getElementById("diasMes");
+        var consumoContrato = document.getElementById("consumoContrato");
+        var consumoDelMes = document.getElementById("consumoDelMes");
+
+        var decimal = "";
+        if (consumoContrato.value.includes('.')) {
+            decimal = "." + consumoContrato.value.split('.')[1].replace(/[^0-9,]/g, '');
+            consumoContrato.value = consumoContrato.value.split('.')[0];
+        }
+
+        consumoContrato.value = consumoContrato.value.replace(/[^0-9,]/g, '');
+
+        if (consumoContrato.value != null && consumoContrato.value != "") {
+            var valorSinComas = parseFloat(consumoContrato.value.replace(/,/g, ''));
+
+            consumoContrato.value = valorSinComas.toLocaleString() + decimal;
+            consumoDelMes.value = (parseFloat(consumoContrato.value.replace(/,/g, '')) * parseFloat(diasMes.value)).toLocaleString();
+        } else {
+            consumoDelMes.value = 0;
+        }
+    }
+
+    function obtenerConsumoPorMes() {
+        var diasMes = document.getElementById("diasMes");
+        var consumoContrato = document.getElementById("consumoContrato");
+        var consumoDelMes = document.getElementById("consumoDelMes");
+
+        var decimal = "";
+        if (consumoDelMes.value.includes('.')) {
+            decimal = "." + consumoDelMes.value.split('.')[1].replace(/[^0-9,]/g, '');
+            consumoDelMes.value = consumoDelMes.value.split('.')[0];
+        }
+        consumoDelMes.value = consumoDelMes.value.replace(/[^0-9,]/g, '');
+
+
+        if (consumoDelMes.value != null && consumoDelMes.value != "") {
+            var valorSinComas = parseFloat(consumoDelMes.value.replace(/,/g, ''));
+
+            consumoDelMes.value = valorSinComas.toLocaleString() + decimal;
+            consumoContrato.value = (parseFloat(valorSinComas + decimal) / parseFloat(diasMes.value)).toLocaleString();
+
+            obtenerConsumoFaltante(valorSinComas);
+
+        } else {
+            consumoDelMes.value = 0;
+        }
+    }
+
+    function obtenerConsumoFaltante(valor) {
+        var consumoTotal = document.getElementById("consumoTotal");
+        var consumoFaltante = document.getElementById("consumoFaltante");
+
+        var decimal = "";
+        if (consumoTotal.value.includes('.')) {
+            decimal = "." + consumoTotal.value.split('.')[1].replace(/[^0-9,]/g, '');
+            consumoTotal.value = consumoTotal.value.split('.')[0];
+        }
+        consumoTotal.value = consumoTotal.value.replace(/[^0-9,]/g, '');
+
+        var consumoTotalSinComas = 0;
+        if (consumoTotal.value != "") {
+            consumoTotalSinComas = parseFloat(consumoTotal.value.replace(/,/g, ''));
+        }
+
+        if (valor != undefined && valor.value != 0) {
+
+            consumoTotal.value = consumoTotalSinComas.toLocaleString() + decimal;
+
+            consumoFaltante.innerText = (valor - consumoTotalSinComas).toLocaleString() + ' SM3';
+        } else {
+            var consumoDelMes = document.getElementById("consumoDelMes");
+            var consumoDelMesSinComas = parseFloat(consumoDelMes.value.replace(/,/g, ''));
+
+            consumoTotal.value = consumoTotalSinComas.toLocaleString() + decimal;
+            consumoFaltante.innerText = (consumoDelMesSinComas - consumoTotalSinComas).toLocaleString() + ' SM3';
+        }
+    }
+
+    function parsearCantidad(consumoDiario) {
+        var input = document.getElementById(consumoDiario);
+
+        var decimal = "";
+        if (input.value.includes('.')) {
+            decimal = "." + input.value.split('.')[1].replace(/[^0-9,]/g, '');
+            input.value = input.value.split('.')[0];
+            console.log("input.value ", input.value);
+        }
+        input.value = input.value.replace(/[^0-9,]/g, '');
+
+        if (input != null && input.value != "") {
+            var valorSinComas = parseFloat(input.value.replace(/,/g, ''));
+
+            input.value = valorSinComas.toLocaleString() + decimal;
+        } else {
+            input.value = "0";
+        }
+    }
+
+    /**************DATOS FILTRO AUTOMATICO Y CENTRIFUGO********** */
 
     function DatosFiltroAutomatico() {
         var tabla = document.getElementById("FiltroAutomatico");
+        var inputFecha = document.getElementById("fechaAutomatico");
 
-        var valores1 = {};
-        var valores2 = {};
+        var valores1 = {
+            "IdReporteFiltro": datosOperario.IdSitio + "-AUTOMATICO-O&M-FOR-01-" + obtenerFecha("format"),
+            "IdDetalleFiltro": datosOperario.IdSitio + "-FiltroAutomatico-1-" + obtenerFecha("format"),
+            "OperadorEjecutor": "NO APLICA",
+            "fecha": inputFecha.value,
+            "NumeroGenerador": 1
+        };
+        var valores2 = {
+            "IdReporteFiltro": datosOperario.IdSitio + "-AUTOMATICO-O&M-FOR-01-" + obtenerFecha("format"),
+            "IdDetalleFiltro": datosOperario.IdSitio + "-FiltroAutomatico-2-" + obtenerFecha("format"),
+            "OperadorEjecutor": "NO APLICA",
+            "fecha": inputFecha.value,
+            "NumeroGenerador": 2
+        };
 
         // Obtener todos los elementos input dentro de la tabla
         var inputs = tabla.querySelectorAll('input');
@@ -239,9 +751,11 @@
                 valores2[input.getAttribute('id-class')] = input.value;
             }
         });
+        var datos = [];
+        datos.push(valores1);
+        datos.push(valores2);
 
-        console.log("Valores 1:", valores1);
-        console.log("Valores 2:", valores2);
+        guardarDatosControl('@Url.Action("GuardarDatosDashBoard", "Home")', datos);
     }
 
 
@@ -300,45 +814,7 @@
     function guardarDatosFiltro() {
         var datos = DatosFiltro();
 
-        console.log("datos : ", datos);
-
-        fetch('@Url.Action("GuardarDatosDashBoard", "Home")', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(datos)
-        })
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                if (data.respuesta.idRespuesta === 0 || data.respuesta.idRespuesta === 1) {
-                    Swal.fire({
-                        title: "Success!!",
-                        text: "Se guardaro los datos.",
-                        icon: "success",
-                        button: "Aww yiss!"
-                    });
-                } else {
-                    Swal.fire({
-                        title: "Error",
-                        text: data.respuesta.mensaje,
-                        icon: "error",
-                        button: "OK",
-                    });
-                }
-            })
-            .catch(function (error) {
-                console.error("Error:", error);
-                Swal.fire({
-                    title: "Error",
-                    text: "Error en la solicitud.",
-                    icon: "error",
-                    button: "OK",
-                });
-            });
-
+        guardarDatosControl('@Url.Action("GuardarDatosDashBoard", "Home")', datos);
     }
 
     function DatosFiltro() {
@@ -347,8 +823,8 @@
         var datos = [];
         for (var i = 0; i < filasTr.length; i++) {
             var valores = obtenerValoresFila(filasTr[i]);
-            valores["IdReporteFiltro"] = datosOperario.IdSitio + "-O&M-FOR-01-" + obtenerFecha("format");
-            valores["IdDetalleFiltro"] = datosOperario.IdSitio + "-FiltroCentrifugo-" + i + "-" + valores["numeroGenerador"] + "-" + obtenerFecha("format");
+            valores["IdReporteFiltro"] = datosOperario.IdSitio + "-CENTRIFUGO-O&M-FOR-01-" + obtenerFecha("format");
+            valores["IdDetalleFiltro"] = datosOperario.IdSitio + "-FiltroCentrifugo-" + i + 1 + "-" + obtenerFecha("format");
             datos.push(valores);
         }
         return datos;
@@ -423,32 +899,147 @@
 </script>
 
 <script>
+    /*********Chart ***************/
+    document.addEventListener('DOMContentLoaded', function () {
 
-    function convertirYMostrarFecha(inputId, evento) {
-        var numeroInput = document.getElementById(inputId);
+        var tituloConsumoGas = document.getElementById("titulo-consumo-gas");
+        tituloConsumoGas.innerText = "CONSUMO DE GAS " + datosOperario.IdSitio + " Sm3";
 
-        // Obtener el valor del input y eliminar letras y caracteres no numéricos excepto '/'
-        var valorNumerico = numeroInput.value.replace(/[^0-9/]/g, '');
+        /*
 
-        // Verificar si la tecla presionada es "Eliminar" o "Backspace"
-        if (evento && (evento.key === 'Delete' || evento.key === 'Backspace')) {
-            // Permitir eliminar el último carácter incluso si es una barra
-            if (numeroInput.value.length === 11 && numeroInput.value.charAt(10) === '/') {
-                numeroInput.value = numeroInput.value.slice(0, -1);
-            }
-        } else {
-            // Verificar si el valor resultante tiene 8 dígitos
-            if (valorNumerico.length === 2 || valorNumerico.length === 5) {
-                // Agregar '/' automáticamente después del segundo y quinto dígito
-                numeroInput.value = valorNumerico + '/';
-            } else if (valorNumerico.length > 10) {
-                // Limite la longitud a 10 caracteres (MM/DD/YYYY)
-                numeroInput.value = valorNumerico.slice(0, 10);
-            }
+            ContratoGas datoContrato = ViewData["datoContrato"] as ContratoGas;
+            ConsumoGas datosConsumo = ViewData["datosConsumo"] as ConsumoGas;
+            DetalleConsumoGas datodetalleConsumo = ViewData["datodetalleConsumo"] as DetalleConsumoGas;
+
+        */
+        // Datos proporcionados
+        var totalConsumir = parseFloat(@Html.Raw(JsonConvert.SerializeObject(datosConsumo != null ? datosConsumo.ConsumoDelMes : 0)));// 2141952;
+        var consumoDiario = parseFloat(@Html.Raw(JsonConvert.SerializeObject(datodetalleConsumo != null ? datodetalleConsumo.ConsumoDiario : 0))); //60105;
+        var consumoHastaFecha = parseFloat(@Html.Raw(JsonConvert.SerializeObject(datodetalleConsumo != null ? datodetalleConsumo.ConsumoTotalActual : 0)));//1910196;
+        var consumoFaltante = totalConsumir - consumoHastaFecha;//231756;
+
+        // Calcular porcentaje completado y faltante
+        var porcentajeCompletado = (consumoHastaFecha / totalConsumir) * 100;
+        var porcentajeFaltante = (consumoFaltante / totalConsumir) * 100;
+
+        // Datos para el gráfico de medialuna
+        var data = {
+            labels: [porcentajeCompletado.toFixed(2) + '% Completado', porcentajeFaltante.toFixed(2) + '% Faltante', 'Consumo Diario : ' + consumoDiario],
+            datasets: [{
+                data: [porcentajeCompletado, porcentajeFaltante],
+                backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                borderWidth: 1
+            }]
+        };
+
+        var options = {
+            cutoutPercentage: 30,
+            circumference: Math.PI,
+            rotation: -Math.PI,
+            animation: {
+                animateRotate: true,
+                animateScale: true
+            },
+            legend: {
+                display: true,
+                position: 'right',
+                labels: {
+                    fontSize: 20
+                }
+            },
+            tooltips: {
+                enabled: false,
+                custom: function (tooltipModel) {
+                    // Personalizar la apariencia del tooltip aquí
+                    var customTooltip = document.getElementById('custom-tooltip');
+                    var chartContainer = document.getElementById('chart-container');
+
+                    if (tooltipModel.body) {
+                        var label = tooltipModel.body[0].lines[0]; // Obtener el label del tooltip
+
+                        // Mostrar el div personalizado solo si hay un label
+                        customTooltip.style.display = 'block';
+                        customTooltip.style.left = tooltipModel.caretX + chartContainer.offsetLeft + 'px';
+                        customTooltip.style.top = tooltipModel.caretY + chartContainer.offsetTop + 'px';
+                        customTooltip.innerHTML = label;
+                    } else {
+                        customTooltip.style.display = 'none';
+                    }
+                }
+            },
+            onHover: function (event, chartElement) {
+                var customTooltip = document.getElementById('custom-tooltip');
+                var chartContainer = document.getElementById('chart-container');
+
+                if (chartElement.length > 0) {
+                    var position = chartElement[0]._model;
+                    customTooltip.style.display = 'block';
+                    customTooltip.style.left = position.x + chartContainer.offsetLeft + 'px';
+                    customTooltip.style.top = position.y + chartContainer.offsetTop + 'px';
+
+                    if (chartElement[0]._index === 0) {
+                        customTooltip.innerHTML = 'Completado: ' + consumoHastaFecha + ' SM3';
+                    } else {
+                        customTooltip.innerHTML = 'Faltante: ' + consumoFaltante + ' SM3';
+                    }
+                } else {
+                    customTooltip.style.display = 'none';
+                }
+            },
+            responsive: true, // Permite que el gráfico sea responsive
+            maintainAspectRatio: false, // Desactiva el mantenimiento del aspecto para personalizar el tamaño
+            aspectRatio: 2 // Define la relación de aspecto personalizada (puedes ajustar este valor)
+        };
+
+        // Crear el gráfico de medialuna
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: options
+        });
+    });
+
+    document.getElementById('contenedor-gas').onclick = function () {
+        mostrarDetalleGas();
+    };
+
+    function mostrarDetalleGas() {
+        var contenedorChart = document.getElementById('chart-container');
+        var contenedorDetalleGas = document.getElementById('detalle-gas');
+        var checkDetalle = document.getElementById('edit-Detalle-Gas');
+
+        // Verificar la visibilidad actual de los contenedores
+        var chartVisible = window.getComputedStyle(contenedorChart).display !== 'none';
+        var detalleGasVisible = window.getComputedStyle(contenedorDetalleGas).display !== 'none';
+
+        if (detalleGasVisible) {
+            // Si el detalle de gas está visible, ocultarlo y mostrar el gráfico
+            contenedorDetalleGas.style.display = 'none';
+            checkDetalle.style.display = "none";
+            contenedorChart.style.display = 'block';
+        } else if (chartVisible) {
+            // Si el gráfico está visible, ocultarlo y mostrar el detalle de gas
+            contenedorChart.style.display = 'none';
+            checkDetalle.style.display = "flex";
+            contenedorDetalleGas.style.display = 'block';
         }
     }
 
-</script>
 
+    $('input[id^="checkEdt"]').change(function () {
+        var contendorDetalleGas = document.getElementById('contenedor-gas');
+
+        // Verificar si el checkbox está marcado o no
+        if (this.checked) {
+            // Agregar la función o lógica que deseas cuando el checkbox está marcado
+            contendorDetalleGas.addEventListener('click', mostrarDetalleGas);
+        } else {
+            // Quitar la función cuando el checkbox no está marcado
+            contendorDetalleGas.removeEventListener('click', mostrarDetalleGas);
+        }
+    });
+</script>
 
 

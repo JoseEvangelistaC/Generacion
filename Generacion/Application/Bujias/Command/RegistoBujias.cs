@@ -39,7 +39,6 @@ namespace Generacion.Application.Bujias.Command
                             cmd.Parameters.Add("p_Sitio", OracleDbType.Varchar2).Value = registro.Sitio;
                             cmd.Parameters.Add("p_Fecha", OracleDbType.Varchar2).Value = registro.Fecha;
                             cmd.Parameters.Add("p_Lado", OracleDbType.Varchar2).Value = registro.Lado;
-                            cmd.Parameters.Add("p_difiere", OracleDbType.Int32).Value = registro.difiere;
                             cmd.Parameters.Add("p_IdSubtituloCampo", OracleDbType.Varchar2).Value = registro.IdSubtituloCampo;
                             cmd.Parameters.Add("p_Fila", OracleDbType.Int32).Value = registro.Fila;
                             cmd.Parameters.Add("p_Item", OracleDbType.Int32).Value = registro.Item;

@@ -245,7 +245,8 @@
                         var itemAnterior = document.getElementById("itemAnterior");
 
 
-                        if (parseInt(data.respuesta.mensaje) + 1 !== data.respuesta.detalle[0].item) {
+                        if (parseInt(data.respuesta.mensaje) + 1 !== data.respuesta.detalle[0].item
+                            && data.respuesta.detalle[0].fecha.split(' ')[0] != fechaActual.value) {
                             botonGuardar.style.display = "initial";
                         } else {
                             botonGuardar.style.display = "none";
@@ -361,11 +362,10 @@
         if (horasAnterior.value !== "") {
             tiempoActual.value = parseInt(horasActual.value) - parseInt(horasAnterior.value)
         }
-
+        
         validarCalculosItems();
     }
 
-    let valorDifiere = 0;
     function validarCalculosItems() {
         var tableActual = document.getElementById("CambioActual").getElementsByTagName('tbody')[0];
         var horasActual = tableActual.querySelector('#HorasCambio input');
@@ -380,10 +380,8 @@
         var itemActual = document.getElementById("itemActual");
 
         if (parseInt(itemAnterior.innerText) + 1 === parseInt(itemActual.innerText)) {
-            valorDifiere = 0;
             horasCursoActual.value = parseInt(tiempoActual.value);
         } else {
-            valorDifiere = 1;
             horasCursoActual.value = parseInt(horasActual.value) - parseInt(horasAnterior.value);
         }
     }
@@ -489,12 +487,6 @@
                     const idInput = input ? input.id : null;
 
                     const iddetalle = input ? input.getAttribute('iddetalleanterior') : null;
-                    var difiereInput = 0;
-
-
-                    if (idInput === "HorasEnCurso") {
-                        difiereInput = valorDifiere;
-                    }
 
 
                     if (input && input.value !== "") {
@@ -507,7 +499,6 @@
                             fila: parseInt(filaSelect.value),
                             item: parseInt(valorItem),
                             IdControlCambio: idControlAnterior,
-                            difiere: difiereInput,
                             sitio: datosOperario.IdSitio,
                             numeroGenerador: generatorSelect.value
                         };
@@ -552,8 +543,6 @@
                     const idFila = fila.cells[0].id;
                     const input = celda.querySelector('input');
 
-                    let difiereInput = 0;
-
                     var nota = '';
                     if (input && input.value !== "") {
                         if (fila.id === "HorasCambio") {
@@ -570,7 +559,6 @@
                             fila: parseInt(filaSelect.value),
                             item: parseInt(valorItem),
                             IdControlCambio: idControlCambio + '-' + generatorSelect.value + '-' + fechaInputActual.replace(/\//g, '_'), //,
-                            difiere: 0,
                             sitio: datosOperario.IdSitio,
                             numeroGenerador: generatorSelect.value,
                             nota: nota

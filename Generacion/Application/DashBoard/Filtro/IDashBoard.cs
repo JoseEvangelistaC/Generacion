@@ -1,7 +1,7 @@
 ﻿using Generacion.Models;
 using Generacion.Models.DashBoard;
 
-namespace Generacion.Application.DashBoard
+namespace Generacion.Application.DashBoard.Filtro
 {
     public interface IDashBoard
     {
